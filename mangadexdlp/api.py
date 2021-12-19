@@ -63,7 +63,7 @@ def get_manga_chapters(uuid, lang):
   req = requests.get(f'{api_url}/manga/{uuid}/feed?limit=0&translatedLanguage[]={lang}&{content_ratings}')
   try:
     total = req.json()['total']
-    print(total)
+    print(f'Total chapters: {total}')
   except:
     print('Error retrieving the chapters list. Did you specify a valid language code?')
     exit(1)

@@ -1,14 +1,8 @@
-import pdb
-import argparse
-from time import sleep
-import requests
-import shutil
 from pathlib import Path
 import mangadexdlp.api as MdApi
 import mangadexdlp.utils as MdUtils
 import mangadexdlp.downloader as MdDownloader
 import mangadexdlp.sqlite as MdSqlite
-
 
 
 def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_list_chapters=False,md_nocbz=False):
@@ -35,6 +29,7 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
   manga_uuid = MdApi.get_manga_uuid(md_url)
   manga_title = MdApi.get_manga_title(manga_uuid, md_lang)
 
+  print('\n=========================================')
   print(f'Manga Name: {manga_title}')
   print(f'UUID: {manga_uuid}')
 
@@ -54,7 +49,11 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
 
   # list chapters if md_list_chapters is true
   if md_list_chapters:
-    print(f'Available Chapters:\n{manga_chapter_list}')
+    print(f'Available Chapters:\n{", ".join(manga_chapter_list)}')
+    print('=========================================\n')
+    exit(0)
+
+  print('=========================================\n\n')
 
   # check chapters to download if it not all
   chapters_to_download = []
@@ -69,11 +68,11 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
 
   # main download loop
   for chapter in chapters_to_download:
-    # get list of image urls
-    list_index = manga_chapter_data.index(chapter)
-    image_urls = MdUtils.get_img_urls(manga_chapter_data[list_index])
-    chapter_num = manga_chapter_data[list_index][0]
-    chapter_name = manga_chapter_data[list_index][3]
+    # get index of chapter
+    chapter_index = next(c for c in manga_chapter_data if c[0] == chapter)
+    image_urls = MdUtils.get_img_urls(chapter_index)
+    chapter_num = chapter_index[0]
+    chapter_name = chapter_index[3]
 
     # filename for chapter
     if chapter_name == None and chapter_num == 'Oneshot':
@@ -88,26 +87,28 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     chapter_path.mkdir(parents=True, exist_ok=True)
 
     # download images
+    print('------------------------------')
     print(f'Downloading Chapter {chapter_num}')
     print(f'DEBUG: Downloading Chapter {chapter}')
+
     try:
       MdDownloader.download_chapter(image_urls, chapter_path)
     except:
-      print('Cant download chapter. Exiting')
+      print(f'Cant download chapter {chapter_num}. Exiting')
       exit(1)
     else:
       # Done with chapter
-      print(f'--Done with Chapter {chapter_num}')
+      print(f'Successfully downloaded chapter {chapter_num}')
 
     # make cbz of folder
     if not md_nocbz:
-      print('Creating .cbz archive')
+      print('\nCreating .cbz archive')
       try:
-        MdUtils.make_archive(chapter_path, manga_path)
+        MdUtils.make_archive(chapter_path)
       except:
         print('Could not make cbz archive')
         exit(1)
       else:
-        print('Done')
+        print('Done\n')
 
 
