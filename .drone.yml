@@ -1,0 +1,37 @@
+---
+######################
+# sonarqube analysis #
+######################
+kind: pipeline
+type: docker
+name: sonarqube-analysis
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+# anchors
+sq_secrets: &sq_secrets
+  sonar_host: 'https://sonarqube.44net.ch'
+  sonar_token:
+    from_secret: sq-44net-token
+
+sq_analysis: &sq_analysis
+  image: 'cr.44net.ch/drone-plugins/sonarqube'
+  pull: if-not-exists
+  group: sonarqube
+
+# build steps
+steps:
+- name: 'sonarqube: analyse code'
+  <<: *sq_analysis
+  settings:
+    <<: *sq_secrets
+    sources: .
+
