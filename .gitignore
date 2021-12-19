@@ -3,3 +3,8 @@ test.py
 mangadexdlp/__pycache__/
 test/
 downloads/
+.vscode/
+.pytest_cache&
+.vscode/
+__pycache__/
+

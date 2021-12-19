@@ -21,7 +21,7 @@ def mangadex_dlp(md_url='',
     lang (str) -- Language to download chapters in. Defaults to "en" -> english\n
     list (bool) -- If it should only list all available chapters. Defaults to False\n
     nocbz (bool) -- If the downloaded images should not be packed into a .cbz archive. Defaults to false\n
-    verbose (bool) -- If verbose logging is enabled
+    verbose (bool) -- If verbose logging is enabled. Defaults to false\n
 
   Returns:\n
     nothing\n
