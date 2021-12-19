@@ -53,14 +53,16 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     print('=========================================\n')
     exit(0)
 
-  print('=========================================\n\n')
-
   # check chapters to download if it not all
   chapters_to_download = []
   if md_chapters.lower() == 'all':
     chapters_to_download = manga_chapter_list
   else:
     chapters_to_download = MdUtils.get_chapter_list(md_chapters)
+
+  # show chapters to download
+  print(f'Chapters selected:\n{", ".join(chapters_to_download)}')
+  print('=========================================\n')
 
   # create manga folder
   manga_path = Path(f'{md_dest}/{manga_title}')
@@ -87,7 +89,6 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     chapter_path.mkdir(parents=True, exist_ok=True)
 
     # download images
-    print('------------------------------')
     print(f'Downloading Chapter {chapter_num}')
     print(f'DEBUG: Downloading Chapter {chapter}')
 
@@ -110,5 +111,5 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
         exit(1)
       else:
         print('Done\n')
-
+        print('------------------------------\n')
 

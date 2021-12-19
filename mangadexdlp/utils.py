@@ -26,6 +26,16 @@ def get_img_urls(manga_chapter_data):
 
 
 def get_chapter_list(chapters):
-  pass
+  chapter_list = []
+  for chapter in chapters.split(','):
+    if '-' in chapter:
+      lower = chapter.split('-')[0]
+      upper = chapter.split('-')[1]
+      for n in range(int(lower), int(upper)+1):
+        chapter_list.append(str(n))
+    else:
+      chapter_list.append(chapter)
+
+  return chapter_list
 
 
