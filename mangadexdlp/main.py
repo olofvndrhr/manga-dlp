@@ -5,7 +5,13 @@ import mangadexdlp.downloader as MdDownloader
 import mangadexdlp.sqlite as MdSqlite
 
 
-def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_list_chapters=False,md_nocbz=False):
+def mangadex_dlp(md_url='',
+                 md_chapters=None,
+                 md_dest='downloads',
+                 md_lang='en',
+                 md_list_chapters=False,
+                 md_nocbz=False,
+                 verbose=False):
   '''Download Mangas from Mangadex.org\n
 
   Args:\n
@@ -15,6 +21,7 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     lang (str) -- Language to download chapters in. Defaults to "en" -> english\n
     list (bool) -- If it should only list all available chapters. Defaults to False\n
     nocbz (bool) -- If the downloaded images should not be packed into a .cbz archive. Defaults to false\n
+    verbose (bool) -- If verbose logging is enabled
 
   Returns:\n
     nothing\n
@@ -39,7 +46,7 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
   # [0][1] = Chapter UUID
   # [0][2] = Chapter Hash
   # [0][3] = Chapter Name
-  # [0][4] = Chapter Data
+  # [0][4] = Chapter Image Data
 
   # crate chapter list
   manga_chapter_list = []
@@ -88,12 +95,16 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     chapter_path = manga_path / chapter_filename
     chapter_path.mkdir(parents=True, exist_ok=True)
 
+    # verbose output
+    if verbose:
+      print(f'Filename: {chapter_path}\n')
+      print(f'Image URLS: {image_urls}')
+      print(f'DEBUG: Downloading Chapter (index) {chapter}')
+
     # download images
     print(f'Downloading Chapter {chapter_num}')
-    print(f'DEBUG: Downloading Chapter {chapter}')
-
     try:
-      MdDownloader.download_chapter(image_urls, chapter_path)
+      MdDownloader.download_chapter(image_urls, chapter_path, verbose)
     except:
       print(f'Cant download chapter {chapter_num}. Exiting')
       exit(1)
@@ -109,7 +120,8 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
       except:
         print('Could not make cbz archive')
         exit(1)
-      else:
-        print('Done\n')
-        print('------------------------------\n')
+
+    # done with chapter
+    print('Done')
+    print('------------------------------\n')
 

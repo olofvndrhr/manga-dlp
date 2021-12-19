@@ -2,8 +2,13 @@ import mangadexdlp.main as Mangadex
 import argparse
 
 def main(args):
-
-  Mangadex.mangadex_dlp(args.url, args.chapter, args.dest, args.lang, args.list, args.nocbz)
+  Mangadex.mangadex_dlp(args.url,
+                        args.chapter,
+                        args.dest,
+                        args.lang,
+                        args.list,
+                        args.nocbz,
+                        args.verbose)
 
 
 if __name__ == '__main__':
@@ -44,6 +49,12 @@ if __name__ == '__main__':
                       dest='nocbz',
                       required=False,
                       help='Dont pack it to a cbz archive',
+                      action='store_true',
+                      )
+  parser.add_argument('--verbose',
+                      dest='verbose',
+                      required=False,
+                      help='Verbose logging',
                       action='store_true',
                       )
 

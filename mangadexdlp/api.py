@@ -1,8 +1,5 @@
-import pdb
 import requests
 import re
-import json
-import html
 
 api_url = 'https://api.mangadex.org'
 
