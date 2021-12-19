@@ -83,7 +83,7 @@ def get_manga_chapters(uuid, lang):
       # chapter name, change illegal file names
       chap_name = chapter['attributes']['title']
       if not chap_name == None:
-        chap_name = re.sub('[/<>:"/\\|?*!.]', '', chap_name)
+        chap_name = re.sub('[/<>:"\\|?*!.]', '', chap_name)
       # check if the chapter is external (cant download them)
       chap_external = chapter['attributes']['externalUrl']
       # name chapter "oneshot" if there is no chapter number

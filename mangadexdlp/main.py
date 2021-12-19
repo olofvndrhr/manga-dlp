@@ -26,11 +26,10 @@ def mangadex_dlp(md_url='',md_chapters=None,md_dest='downloads',md_lang='en',md_
     nothing\n
   '''
   # check if md_list_chapters is true, if not check if chapters to download were specified
-  if not md_list_chapters:
-    if md_chapters == None:
-      # no chapters to download were given
-      print(f'You need to specify one or more chapters to download. To see all chapters use "--list"')
-      exit(1)
+  if not md_list_chapters and md_chapters == None:
+    # no chapters to download were given
+    print(f'You need to specify one or more chapters to download. To see all chapters use "--list"')
+    exit(1)
 
   # get uuid and manga name of url
   manga_uuid = MdApi.get_manga_uuid(md_url)
