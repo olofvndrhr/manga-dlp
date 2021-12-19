@@ -88,10 +88,10 @@ def get_manga_chapters(uuid, lang):
       chap_external = chapter['attributes']['externalUrl']
       # name chapter "oneshot" if there is no chapter number
       if chap_external == None and chap_num == None:
-        chap_data_list.append('Oneshot', chap_uuid, chap_hash, chap_name, chap_data)
+        chap_data_list.append(['Oneshot', chap_uuid, chap_hash, chap_name, chap_data])
       # else add chapter number
       elif chap_external == None:
-        chap_data_list.append(chap_num, chap_uuid, chap_hash, chap_name, chap_data)
+        chap_data_list.append([chap_num, chap_uuid, chap_hash, chap_name, chap_data])
     offset += 500
 
   #chap_list.sort() # sort numerically by chapter #
