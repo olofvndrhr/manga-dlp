@@ -37,11 +37,7 @@ def mangadex_dlp(md_url='',
   manga_uuid = MdApi.get_manga_uuid(md_url)
   manga_title = MdApi.get_manga_title(manga_uuid, md_lang)
 
-  print('\n=========================================')
-  print(f'Manga Name: {manga_title}')
-  print(f'UUID: {manga_uuid}')
-
-  # get chapters
+    # get chapters
   manga_chapter_data = MdApi.get_manga_chapters(manga_uuid, md_lang)
   # [0][0] = Volume Number
   # [0][1] = Chapter number/oneshot
@@ -63,6 +59,12 @@ def mangadex_dlp(md_url='',
   # sort chapter list for volumes
   if md_forcevol:
     manga_chapter_list.sort(key=lambda x: x.split(':')[0])
+
+  # print infos
+  print('\n=========================================')
+  print(f'Manga Name: {manga_title}')
+  print(f'UUID: {manga_uuid}')
+  print(f'Total chapters: {len(manga_chapter_list)}')
 
   # list chapters if md_list_chapters is true
   if md_list_chapters:
