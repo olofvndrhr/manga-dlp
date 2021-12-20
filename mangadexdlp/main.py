@@ -9,6 +9,7 @@ def mangadex_dlp(md_url='',
                  md_chapters=None,
                  md_dest='downloads',
                  md_lang='en',
+                 md_read='',
                  md_list_chapters=False,
                  md_nocbz=False,
                  md_forcevol=False,
@@ -28,12 +29,36 @@ def mangadex_dlp(md_url='',
   Returns:\n
     nothing\n
   '''
-  # check if md_list_chapters is true, if not check if chapters to download were specified
+  # prechecks userinput/options
   if not md_list_chapters and md_chapters == None:
     # no chapters to download were given
     print(f'You need to specify one or more chapters to download. To see all chapters use "--list"')
     exit(1)
+  elif not md_url and not md_read:
+    print(f'You need to specify a manga url with "-u" or a list with "--read"')
+    exit(1)
 
+  # loop trough every chapter in readin file
+  if md_read:
+    for url in readin_list(md_read):
+      get_manga(url, md_chapters, md_dest, md_lang, md_list_chapters, md_nocbz, md_forcevol, md_wait, md_verbose)
+  else:
+    # single manga
+    get_manga(md_url, md_chapters, md_dest, md_lang, md_list_chapters, md_nocbz, md_forcevol, md_wait, md_verbose)
+
+
+
+def readin_list(md_read):
+  url_file = Path(md_read)
+  url_list = []
+  with url_file.open('r') as file:
+    for line in file:
+      url_list.append(line.rstrip())
+
+  return url_list
+
+
+def get_manga(md_url, md_chapters, md_dest, md_lang, md_list_chapters, md_nocbz, md_forcevol, md_wait, md_verbose):
   # get uuid and manga name of url
   manga_uuid = MdApi.get_manga_uuid(md_url)
   manga_title = MdApi.get_manga_title(manga_uuid, md_lang)
@@ -71,7 +96,7 @@ def mangadex_dlp(md_url='',
   if md_list_chapters:
     print(f'Available Chapters:\n{", ".join(manga_chapter_list)}')
     print('=========================================\n')
-    exit(0)
+    return
 
   # check chapters to download if it not all
   chapters_to_download = []

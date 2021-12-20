@@ -6,6 +6,7 @@ def main(args):
                         args.chapter,
                         args.dest,
                         args.lang,
+                        args.read,
                         args.list,
                         args.nocbz,
                         args.forcevol,
@@ -17,7 +18,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Script to download mangas from Mangadex.org')
   parser.add_argument('-u', '--url',
                       dest='url',
-                      required=True,
+                      required=False,
                       help='URL of the manga.',
                       action='store',
                       )
@@ -40,6 +41,12 @@ if __name__ == '__main__':
                       help='Manga language',
                       action='store',
                       default='en',
+                      )
+  parser.add_argument('--read',
+                      dest='read',
+                      required=False,
+                      help='Path of file with manga links to download. One per line',
+                      action='store',
                       )
   parser.add_argument('--list',
                       dest='list',
