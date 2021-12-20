@@ -9,6 +9,7 @@ def main(args):
                         args.list,
                         args.nocbz,
                         args.forcevol,
+                        args.wait,
                         args.verbose)
 
 
@@ -29,7 +30,7 @@ if __name__ == '__main__':
   parser.add_argument('-d', '--destination',
                       dest='dest',
                       required=False,
-                      help='Download path',
+                      help='Download path. Defaults to "<script_dir>/downloads',
                       action='store',
                       default='downloads',
                       )
@@ -49,7 +50,7 @@ if __name__ == '__main__':
   parser.add_argument('--nocbz',
                       dest='nocbz',
                       required=False,
-                      help='Dont pack it to a cbz archive',
+                      help='Dont pack it to a cbz archive. Defaults to false.',
                       action='store_true',
                       )
   parser.add_argument('--forcevol',
@@ -58,10 +59,16 @@ if __name__ == '__main__':
                       help='Force naming of volumes. For mangas where chapters reset each volume',
                       action='store_true',
                       )
+  parser.add_argument('--wait',
+                      dest='wait',
+                      required=False,
+                      type=float,
+                      help='Time to wait for each picture to download in seconds(float). Defaults 0.5.',
+                      )
   parser.add_argument('--verbose',
                       dest='verbose',
                       required=False,
-                      help='Verbose logging',
+                      help='Verbose logging. Defaults to false.',
                       action='store_true',
                       )
 

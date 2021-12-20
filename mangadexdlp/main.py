@@ -12,7 +12,8 @@ def mangadex_dlp(md_url='',
                  md_list_chapters=False,
                  md_nocbz=False,
                  md_forcevol=False,
-                 verbose=False):
+                 md_wait=0.5,
+                 md_verbose=False):
   '''Download Mangas from Mangadex.org\n
 
   Args:\n
@@ -135,7 +136,7 @@ def mangadex_dlp(md_url='',
     chapter_path.mkdir(parents=True, exist_ok=True)
 
     # verbose output
-    if verbose:
+    if md_verbose:
       print(f'Filename: {chapter_path}\n')
       print(f'Image URLS: {image_urls}')
       print(f'DEBUG: Downloading Volume {chapter_vol}')
@@ -146,7 +147,7 @@ def mangadex_dlp(md_url='',
     else:
       print(f'+ Downloading Chapter {chapter_num}')
     try:
-      MdDownloader.download_chapter(image_urls, chapter_path, verbose)
+      MdDownloader.download_chapter(image_urls, chapter_path, md_wait, md_verbose)
     except:
       if md_forcevol:
         print(f'Cant download volume {chapter_vol} chapter {chapter_num}. Exiting')
