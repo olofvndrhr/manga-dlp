@@ -49,7 +49,7 @@ def get_manga_title(uuid, lang):
       print('Chapter in requested language not found.')
       exit(1)
 
-  return title
+  return fix_name(title)
 
 
 
@@ -81,10 +81,7 @@ def get_manga_chapters(uuid, lang):
       chap_data = chapter['attributes']['data']
       chap_name = chapter['attributes']['title']
       if not chap_name == None:
-        # remove illegal characters
-        chap_name = re.sub('[/<>:"\\|?*!.]', '', chap_name)
-        # remove trailing space
-        chap_name = re.sub('[ \t]+$', '', chap_name)
+        chap_name = fix_name(chap_name)
       # check if the chapter is external (cant download them)
       chap_external = chapter['attributes']['externalUrl']
       # name chapter "oneshot" if there is no chapter number
@@ -106,4 +103,12 @@ def get_manga_chapters(uuid, lang):
 
   return chap_data_list
 
+
+def fix_name(name):
+  # remove illegal characters
+  name = re.sub('[/<>:"\\|?*!.]', '', name)
+  # remove trailing space
+  name = re.sub('[ \t]+$', '', name)
+
+  return name
 
