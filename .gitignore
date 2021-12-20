@@ -7,4 +7,5 @@ downloads/
 .pytest_cache&
 .vscode/
 __pycache__/
+.pytest_cache/
 

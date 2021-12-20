@@ -8,6 +8,7 @@ def main(args):
                         args.lang,
                         args.list,
                         args.nocbz,
+                        args.forcevol,
                         args.verbose)
 
 
@@ -49,6 +50,12 @@ if __name__ == '__main__':
                       dest='nocbz',
                       required=False,
                       help='Dont pack it to a cbz archive',
+                      action='store_true',
+                      )
+  parser.add_argument('--forcevol',
+                      dest='forcevol',
+                      required=False,
+                      help='Force naming of volumes. For mangas where chapters reset each volume',
                       action='store_true',
                       )
   parser.add_argument('--verbose',

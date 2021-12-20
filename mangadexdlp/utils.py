@@ -14,11 +14,9 @@ def make_archive(chapter_path):
   shutil.rmtree(image_folder)
 
 
-def get_img_urls(manga_chapter_data):
+def get_img_urls(img_files, chapter_hash):
   dl_base_url = 'https://uploads.mangadex.org'
   img_urls = []
-  img_files = manga_chapter_data[4]
-  chapter_hash = manga_chapter_data[2]
   for img in img_files:
     img_urls.append(f'{dl_base_url}/data/{chapter_hash}/{img}')
 
@@ -28,7 +26,12 @@ def get_img_urls(manga_chapter_data):
 def get_chapter_list(chapters):
   chapter_list = []
   for chapter in chapters.split(','):
-    if '-' in chapter:
+    if '-' in chapter and ':' in chapter:
+      lower = chapter.split('-')[0].split(':')
+      upper = chapter.split('-')[1].split(':')
+      for n in range(int(lower[1]), int(upper[1])+1):
+        chapter_list.append(str(f'{lower[0]}:{n}'))
+    elif '-' in chapter:
       lower = chapter.split('-')[0]
       upper = chapter.split('-')[1]
       for n in range(int(lower), int(upper)+1):

@@ -69,26 +69,37 @@ def get_manga_chapters(uuid, lang):
     print('No chapters available to download!')
     exit(0)
 
+  last_chap = ['', '']
   offset = 0
   while offset < total: # if more than 500 chapters!
     req = requests.get(f'{api_url}/manga/{uuid}/feed?order[chapter]=asc&order[volume]=asc&limit=500&translatedLanguage[]={lang}&offset={offset}&{content_ratings}')
     for chapter in req.json()['data']:
       chap_num = chapter['attributes']['chapter']
+      chap_vol = chapter['attributes']['volume']
       chap_uuid = chapter['id']
       chap_hash = chapter['attributes']['hash']
       chap_data = chapter['attributes']['data']
-      # chapter name, change illegal file names
       chap_name = chapter['attributes']['title']
       if not chap_name == None:
+        # remove illegal characters
         chap_name = re.sub('[/<>:"\\|?*!.]', '', chap_name)
+        # remove trailing space
+        chap_name = re.sub('[ \t]+$', '', chap_name)
       # check if the chapter is external (cant download them)
       chap_external = chapter['attributes']['externalUrl']
       # name chapter "oneshot" if there is no chapter number
       if chap_external == None and chap_num == None:
-        chap_data_list.append(['Oneshot', chap_uuid, chap_hash, chap_name, chap_data])
+        # check for duplicates
+        if last_chap[0] == chap_vol and last_chap[1] == chap_num:
+          continue
+        chap_data_list.append([chap_vol, 'Oneshot', chap_uuid, chap_hash, chap_name, chap_data])
       # else add chapter number
       elif chap_external == None:
-        chap_data_list.append([chap_num, chap_uuid, chap_hash, chap_name, chap_data])
+        # check for duplicates
+        if last_chap[0] == chap_vol and last_chap[1] == chap_num:
+          continue
+        chap_data_list.append([chap_vol, chap_num, chap_uuid, chap_hash, chap_name, chap_data])
+      last_chap = [chap_vol, chap_num]
     offset += 500
 
   #chap_list.sort() # sort numerically by chapter #

@@ -14,7 +14,7 @@ def download_chapter(image_urls, chapter_path, verbose=False):
       #print('Try getting ' + img)
       req = requests.get(img, stream = True)
     except:
-      print('Request for image {img} failed, retrying')
+      print(f'Request for image {img} failed, retrying')
       sleep(2)
       req = requests.get(img, stream = True)
 
