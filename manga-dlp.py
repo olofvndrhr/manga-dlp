@@ -19,7 +19,7 @@ if __name__ == '__main__':
   parser.add_argument('-u', '--url',
                       dest='url',
                       required=False,
-                      help='URL of the manga.',
+                      help='URL of the manga',
                       action='store',
                       )
   parser.add_argument('-c', '--chapters',
@@ -31,14 +31,14 @@ if __name__ == '__main__':
   parser.add_argument('-p', '--path',
                       dest='path',
                       required=False,
-                      help='Download path. Defaults to "<script_dir>/downloads',
+                      help='Download path. Defaults to "<script_dir>/downloads"',
                       action='store',
                       default='downloads',
                       )
   parser.add_argument('-l', '--language',
                       dest='lang',
                       required=False,
-                      help='Manga language',
+                      help='Manga language. Defaults to "en" --> english',
                       action='store',
                       default='en',
                       )
@@ -51,13 +51,13 @@ if __name__ == '__main__':
   parser.add_argument('--list',
                       dest='list',
                       required=False,
-                      help='List all available chapters',
+                      help='List all available chapters. Defaults to false',
                       action='store_true',
                       )
   parser.add_argument('--nocbz',
                       dest='nocbz',
                       required=False,
-                      help='Dont pack it to a cbz archive. Defaults to false.',
+                      help='Dont pack it to a cbz archive. Defaults to false',
                       action='store_true',
                       )
   parser.add_argument('--forcevol',
@@ -70,12 +70,12 @@ if __name__ == '__main__':
                       dest='wait',
                       required=False,
                       type=float,
-                      help='Time to wait for each picture to download in seconds(float). Defaults 0.5.',
+                      help='Time to wait for each picture to download in seconds(float). Defaults 0.5',
                       )
   parser.add_argument('--verbose',
                       dest='verbose',
                       required=False,
-                      help='Verbose logging. Defaults to false.',
+                      help='Verbose logging. Defaults to false',
                       action='store_true',
                       )
 
