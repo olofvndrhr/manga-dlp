@@ -1,35 +1,35 @@
-import mangadexdlp.main as Mangadex
+import mangadlp.main as MangaDLP
 import argparse
 
 def main(args):
-  Mangadex.mangadex_dlp(args.url,
-                        args.chapter,
-                        args.dest,
-                        args.lang,
-                        args.read,
-                        args.list,
-                        args.nocbz,
-                        args.forcevol,
-                        args.wait,
-                        args.verbose)
+  MangaDLP.main(args.url,
+                args.lang,
+                args.chapters,
+                args.read,
+                args.list,
+                args.nocbz,
+                args.forcevol,
+                args.path,
+                args.wait,
+                args.verbose)
 
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Script to download mangas from Mangadex.org')
+  parser = argparse.ArgumentParser(description='Script to download mangas from various sites')
   parser.add_argument('-u', '--url',
                       dest='url',
                       required=False,
                       help='URL of the manga.',
                       action='store',
                       )
-  parser.add_argument('-c', '--chapter',
-                      dest='chapter',
+  parser.add_argument('-c', '--chapters',
+                      dest='chapters',
                       required=False,
-                      help='Chapter to download',
+                      help='Chapters to download',
                       action='store',
                       )
-  parser.add_argument('-d', '--destination',
-                      dest='dest',
+  parser.add_argument('-p', '--path',
+                      dest='path',
                       required=False,
                       help='Download path. Defaults to "<script_dir>/downloads',
                       action='store',
