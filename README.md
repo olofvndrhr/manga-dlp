@@ -13,13 +13,13 @@
 ## Description
 A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support for other sites is planned.
 
-Before downloading the a new chapter, the script always checks if there is already a chapter with the same name in the download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new chapters without any additional setup.
+Before downloading a new chapter, the script always checks if there is already a chapter with the same name in the download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new chapters without any additional setup.
 
 The default behaiviour is to pack the images to a [cbz archvie](https://en.wikipedia.org/wiki/Comic_book_archive). If you just want the folder with all the pictures use the flag `--nocbz`.
 
 ## Usage
 
-### With github
+### With GitHub
 
 ```sh
 git clone https://github.com/olofvndrhr/manga-dlp.git # clone the repository
