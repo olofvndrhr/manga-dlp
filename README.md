@@ -26,6 +26,8 @@ git clone https://github.com/olofvndrhr/manga-dlp.git # clone the repository
 
 cd manga-dlp # go in the directory
 
+pip install -r requirements.txt # install required packages
+
 # on windows
 python manga-dlp.py <options>
 # on unix
