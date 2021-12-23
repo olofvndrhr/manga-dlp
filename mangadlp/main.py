@@ -52,21 +52,21 @@ def main(manga_url='',
   if manga_readlist:
     # loop trough every chapter in readin file
     for url in readin_list(manga_readlist):
-      api_used = check_api(url)
+      ApiUsed = check_api(url)
       if log_verbose:
-        print(f'API used: {api_used}')
+        print(f'Api used: {ApiUsed}')
       # get manga
-      get_manga(api_used, url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose)
+      get_manga(ApiUsed, url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose)
   else:
     # single manga
-    api_used = check_api(manga_url)
+    ApiUsed = check_api(manga_url)
     if log_verbose:
-        print(f'API used: {api_used}')
+        print(f'Api used: {ApiUsed}')
     # get manga
-    get_manga(api_used, manga_url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose)
+    get_manga(ApiUsed, manga_url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose)
 
 
-
+# read in the list of links from a file
 def readin_list(manga_readlist):
   url_file = Path(manga_readlist)
   url_list = []
@@ -77,33 +77,30 @@ def readin_list(manga_readlist):
   return url_list
 
 
+# check the api which needs to be used
 def check_api(manga_url):
-  # set apis to check
+  # apis to check
   api_mangadex = re.compile('mangadex.org')
   api_test = re.compile('test.test')
-
   # check url for match
   if api_mangadex.search(manga_url):
-    api_used = 'Mangadex'
+    return Mangadex
+  # this is only for testing multiple apis
   elif api_test.search(manga_url):
-    api_used = 'Test'
-
-  return eval(api_used)
+    pass
 
 
-def get_manga(api_used, manga_url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose):
+# main function to get the chapters
+def get_manga(ApiUsed, manga_url, manga_language, manga_chapters, manga_list_chapters, manga_nocbz, manga_forcevol, download_path, download_wait, log_verbose):
   # init api
-  api = api_used(manga_url, manga_language)
-
+  Api = ApiUsed(manga_url, manga_language)
   # get manga title and uuid
-  manga_uuid = api.manga_uuid
-  manga_title = api.manga_title
+  manga_uuid = Api.manga_uuid
+  manga_title = Api.manga_title
   # get chapter data
-  manga_chapter_data = api.manga_chapter_data
-
+  manga_chapter_data = Api.manga_chapter_data
   # crate chapter list
-  manga_chapter_list = api.create_chapter_list(manga_chapter_data, manga_forcevol)
-
+  manga_chapter_list = Api.create_chapter_list(manga_chapter_data, manga_forcevol)
   # sort chapter list for volumes
   if manga_forcevol:
     manga_chapter_list.sort(key=lambda x: x.split(':')[0])
@@ -138,7 +135,7 @@ def get_manga(api_used, manga_url, manga_language, manga_chapters, manga_list_ch
   # main download loop
   for chapter in chapters_to_download:
     # get index of chapter
-    chapter_index = api.get_chapter_index(chapter, manga_forcevol)
+    chapter_index = Api.get_chapter_index(chapter, manga_forcevol)
 
     # default mapping of chapter data
     chapter_vol = chapter_index[0]
@@ -148,7 +145,7 @@ def get_manga(api_used, manga_url, manga_language, manga_chapters, manga_list_ch
     chapter_name = chapter_index[4]
     chapter_img_data = chapter_index[5]
     # create image urls from img data
-    image_urls = api.get_img_urls(chapter_img_data, chapter_hash)
+    image_urls = Api.get_img_urls(chapter_img_data, chapter_hash)
 
     # get filename for chapter
     chapter_filename = MUtils.get_filename(chapter_name, chapter_vol, chapter_num, manga_forcevol)
