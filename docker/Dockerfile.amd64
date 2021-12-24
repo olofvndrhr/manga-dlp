@@ -7,7 +7,7 @@ LABEL build_version="Version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="Ivan Schaller"
 
 # manga-dlp version
-ARG MDLP_VERSION=1.0.0
+ARG MDLP_VERSION=1.0.1
 
 # install packages
 RUN \
