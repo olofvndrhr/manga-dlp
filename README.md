@@ -17,6 +17,10 @@ Before downloading a new chapter, the script always checks if there is already a
 
 The default behaiviour is to pack the images to a [cbz archvie](https://en.wikipedia.org/wiki/Comic_book_archive). If you just want the folder with all the pictures use the flag `--nocbz`.
 
+## *Currently* Supported sites
+
+* [Mangadex.org](https://mangadex.org/)
+
 ## Usage
 
 ### With GitHub
