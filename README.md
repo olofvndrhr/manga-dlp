@@ -40,7 +40,7 @@ python3 manga-dlp.py <options>
 
 
 ### With docker
-(not yet done)
+See the docker [README](./docker/README.md)
 
 
 ## Options
@@ -115,8 +115,9 @@ Otherwise you can open a issue with the name of the site which you want support 
 If you encounter any bugs, also just open a issue with a description of the problem.
 
 ## TODO's
-* Make docker container for easy distribution
+* <del>Make docker container for easy distribution</del> --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
 * Make pypi package
 * Add more supported sites
+
 
 
