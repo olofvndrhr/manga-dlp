@@ -36,3 +36,120 @@ steps:
     sources: .
     exclusions: contrib/**
 
+
+
+---
+################
+# docker build #
+################
+kind: pipeline
+type: docker
+name: docker-build-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+trigger:
+  event:
+  - tag
+
+# anchors
+cr_secrets: &cr_secrets
+  username:
+    from_secret: cr-dhub-username
+  password:
+    from_secret: cr-dhub-key
+
+docker_build: &docker_build
+  image: plugins/docker
+  pull: if-not-exists
+  group: build
+
+# build steps arm64
+steps:
+- name: 'build and publish docker image'
+  <<: *docker_build
+  settings:
+    repo: olofvndrhr/manga-dlp
+    registry: hub.docker.com
+    context: docker
+    dockerfile: docker/Dockerfile.arm64
+    auto_tag: true
+    auto_tag_suffix: linux-arm64
+    <<: *cr_secrets
+
+
+---
+kind: pipeline
+type: docker
+name: docker-build-amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+  - tag
+
+# anchors
+cr_secrets: &cr_secrets
+  username:
+    from_secret: cr-dhub-username
+  password:
+    from_secret: cr-dhub-key
+
+docker_build: &docker_build
+  image: plugins/docker
+  pull: if-not-exists
+  group: build
+
+# build steps amd64
+steps:
+- name: 'build and publish docker image'
+  <<: *docker_build
+  settings:
+    repo: olofvndrhr/manga-dlp
+    registry: hub.docker.com
+    context: docker
+    dockerfile: docker/Dockerfile.amd64
+    auto_tag: true
+    auto_tag_suffix: linux-amd64
+    <<: *cr_secrets
+
+
+---
+kind: pipeline
+type: docker
+name: docker-publish-manifest
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+  - tag
+
+# anchors
+cr_secrets: &cr_secrets
+  username:
+    from_secret: cr-dhub-username
+  password:
+    from_secret: cr-dhub-key
+
+# build steps
+steps:
+- name: 'publish manifest'
+  image: plugins/manifest
+  settings:
+    spec: docker/manifest.tmpl
+    auto_tag: true
+    ignore_missing: true
+    <<: *cr_secrets
+
+depends_on:
+  - docker-build-amd64
+  - docker-build-arm64
+

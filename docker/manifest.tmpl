@@ -1,0 +1,20 @@
+image: hub.docker.com/olofvndrhr/manga-dlp:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}dev{{/if}}
+{{#if build.tags}}
+tags:
+{{#each build.tags}}
+  - {{this}}
+{{/each}}
+  - "latest"
+{{/if}}
+manifests:
+  -
+    image: hub.docker.com/olofvndrhr/manga-dlp:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{else}}dev-{{/if}}linux-amd64
+    platform:
+      architecture: amd64
+      os: linux
+  -
+    image: hub.docker.com/olofvndrhr/manga-dlp:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{else}}dev-{{/if}}linux-arm64
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8

@@ -1,0 +1,23 @@
+version: "3"
+services:
+
+  manga-dlp:
+    image: olofvndrhr/manga-dlp:latest
+    container_name: manga-dlp
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - mangadlp
+    volumes:
+      - ./downloads/:/app/downloads/ # default manga download directory
+      - ./mangas.txt:/app/mangas.txt # default file for manga links to download
+    environment:
+      - TZ=Europe/Zurich
+      # - PUID= # custom userid - defaults to 4444
+      # - PGID= # custom groupid - defaults to 4444
+
+
+networks:
+  mangadlp:
+

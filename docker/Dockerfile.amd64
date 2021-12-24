@@ -1,0 +1,45 @@
+FROM cr.44net.ch/baseimages/debian-s6-slim:1.3.1
+
+# set version label
+ARG BUILD_DATE
+ARG VERSION
+LABEL build_version="Version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="Ivan Schaller"
+
+# manga-dlp version
+ARG MDLP_VERSION=1.0.0
+
+# install packages
+RUN \
+  echo "**** install base packages ****" && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+      python3 \
+      python3-pip \
+      && \
+  echo "**** creating folders ****" && \
+  mkdir -p /app && \
+  echo "**** cleanup ****" && \
+  apt-get purge --auto-remove -y && \
+  apt-get clean && \
+  rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+
+
+# install app
+RUN git -C /app/ clone --depth 1 --branch ${MDLP_VERSION} \
+        https://github.com/olofvndrhr/manga-dlp.git /app && \
+    pip install -r /app/requirements.txt && \
+    rm -rf \
+      /app/docker \
+      /app/contrib \
+      /app/tests
+
+
+# copy files to container
+COPY rootfs /
+
+WORKDIR /app
+

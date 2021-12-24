@@ -53,6 +53,8 @@ def main(manga_url='',
     # loop trough every chapter in readin file
     for url in readin_list(manga_readlist):
       ApiUsed = check_api(url)
+      if not ApiUsed:
+        continue
       if log_verbose:
         print(f'Api used: {ApiUsed}')
       # get manga
@@ -60,6 +62,8 @@ def main(manga_url='',
   else:
     # single manga
     ApiUsed = check_api(manga_url)
+    if not ApiUsed:
+      exit(1)
     if log_verbose:
         print(f'Api used: {ApiUsed}')
     # get manga
@@ -88,6 +92,10 @@ def check_api(manga_url):
   # this is only for testing multiple apis
   elif api_test.search(manga_url):
     pass
+  # no supported api found
+  else:
+    print(f'No supported api in link found\n{manga_url}')
+    return False
 
 
 # main function to get the chapters
