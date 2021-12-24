@@ -109,9 +109,6 @@ def get_manga(ApiUsed, manga_url, manga_language, manga_chapters, manga_list_cha
   manga_chapter_data = Api.manga_chapter_data
   # crate chapter list
   manga_chapter_list = Api.create_chapter_list(manga_chapter_data, manga_forcevol)
-  # sort chapter list for volumes
-  if manga_forcevol:
-    manga_chapter_list.sort(key=lambda x: x.split(':')[0])
 
   # print infos
   print('\n=========================================')
