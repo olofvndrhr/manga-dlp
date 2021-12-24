@@ -72,7 +72,6 @@ steps:
   <<: *docker_build
   settings:
     repo: olofvndrhr/manga-dlp
-    registry: hub.docker.com
     context: docker
     dockerfile: docker/Dockerfile.arm64
     auto_tag: true
@@ -111,7 +110,6 @@ steps:
   <<: *docker_build
   settings:
     repo: olofvndrhr/manga-dlp
-    registry: hub.docker.com
     context: docker
     dockerfile: docker/Dockerfile.amd64
     auto_tag: true
