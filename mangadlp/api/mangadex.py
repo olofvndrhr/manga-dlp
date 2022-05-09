@@ -1,146 +1,242 @@
-import requests
 import re
-import mangadlp.utils as MUtils
+from time import sleep
+import requests
+import mangadlp.utils as utils
 
 
-class Mangadex():
+class Mangadex:
 
-  # api information
-  api_base_url = 'https://api.mangadex.org'
-  img_base_url = 'https://uploads.mangadex.org'
+    # api information
+    api_base_url = "https://api.mangadex.org"
+    img_base_url = "https://uploads.mangadex.org"
+    # get infos to initiate class
 
+    def __init__(self, manga_url_uuid, manga_lang, forcevol, verbose):
+        # static info
+        self.manga_url_uuid = manga_url_uuid
+        self.manga_lang = manga_lang
+        self.forcevol = forcevol
+        self.verbose = verbose
 
-  # get infos to initiate class
-  def __init__(self, manga_url, manga_lang):
-    self.manga_url = manga_url
-    self.manga_lang = manga_lang
-    self.manga_uuid = self.get_manga_uuid()
-    self.manga_title = self.get_manga_title(self.manga_uuid)
-    self.manga_chapter_data = self.get_manga_chapters(self.manga_uuid)
+        # api stuff
+        self.api_content_ratings = "contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic"
+        self.api_language = f"translatedLanguage[]={self.manga_lang}"
+        self.api_additions = f"{self.api_language}&{self.api_content_ratings}"
 
+        # infos from functions
+        self.manga_uuid = self.get_manga_uuid()
+        self.manga_data = self.get_manga_data()
+        self.manga_title = self.get_manga_title()
+        self.manga_chapter_data = self.get_chapter_data()
 
-  # get the uuid for the manga
-  def get_manga_uuid(self):
-    # isolate id from url
-    uuid_regex = re.compile('[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}')
-    # check for new mangadex id
-    if uuid_regex.search(self.manga_url):
-      manga_uuid = uuid_regex.search(self.manga_url)[0]
-    else:
-      print('No valid uuid found')
-      exit(1)
-    # check if the manga exists
-    try:
-      req = requests.get(f'{self.api_base_url}/manga/{manga_uuid}')
-    except:
-      print('Error. Maybe the MangaDex API is down?')
-      exit(1)
-    else:
-      # check mangadex status
-      response = req.json()['result']
-      if not response == 'ok':
-        print('Manga not found')
-        exit(1)
+    # make initial request
+    def get_manga_data(self):
+        if self.verbose:
+            print(f"INFO: Getting manga data for: {self.manga_uuid}")
+        counter = 1
+        while counter < 3:
+            try:
+                manga_data = requests.get(
+                    f"{self.api_base_url}/manga/{self.manga_uuid}"
+                )
+            except:
+                if counter >= 3:
+                    print("ERR: Maybe the MangaDex API is down?")
+                    exit(1)
+                else:
+                    print("ERR: Mangadex API not reachable. Retrying")
+                    sleep(2)
+                    counter += 1
+            else:
+                break
+        # check if manga exists
+        if manga_data.json()["result"] != "ok":
+            print("ERR: Manga not found")
+            exit(1)
 
-      return manga_uuid
+        return manga_data
 
+    # get the uuid for the manga
+    def get_manga_uuid(self):
+        # isolate id from url
+        uuid_regex = re.compile(
+            "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
+        )
+        # check for new mangadex id
+        if not uuid_regex.search(self.manga_url_uuid):
+            print("ERR: No valid UUID found")
+            exit(1)
+        manga_uuid = uuid_regex.search(self.manga_url_uuid)[0]
+        return manga_uuid
 
-  # get the title of the manga (and fix the filename)
-  def get_manga_title(self, manga_uuid):
-    req = requests.get(f'{self.api_base_url}/manga/{manga_uuid}')
-    api_resp = req.json()
-    try:
-      title = api_resp['data']['attributes']['title'][self.manga_lang]
-    except:
-      # search in alt titles
-      try:
-        alt_titles = {}
-        for title in api_resp['data']['attributes']['altTitles']:
-          alt_titles.update(title)
-        title = alt_titles[self.manga_lang]
-      except: # no title on requested language found
-        print('Chapter in requested language not found.')
-        exit(1)
+    # get the title of the manga (and fix the filename)
+    def get_manga_title(self):
+        if self.verbose:
+            print(f"INFO: Getting manga title for: {self.manga_uuid}")
+        manga_data = self.manga_data.json()
+        try:
+            title = manga_data["data"]["attributes"]["title"][self.manga_lang]
+        except:
+            # search in alt titles
+            try:
+                alt_titles = {}
+                for title in manga_data["data"]["attributes"]["altTitles"]:
+                    alt_titles.update(title)
+                title = alt_titles[self.manga_lang]
+            except:  # no title on requested language found
+                print("ERR: Chapter in requested language not found.")
+                exit(1)
+        return utils.fix_name(title)
 
-    return MUtils.fix_name(title)
+    # check if chapters are available in requested language
+    def check_chapter_lang(self):
+        if self.verbose:
+            print(
+                f"INFO: Checking for chapters in specified language for: {self.manga_uuid}"
+            )
+        r = requests.get(
+            f"{self.api_base_url}/manga/{self.manga_uuid}/feed?limit=0&{self.api_additions}"
+        )
+        try:
+            total_chapters = r.json()["total"]
+        except:
+            print(
+                "ERR: Error retrieving the chapters list. Did you specify a valid language code?"
+            )
+            return 0
+        else:
+            if total_chapters == 0:
+                print("ERR: No chapters available to download!")
+                return 0
 
+        return total_chapters
 
-  # get all chapter data for further parsing
-  def get_manga_chapters(self, manga_uuid):
-    content_ratings = 'contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic'
-    chap_data_list = []
-    req = requests.get(f'{self.api_base_url}/manga/{manga_uuid}/feed?limit=0&translatedLanguage[]={self.manga_lang}&{content_ratings}')
-    try:
-      total = req.json()['total']
-    except:
-      print('Error retrieving the chapters list. Did you specify a valid language code?')
-      exit(1)
-    if total == 0:
-      print('No chapters available to download!')
-      exit(0)
-    last_chap = ['', '']
-    offset = 0
-    while offset < total: # if more than 500 chapters
-      req = requests.get(f'{self.api_base_url}/manga/{manga_uuid}/feed?order[chapter]=asc&order[volume]=asc&limit=500&translatedLanguage[]={self.manga_lang}&offset={offset}&{content_ratings}')
-      for chapter in req.json()['data']:
-        chap_num = chapter['attributes']['chapter']
-        chap_vol = chapter['attributes']['volume']
-        chap_uuid = chapter['id']
-        chap_hash = chapter['attributes']['hash']
-        chap_data = chapter['attributes']['data']
-        chap_name = chapter['attributes']['title']
-        if not chap_name == None:
-          chap_name = MUtils.fix_name(chap_name)
-        # check if the chapter is external (cant download them)
-        chap_external = chapter['attributes']['externalUrl']
-        # name chapter "oneshot" if there is no chapter number
-        if chap_external == None and chap_num == None:
-          # check for duplicates
-          if last_chap[0] == chap_vol and last_chap[1] == chap_num:
-            continue
-          chap_data_list.append([chap_vol, 'Oneshot', chap_uuid, chap_hash, chap_name, chap_data])
-        # else add chapter number
-        elif chap_external == None:
-          # check for duplicates
-          if last_chap[0] == chap_vol and last_chap[1] == chap_num:
-            continue
-          chap_data_list.append([chap_vol, chap_num, chap_uuid, chap_hash, chap_name, chap_data])
-        last_chap = [chap_vol, chap_num]
-      offset += 500
+    # get chapter data like name, uuid etc
+    def get_chapter_data(self):
+        if self.verbose:
+            print(f"INFO: Getting chapter data for: {self.manga_uuid}")
+        api_sorting = "order[chapter]=asc&order[volume]=asc"
+        # check for chapters in specified lang
+        total_chapters = self.check_chapter_lang()
+        if total_chapters == 0:
+            exit(1)
 
-    return chap_data_list
+        chapter_data = {}
+        last_chapter = ["", ""]
+        offset = 0
+        while offset < total_chapters:  # if more than 500 chapters
+            r = requests.get(
+                f"{self.api_base_url}/manga/{self.manga_uuid}/feed?{api_sorting}&limit=500&offset={offset}&{self.api_additions}"
+            )
+            for chapter in r.json()["data"]:
+                # chapter infos from feed
+                chapter_num = chapter["attributes"]["chapter"]
+                chapter_vol = chapter["attributes"]["volume"]
+                chapter_uuid = chapter["id"]
+                chapter_name = chapter["attributes"]["title"]
+                chapter_external = chapter["attributes"]["externalUrl"]
 
+                # check for chapter title and fix it
+                if chapter_name is None:
+                    chapter_name = "No Title"
+                else:
+                    chapter_name = utils.fix_name(chapter_name)
+                # check if the chapter is external (can't download them)
+                if chapter_external is not None:
+                    continue
+                # name chapter "oneshot" if there is no chapter number
+                if chapter_num is None:
+                    chapter_num = "Oneshot"
 
-  def get_chapter_index(self, chapter, forcevol):
-    # get index of chapter
-    if forcevol:
-      chapter_index = next(c for c in self.manga_chapter_data if f'{c[0]}:{c[1]}' == chapter)
-    else:
-      chapter_index = next(c for c in self.manga_chapter_data if c[1] == chapter)
+                # check if its duplicate from the last entry
+                if last_chapter[0] == chapter_vol and last_chapter[1] == chapter_num:
+                    continue
 
-    return chapter_index
+                # export chapter data as a dict
+                chapter_index = (
+                    chapter_num if not self.forcevol else f"{chapter_vol}:{chapter_num}"
+                )
+                chapter_data[chapter_index] = [
+                    chapter_uuid,
+                    chapter_vol,
+                    chapter_num,
+                    chapter_name,
+                ]
+                # add last chapter to duplicate check
+                last_chapter = [chapter_vol, chapter_num]
 
+            # increase offset for mangas with more than 500 chapters
+            offset += 500
 
-  # create list of chapters
-  def create_chapter_list(self, chapter_data, forcevol):
-    chapter_list = []
-    for chap in chapter_data:
-      volume_number = chap[0]
-      chapter_number = chap[1]
-      if forcevol:
-        chapter_list.append(f'{volume_number}:{chapter_number}')
-      else:
-        chapter_list.append(chapter_number)
+        return chapter_data
 
-    return chapter_list
+    # get images for the chapter (mangadex@home)
+    def get_chapter_images(self, chapter):
+        if self.verbose:
+            print(f"INFO: Getting chapter images for: {self.manga_uuid}")
+        athome_url = f"{self.api_base_url}/at-home/server"
+        chapter_uuid = self.manga_chapter_data[chapter][0]
 
+        r = requests.get(f"{athome_url}/{chapter_uuid}")
+        api_data = r.json()
+        if api_data["result"] != "ok":
+            print(f"ERR: No chapter with the id {chapter_uuid} found")
+        elif api_data["chapter"]["data"] is None:
+            print(f"ERR: No chapter data found for chapter {chapter_uuid}")
 
-  # get list of image urls
-  def get_img_urls(self, images, chapter_hash):
-    img_urls = []
-    for img in images:
-      img_urls.append(f'{self.img_base_url}/data/{chapter_hash}/{img}')
+        chapter_hash = api_data["chapter"]["hash"]
+        chapter_img_data = api_data["chapter"]["data"]
 
-    return img_urls
+        # get list of image urls
+        image_urls = []
+        for image in chapter_img_data:
+            image_urls.append(f"{self.img_base_url}/data/{chapter_hash}/{image}")
 
+        return image_urls
 
+    # create list of chapters
+    def create_chapter_list(self):
+        if self.verbose:
+            print(f"INFO: Creating chapter list for: {self.manga_uuid}")
+        chapter_list = []
+        for chapter in self.manga_chapter_data.items():
+            chapter_info = self.get_chapter_infos(chapter[0])
+            chapter_number = chapter_info["chapter"]
+            volume_number = chapter_info["volume"]
+            if self.forcevol:
+                chapter_list.append(f"{volume_number}:{chapter_number}")
+            else:
+                chapter_list.append(chapter_number)
+
+        return chapter_list
+
+    # create filename for chapter
+    def get_filename(self, chapter):
+        if self.verbose:
+            print(f"INFO: Creating filename for: {self.manga_uuid}")
+        chapter_info = self.get_chapter_infos(chapter)
+        chapter_name = chapter_info["name"]
+        chapter_num = chapter_info["chapter"]
+        volume_number = chapter_info["volume"]
+
+        return utils.get_filename(
+            chapter_name, volume_number, chapter_num, self.forcevol
+        )
+
+    # create easy to access chapter infos
+    def get_chapter_infos(self, chapter):
+        if self.verbose:
+            print(
+                f"INFO: Getting chapter infos for: {self.manga_chapter_data[chapter][0]}"
+            )
+        chapter_uuid = self.manga_chapter_data[chapter][0]
+        chapter_vol = self.manga_chapter_data[chapter][1]
+        chapter_num = self.manga_chapter_data[chapter][2]
+        chapter_name = self.manga_chapter_data[chapter][3]
+
+        return {
+            "uuid": chapter_uuid,
+            "volume": chapter_vol,
+            "chapter": chapter_num,
+            "name": chapter_name,
+        }
