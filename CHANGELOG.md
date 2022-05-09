@@ -9,6 +9,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.0.2] - 2022-05-09
+
+### Fixed
+- Restart failed api requests
+- Added wait time for image gathering, as to stop api rate limiting from mangadex
+- "--wait" options now works properly again
+
 ## [2.0.1] - 2022-05-09
 
 ### Fixed
