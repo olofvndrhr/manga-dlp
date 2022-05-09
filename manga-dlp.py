@@ -4,7 +4,7 @@ import argparse
 
 def main(args):
     mangadlp.main(
-        args.url,
+        args.url_uuid,
         args.lang,
         args.chapters,
         args.read,
@@ -24,9 +24,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "-u",
         "--url",
-        dest="url",
+        "--uuid",
+        dest="url_uuid",
         required=False,
-        help="URL of the manga",
+        help="URL or UUID of the manga",
         action="store",
     )
     parser.add_argument(

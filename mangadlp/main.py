@@ -1,14 +1,15 @@
-from pathlib import Path
 import re
-import mangadlp.utils as utils
+from pathlib import Path
+
 import mangadlp.downloader as downloader
+import mangadlp.utils as utils
 
 # supported api's
 from mangadlp.api.mangadex import Mangadex
 
 
 def main(
-    manga_url="",
+    manga_url_uuid="",
     manga_language="en",
     manga_chapters=None,
     manga_readlist="",
@@ -22,7 +23,7 @@ def main(
     """Download Mangas from supported sites\n
 
     Args:\n
-      url (str) -- Manga URL to Download. No defaults\n
+      url (str) -- Manga URL or UUID to Download. No defaults\n
       lang (str) -- Language to download chapters in. Defaults to "en" -> english\n
       chapter (str) -- Chapters to download "all" for every chapter available. Defaults to none\n
       readlist (str) -- List of chapters to read in. One link per line. No defaults\n
@@ -40,16 +41,18 @@ def main(
     if not manga_list_chapters and manga_chapters is None:
         # no chapters to download were given
         print(
-            f'You need to specify one or more chapters to download. To see all chapters use "--list"'
+            f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
         )
         exit(1)
     # no url and no readin list given
-    elif not manga_url and not manga_readlist:
-        print(f'You need to specify a manga url with "-u" or a list with "--read"')
+    elif not manga_url_uuid and not manga_readlist:
+        print(
+            f'ERR: You need to specify a manga url/uuid with "-u" or a list with "--read"'
+        )
         exit(1)
     # url and readin list given
-    elif manga_url and manga_readlist:
-        print(f'You can only use "-u" or "--read". Dont specify both')
+    elif manga_url_uuid and manga_readlist:
+        print(f'ERR: You can only use "-u" or "--read". Dont specify both')
         exit(1)
 
     # check if readin file was specified
@@ -59,8 +62,6 @@ def main(
             api_used = check_api(url)
             if not api_used:
                 continue
-            if log_verbose:
-                print(f"Api used: {api_used}")
             # get manga
             get_manga(
                 api_used,
@@ -76,15 +77,13 @@ def main(
             )
     else:
         # single manga
-        api_used = check_api(manga_url)
+        api_used = check_api(manga_url_uuid)
         if not api_used:
             exit(1)
-        if log_verbose:
-            print(f"Api used: {api_used}")
         # get manga
         get_manga(
             api_used,
-            manga_url,
+            manga_url_uuid,
             manga_language,
             manga_chapters,
             manga_list_chapters,
@@ -111,16 +110,19 @@ def readin_list(manga_readlist):
 def check_api(manga_url):
     # apis to check
     api_mangadex = re.compile("mangadex.org")
+    api_mangadex2 = re.compile(
+        "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
+    )
     api_test = re.compile("test.test")
     # check url for match
-    if api_mangadex.search(manga_url):
+    if api_mangadex.search(manga_url) or api_mangadex2.search(manga_url):
         return Mangadex
     # this is only for testing multiple apis
     elif api_test.search(manga_url):
         pass
     # no supported api found
     else:
-        print(f"No supported api in link found\n{manga_url}")
+        print(f"ERR: No supported api in link/uuid found\n{manga_url}")
         return False
 
 
@@ -137,26 +139,28 @@ def get_manga(
     download_wait,
     log_verbose,
 ):
+    # show api used
+    if log_verbose:
+        print(f"INFO: API used: {api_used}")
     # init api
-    Api = api_used(manga_url, manga_language)
+    Api = api_used(manga_url, manga_language, manga_forcevol, log_verbose)
     # get manga title and uuid
     manga_uuid = Api.manga_uuid
     manga_title = Api.manga_title
-    # get chapter data
-    manga_chapter_data = Api.manga_chapter_data
     # crate chapter list
-    manga_chapter_list = Api.create_chapter_list(manga_chapter_data, manga_forcevol)
+    manga_chapter_list = Api.create_chapter_list()
 
-    # print infos
-    print("\n=========================================")
-    print(f"Manga Name: {manga_title}")
-    print(f"UUID: {manga_uuid}")
-    print(f"Total chapters: {len(manga_chapter_list)}")
+    # show infos
+    print_divider = "========================================="
+    print(f"\n{print_divider}")
+    print(f"INFO: Manga Name: {manga_title}")
+    print(f"INFO: Manga UUID: {manga_uuid}")
+    print(f"INFO: Total chapters: {len(manga_chapter_list)}")
 
     # list chapters if manga_list_chapters is true
     if manga_list_chapters:
-        print(f'Available Chapters:\n{", ".join(manga_chapter_list)}')
-        print("=========================================\n")
+        print(f'INFO: Available Chapters:\n{", ".join(manga_chapter_list)}')
+        print(f"{print_divider}\n")
         return
 
     # check chapters to download if not all
@@ -166,8 +170,8 @@ def get_manga(
         chapters_to_download = utils.get_chapter_list(manga_chapters)
 
     # show chapters to download
-    print(f'Chapters selected:\n{", ".join(chapters_to_download)}')
-    print("=========================================\n")
+    print(f'INFO: Chapters selected:\n{", ".join(chapters_to_download)}')
+    print(f"{print_divider}\n")
 
     # create manga folder
     manga_path = Path(f"{download_path}/{manga_title}")
@@ -175,36 +179,23 @@ def get_manga(
 
     # main download loop
     for chapter in chapters_to_download:
-        # get index of chapter
-        chapter_index = Api.get_chapter_index(chapter, manga_forcevol)
+        # get chapter infos
+        chapter_infos = Api.get_chapter_infos(chapter)
 
-        # default mapping of chapter data
-        chapter_vol = chapter_index[0]
-        chapter_num = chapter_index[1]
-        chapter_uuid = chapter_index[2]
-        chapter_hash = chapter_index[3]
-        chapter_name = chapter_index[4]
-        chapter_img_data = chapter_index[5]
-        # create image urls from img data
-        image_urls = Api.get_img_urls(chapter_img_data, chapter_hash)
+        # get image urls for chapter
+        chapter_image_urls = Api.get_chapter_images(chapter)
 
         # get filename for chapter
-        chapter_filename = utils.get_filename(
-            chapter_name, chapter_vol, chapter_num, manga_forcevol
-        )
+        chapter_filename = Api.get_filename(chapter)
 
         # set download path for chapter
         chapter_path = manga_path / chapter_filename
 
         # check if chapter already exists.
         # check for folder if option nocbz is given. if nocbz is not given, the folder will be overwritten
-        if utils.check_existence(chapter_path, manga_nocbz) and manga_forcevol:
-            print(
-                f"- Vol {chapter_vol} Chapter {chapter_num} already exists. Skipping\n"
-            )
-            continue
-        elif utils.check_existence(chapter_path, manga_nocbz):
-            print(f"- Chapter {chapter_num} already exists. Skipping\n")
+
+        if utils.check_existence(chapter_path, manga_nocbz):
+            print(f"INFO: '{chapter_filename}' already exists. Skipping\n")
             continue
 
         # create chapter folder (skips it if it already exists)
@@ -212,57 +203,46 @@ def get_manga(
 
         # verbose log
         if log_verbose:
-            print(f"Chapter UUID: {chapter_uuid}")
+            print(f"INFO: Chapter UUID: {chapter_infos['uuid']}")
             print(
-                f"Filename: {chapter_path}\n"
+                f"INFO: Filename: '{chapter_filename}'\n"
                 if manga_nocbz
-                else f"Filename: {chapter_path}.cbz\n"
+                else f"INFO: Filename: '{chapter_filename}.cbz'\n"
             )
-            print(f"Image URLS: {image_urls}")
-            print(f"DEBUG: Downloading Volume {chapter_vol}")
+            print(f"INFO: Image URLS: {chapter_image_urls}")
 
         # log
-        if manga_forcevol:
-            print(f"+ Downloading Volume {chapter_vol} Chapter {chapter_num}")
-        else:
-            print(f"+ Downloading Chapter {chapter_num}")
+        print(f"INFO: Downloading: '{chapter_filename}'")
 
         # download images
         try:
             downloader.download_chapter(
-                image_urls, chapter_path, download_wait, log_verbose
+                chapter_image_urls, chapter_path, download_wait, log_verbose
             )
+        except KeyboardInterrupt:
+            print("ERR: Stopping")
+            exit(1)
         except:
-            if manga_forcevol:
-                print(
-                    f"Cant download volume {chapter_vol} chapter {chapter_num}. Exiting"
-                )
-            else:
-                print(f"Cant download chapter {chapter_num}. Exiting")
-                exit(1)
+            print(f"ERR: Cant download: '{chapter_filename}'. Exiting")
+
         else:
             # Done with chapter
-            if manga_forcevol:
-                print(
-                    f"Successfully downloaded volume {chapter_vol} chapter {chapter_num}"
-                )
-            else:
-                print(f"Successfully downloaded chapter {chapter_num}")
+            print(f"INFO: Successfully downloaded: '{chapter_filename}'")
 
         # make cbz of folder
         if not manga_nocbz:
-            print("\n+ Creating .cbz archive")
+            print("INFO: Creating .cbz archive")
             try:
                 utils.make_archive(chapter_path)
             except:
-                print("Could not make cbz archive")
+                print("ERR: Could not make cbz archive")
                 exit(1)
 
         # done with chapter
-        print("Done with chapter")
-        print("------------------------------\n")
+        print("INFO: Done with chapter")
+        print("-----------------------------------------\n")
 
     # done with manga
-    print("=============================")
-    print(f"Done with manga: {manga_title}")
-    print("=============================\n")
+    print(f"{print_divider}")
+    print(f"INFO: Done with manga: {manga_title}")
+    print(f"{print_divider}\n")

@@ -1,11 +1,10 @@
 import shutil
-import requests
-from time import sleep
 from pathlib import Path
+from time import sleep
+import requests
 
-
+# download images
 def download_chapter(image_urls, chapter_path, md_wait=0.5, md_verbose=False):
-    # download images
     img_num = 1
     for img in image_urls:
         # set image path
@@ -14,7 +13,7 @@ def download_chapter(image_urls, chapter_path, md_wait=0.5, md_verbose=False):
             # print('Try getting ' + img)
             req = requests.get(img, stream=True)
         except:
-            print(f"Request for image {img} failed, retrying")
+            print(f"ERR: Request for image {img} failed, retrying")
             sleep(md_wait)
             req = requests.get(img, stream=True)
 
@@ -25,10 +24,10 @@ def download_chapter(image_urls, chapter_path, md_wait=0.5, md_verbose=False):
 
             # verbose logging
             if md_verbose:
-                print(f"  Downloaded image {img_num}")
+                print(f"INFO: Downloaded image {img_num}")
 
             img_num += 1
             sleep(0.5)
         else:
-            print("Image {img} could not be downloaded. Exiting")
+            print(f"ERR: Image {img} could not be downloaded. Exiting")
             exit(1)
