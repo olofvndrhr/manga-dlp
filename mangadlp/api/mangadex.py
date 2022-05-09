@@ -177,12 +177,33 @@ class Mangadex:
         athome_url = f"{self.api_base_url}/at-home/server"
         chapter_uuid = self.manga_chapter_data[chapter][0]
 
-        r = requests.get(f"{athome_url}/{chapter_uuid}")
-        api_data = r.json()
-        if api_data["result"] != "ok":
-            print(f"ERR: No chapter with the id {chapter_uuid} found")
-        elif api_data["chapter"]["data"] is None:
-            print(f"ERR: No chapter data found for chapter {chapter_uuid}")
+        # retry up to two times if the api applied ratelimits
+        api_error = False
+        counter = 1
+        while counter < 3:
+            try:
+                r = requests.get(f"{athome_url}/{chapter_uuid}")
+                api_data = r.json()
+                if api_data["result"] != "ok":
+                    print(f"ERR: No chapter with the id {chapter_uuid} found")
+                    api_error = True
+                    raise IndexError
+                elif api_data["chapter"]["data"] is None:
+                    print(f"ERR: No chapter data found for chapter {chapter_uuid}")
+                    api_error = True
+                    raise IndexError
+                else:
+                    api_error = False
+                    break
+            except:
+                print(f"ERR: Retrying in a few seconds")
+                counter += 1
+                sleep(wait_time + 2)
+                continue
+        # check if result is ok
+        else:
+            if api_error:
+                return None
 
         chapter_hash = api_data["chapter"]["hash"]
         chapter_img_data = api_data["chapter"]["data"]

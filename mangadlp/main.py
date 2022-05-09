@@ -149,6 +149,8 @@ def get_manga(
     manga_title = Api.manga_title
     # crate chapter list
     manga_chapter_list = Api.create_chapter_list()
+    # create skipped chapters list
+    skipped_chapters = []
 
     # show infos
     print_divider = "========================================="
@@ -159,7 +161,7 @@ def get_manga(
 
     # list chapters if manga_list_chapters is true
     if manga_list_chapters:
-        print(f'INFO: Available Chapters:\n{", ".join(manga_chapter_list)}')
+        print(f"INFO: Available Chapters:\n{', '.join(manga_chapter_list)}")
         print(f"{print_divider}\n")
         return
 
@@ -170,7 +172,7 @@ def get_manga(
         chapters_to_download = utils.get_chapter_list(manga_chapters)
 
     # show chapters to download
-    print(f'INFO: Chapters selected:\n{", ".join(chapters_to_download)}')
+    print(f"INFO: Chapters selected:\n{', '.join(chapters_to_download)}")
     print(f"{print_divider}\n")
 
     # create manga folder
@@ -184,6 +186,17 @@ def get_manga(
 
         # get image urls for chapter
         chapter_image_urls = Api.get_chapter_images(chapter, download_wait)
+
+        # check if the image urls are empty. if yes skip this chapter (for mass downloads)
+        if not chapter_image_urls:
+            print(
+                f"ERR: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
+            )
+            # add to skipped chapters list
+            skipped_chapters.append(
+                f"{chapter_infos['volume']}:{chapter_infos['chapter']}"
+            )
+            continue
 
         # get filename for chapter
         chapter_filename = Api.get_filename(chapter)
@@ -245,4 +258,6 @@ def get_manga(
     # done with manga
     print(f"{print_divider}")
     print(f"INFO: Done with manga: {manga_title}")
+    if len(skipped_chapters) >= 1:
+        print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
     print(f"{print_divider}\n")
