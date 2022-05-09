@@ -171,7 +171,7 @@ class Mangadex:
         return chapter_data
 
     # get images for the chapter (mangadex@home)
-    def get_chapter_images(self, chapter):
+    def get_chapter_images(self, chapter, wait_time):
         if self.verbose:
             print(f"INFO: Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
@@ -192,6 +192,7 @@ class Mangadex:
         for image in chapter_img_data:
             image_urls.append(f"{self.img_base_url}/data/{chapter_hash}/{image}")
 
+        sleep(wait_time)
         return image_urls
 
     # create list of chapters

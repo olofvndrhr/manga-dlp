@@ -89,6 +89,7 @@ if __name__ == "__main__":
         dest="wait",
         required=False,
         type=float,
+        default=0.5,
         help="Time to wait for each picture to download in seconds(float). Defaults 0.5",
     )
     parser.add_argument(

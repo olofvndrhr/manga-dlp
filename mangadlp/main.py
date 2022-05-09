@@ -183,7 +183,7 @@ def get_manga(
         chapter_infos = Api.get_chapter_infos(chapter)
 
         # get image urls for chapter
-        chapter_image_urls = Api.get_chapter_images(chapter)
+        chapter_image_urls = Api.get_chapter_images(chapter, download_wait)
 
         # get filename for chapter
         chapter_filename = Api.get_filename(chapter)

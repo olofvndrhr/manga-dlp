@@ -4,7 +4,7 @@ from time import sleep
 import requests
 
 # download images
-def download_chapter(image_urls, chapter_path, md_wait=0.5, md_verbose=False):
+def download_chapter(image_urls, chapter_path, md_wait, md_verbose):
     img_num = 1
     for img in image_urls:
         # set image path
@@ -27,7 +27,7 @@ def download_chapter(image_urls, chapter_path, md_wait=0.5, md_verbose=False):
                 print(f"INFO: Downloaded image {img_num}")
 
             img_num += 1
-            sleep(0.5)
+            sleep(md_wait)
         else:
             print(f"ERR: Image {img} could not be downloaded. Exiting")
             exit(1)
