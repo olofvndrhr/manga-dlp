@@ -195,7 +195,8 @@ def get_manga(
             # add to skipped chapters list
             skipped_chapters.append(
                 f"{chapter_infos['volume']}:{chapter_infos['chapter']}"
-            )
+            ) if manga_forcevol else skipped_chapters.append(chapter_infos["chapter"])
+
             continue
 
         # get filename for chapter
