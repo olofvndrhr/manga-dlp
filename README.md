@@ -11,11 +11,16 @@
 ---
 
 ## Description
-A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support for other sites is planned.
 
-Before downloading a new chapter, the script always checks if there is already a chapter with the same name in the download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new chapters without any additional setup.
+A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support
+for other sites is planned.
 
-The default behaiviour is to pack the images to a [cbz archvie](https://en.wikipedia.org/wiki/Comic_book_archive). If you just want the folder with all the pictures use the flag `--nocbz`.
+Before downloading a new chapter, the script always checks if there is already a chapter with the same name in the
+download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new
+chapters without any additional setup.
+
+The default behaiviour is to pack the images to a [cbz archvie](https://en.wikipedia.org/wiki/Comic_book_archive). If
+you just want the folder with all the pictures use the flag `--nocbz`.
 
 ## *Currently* Supported sites
 
@@ -38,14 +43,13 @@ python manga-dlp.py <options>
 python3 manga-dlp.py <options>
 ```
 
-
 ### With pip (pypi)
+
 (not yet done)
 
-
 ### With docker
-See the docker [README](./docker/README.md)
 
+See the docker [README](./docker/README.md)
 
 ## Options
 
@@ -55,7 +59,7 @@ usage: manga-dlp.py [-h] [-u URL] [-c CHAPTERS] [-p PATH] [-l LANG] [--read READ
 
 optional arguments:
 -h, --help                          Show this help message and exit
--u URL, --url URL                   URL of the manga
+-u URL/UUID, --url URL/UUID         URL or UUID of the manga
 -c CHAPTERS, --chapters CHAPTERS    Chapters to download
 -p PATH, --path PATH                Download path. Defaults to "<script_dir>/downloads"
 -l LANG, --language LANG            Manga language. Defaults to "en" --> english
@@ -68,45 +72,49 @@ optional arguments:
 ```
 
 ### Downloads file-structure
+
 ```txt
 .
 └── <download path>/
     └── <manga title>/
         └── <chapter title>/
 ```
+
 #### Example:
+
 ```txt
 ./downloads/mangatitle/chaptertitle(.cbz)
 ```
 
 ### Read list of links from file
 
-With the option `--read` you can specify a file with links to multiple mangas. They will be parsed from top to bottom one at a time. Every link will be matched for the right api to use.
-It is important that you only have one link per line, otherwise they can't be parsed.
+With the option `--read` you can specify a file with links to multiple mangas. They will be parsed from top to bottom
+one at a time. Every link will be matched for the right api to use. It is important that you only have one link per
+line, otherwise they can't be parsed.
 
 #### Example:
+
 ```txt
 # mangas.txt
 link1
 link2
 link3
 ```
+
 `python3 manga-dlp.py --read mangas.txt --list`
 
 This will list all available chapters for link1, link2 and link3.
 
-
 ### Set download path
 
-With the option `-p/--path` you can specify a path to download the chapters to.
-The default path is `<script_dir>/downloads`.
-Absolute and relative paths are supported.
+With the option `-p/--path` you can specify a path to download the chapters to. The default path
+is `<script_dir>/downloads`. Absolute and relative paths are supported.
 
 #### Example:
+
 `python3 manga-dlp.py <other options> --path /media/mangas`
 
 This will save all mangas/chapters in the path `/media/mangas/<manga title>/<chapter name>`
-
 
 ## Contribution / Bugs
 
@@ -119,7 +127,9 @@ Otherwise you can open a issue with the name of the site which you want support 
 If you encounter any bugs, also just open a issue with a description of the problem.
 
 ## TODO's
-* <del>Make docker container for easy distribution</del> --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
+
+* <del>Make docker container for easy distribution</del>
+  --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
 * Make pypi package
 * Add more supported sites
 
