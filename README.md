@@ -2,16 +2,11 @@
 
 ## python script to download mangas
 
----
-
 [![Build Status](https://drone.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://drone.44net.ch/olofvndrhr/manga-dlp)
-
 [![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=677dfde6a5c7ea85463eb2fe4133c47f71494494)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
-
----
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Description
-
 A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support
 for other sites is planned.
 
@@ -19,7 +14,7 @@ Before downloading a new chapter, the script always checks if there is already a
 download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new
 chapters without any additional setup.
 
-The default behaiviour is to pack the images to a [cbz archvie](https://en.wikipedia.org/wiki/Comic_book_archive). If
+The default behaiviour is to pack the images to a [cbz archive](https://en.wikipedia.org/wiki/Comic_book_archive). If
 you just want the folder with all the pictures use the flag `--nocbz`.
 
 ## *Currently* Supported sites
@@ -27,6 +22,15 @@ you just want the folder with all the pictures use the flag `--nocbz`.
 * [Mangadex.org](https://mangadex.org/)
 
 ## Usage
+
+### Quick start
+
+```sh
+python3 manga-dlp.py \
+          --url https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu \
+          --language "en" \
+          --chapters "all"
+```
 
 ### With GitHub
 

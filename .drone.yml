@@ -12,9 +12,9 @@ platform:
 
 trigger:
   branch:
-  - master
+    - master
   event:
-  - push
+    - push
 
 # anchors
 sq_secrets: &sq_secrets
@@ -29,12 +29,12 @@ sq_analysis: &sq_analysis
 
 # build steps
 steps:
-- name: 'sonarqube: analyse code'
-  <<: *sq_analysis
-  settings:
-    <<: *sq_secrets
-    sources: .
-    exclusions: contrib/**
+  - name: 'sonarqube: analyse code'
+    <<: *sq_analysis
+    settings:
+      <<: *sq_secrets
+      sources: .
+      exclusions: contrib/**
 
 
 
@@ -52,7 +52,7 @@ platform:
 
 trigger:
   event:
-  - tag
+    - tag
 
 # anchors
 cr_secrets: &cr_secrets
@@ -68,15 +68,15 @@ docker_build: &docker_build
 
 # build steps arm64
 steps:
-- name: 'build and publish docker image'
-  <<: *docker_build
-  settings:
-    repo: olofvndrhr/manga-dlp
-    context: docker
-    dockerfile: docker/Dockerfile.arm64
-    auto_tag: true
-    auto_tag_suffix: linux-arm64
-    <<: *cr_secrets
+  - name: 'build and publish docker image'
+    <<: *docker_build
+    settings:
+      repo: olofvndrhr/manga-dlp
+      context: docker
+      dockerfile: docker/Dockerfile.arm64
+      auto_tag: true
+      auto_tag_suffix: linux-arm64
+      <<: *cr_secrets
 
 
 ---
@@ -90,7 +90,7 @@ platform:
 
 trigger:
   event:
-  - tag
+    - tag
 
 # anchors
 cr_secrets: &cr_secrets
@@ -106,15 +106,15 @@ docker_build: &docker_build
 
 # build steps amd64
 steps:
-- name: 'build and publish docker image'
-  <<: *docker_build
-  settings:
-    repo: olofvndrhr/manga-dlp
-    context: docker
-    dockerfile: docker/Dockerfile.amd64
-    auto_tag: true
-    auto_tag_suffix: linux-amd64
-    <<: *cr_secrets
+  - name: 'build and publish docker image'
+    <<: *docker_build
+    settings:
+      repo: olofvndrhr/manga-dlp
+      context: docker
+      dockerfile: docker/Dockerfile.amd64
+      auto_tag: true
+      auto_tag_suffix: linux-amd64
+      <<: *cr_secrets
 
 
 ---
@@ -128,7 +128,7 @@ platform:
 
 trigger:
   event:
-  - tag
+    - tag
 
 # anchors
 cr_secrets: &cr_secrets
@@ -139,15 +139,51 @@ cr_secrets: &cr_secrets
 
 # build steps
 steps:
-- name: 'publish manifest'
-  image: plugins/manifest
-  settings:
-    spec: docker/manifest.tmpl
-    auto_tag: true
-    ignore_missing: true
-    <<: *cr_secrets
+  - name: 'publish manifest'
+    image: plugins/manifest
+    settings:
+      spec: docker/manifest.tmpl
+      auto_tag: true
+      ignore_missing: true
+      <<: *cr_secrets
 
 depends_on:
   - docker-build-amd64
   - docker-build-arm64
 
+#---
+#################
+## publish pypi #
+#################
+#kind: pipeline
+#type: docker
+#name: publish-pypi-package
+#
+#platform:
+#  os: linux
+#  arch: arm64
+#
+#trigger:
+#  event:
+#    - tag
+#
+## anchors
+#pypi_secrets: &pypi_secrets
+#  username:
+#    from_secret: pypi-username
+#  password:
+#    from_secret: pypi-token
+#
+#pypi_plugin: &pypi_plugin
+#  image: plugins/pypi
+#  pull: if-not-exists
+#  group: build
+#
+## build steps arm64
+#steps:
+#  - name: 'publish or update pypi package'
+#    <<: *pypi_plugin
+#    settings:
+#      # repository:
+#      setupfile: setup.py
+#      <<: *pypi_secrets

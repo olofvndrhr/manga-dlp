@@ -9,6 +9,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.0.1] - 2022-05-09
+
+### Fixed
+- Regex for removing illegal characters in the filenames now doesn't remove quotes
+- Updated docker baseimage and fixed the mangadlp tag in it
+- Update license for 2022
+
+### Added
+- Quick start section in README
+- Preperation for pypi
+
 ## [2.0.0] - 2022-05-09
 
 ### Fixed

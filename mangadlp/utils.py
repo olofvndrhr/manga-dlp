@@ -1,7 +1,8 @@
-from pathlib import Path
-import shutil
-from zipfile import ZipFile
 import re
+import shutil
+from pathlib import Path
+from zipfile import ZipFile
+
 
 # create a cbz archive
 def make_archive(chapter_path):
@@ -52,7 +53,7 @@ def get_chapter_list(chapters):
 # remove illegal characters etc
 def fix_name(filename):
     # remove illegal characters
-    filename = re.sub("[\\\/\<\>\:\;'\"\|\?\*\!\@]", ".", filename)
+    filename = re.sub("[\\\/\<\>\:\;\|\?\*\!\@]", "", filename)
     # remove multiple dots
     filename = re.sub("([\.]{2,})", ".", filename)
     # remove dot(s) at the beginning and end of the filename

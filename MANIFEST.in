@@ -1,0 +1,10 @@
+include *.json
+include *.md
+include *.properties
+include *.py
+include *.txt
+include *.yml
+recursive-include contrib *.py
+recursive-include mangadlp *.py
+recursive-include tests *.py
+recursive-include tests *.txt
