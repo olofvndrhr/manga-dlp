@@ -11,8 +11,6 @@ platform:
   arch: amd64
 
 trigger:
-  branch:
-    - master
   event:
     - push
 
@@ -25,17 +23,30 @@ sq_secrets: &sq_secrets
 sq_analysis: &sq_analysis
   image: 'cr.44net.ch/drone-plugins/sonarqube'
   pull: if-not-exists
-  group: sonarqube
+  group: test
 
-# build steps
+test_plugin: &test_plugin
+  image: 'cr.44net.ch/drone-plugins/test'
+  pull: if-not-exists
+  group: publish
+
+# steps
 steps:
+  # test python code
+  - name: 'test code and generate coverage report'
+    <<: *test_plugin
+    commands:
+      - coverage erase
+      - coverage run -m pytest
+      - coverage xml -i
+
+  # upload analysis to sonarqube
   - name: 'sonarqube: analyse code'
     <<: *sq_analysis
     settings:
       <<: *sq_secrets
       sources: .
-      exclusions: contrib/**
-
+      exclusions: contrib/**, docker/**
 
 
 ---
@@ -151,6 +162,43 @@ depends_on:
   - docker-build-amd64
   - docker-build-arm64
 
+---
+#################
+# gitea release #
+#################
+kind: pipeline
+type: docker
+name: gitea-release
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - tag
+
+# anchors
+gitea_secrets: &gitea_secrets
+  api_key:
+    from_secret: gitea-token
+
+gitea_plugin: &gitea_plugin
+  image: plugins/gitea-release
+  pull: if-not-exists
+  group: publish
+
+# publish release on gitea
+steps:
+  - name: 'publish or update pypi package'
+    <<: *gitea_plugin
+    settings:
+      base_url: https://git.44net.ch
+      files: ./*
+      title: 'manga-dlp release: ${DRONE_TAG}'
+      note: CHANGELOG.md
+      <<: *gitea_secrets
+
 #---
 #################
 ## publish pypi #
@@ -161,7 +209,7 @@ depends_on:
 #
 #platform:
 #  os: linux
-#  arch: arm64
+#  arch: amd64
 #
 #trigger:
 #  event:
@@ -177,9 +225,9 @@ depends_on:
 #pypi_plugin: &pypi_plugin
 #  image: plugins/pypi
 #  pull: if-not-exists
-#  group: build
+#  group: publish
 #
-## build steps arm64
+## publish package on pypi
 #steps:
 #  - name: 'publish or update pypi package'
 #    <<: *pypi_plugin
