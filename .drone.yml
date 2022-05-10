@@ -20,7 +20,7 @@ steps:
   - name: 'test code and generate coverage report'
     image: 'cr.44net.ch/drone-plugins/test'
     pull: if-not-exists
-    group: publish
+    group: test
     commands:
       - pip install -r requirements.txt
       - coverage erase
@@ -35,7 +35,7 @@ steps:
     settings:
       sonar_host: 'https://sonarqube.44net.ch'
       sonar_token:
-        from_secret: sq-44net-token
+        from_secret: 'sq-44net-token'
       usingProperties: true
 
 
@@ -68,9 +68,9 @@ steps:
       auto_tag: true
       auto_tag_suffix: linux-arm64
       username:
-        from_secret: cr-dhub-username
+        from_secret: 'cr-dhub-username'
       password:
-        from_secret: cr-dhub-key
+        from_secret: 'cr-dhub-key'
 
 
 ---
@@ -99,9 +99,9 @@ steps:
       auto_tag: true
       auto_tag_suffix: linux-amd64
       username:
-        from_secret: cr-dhub-username
+        from_secret: 'cr-dhub-username'
       password:
-        from_secret: cr-dhub-key
+        from_secret: 'cr-dhub-key'
 
 
 ---
@@ -126,9 +126,9 @@ steps:
       auto_tag: true
       ignore_missing: true
       username:
-        from_secret: cr-dhub-username
+        from_secret: 'cr-dhub-username'
       password:
-        from_secret: cr-dhub-key
+        from_secret: 'cr-dhub-key'
 
 depends_on:
   - docker-build-amd64
@@ -165,7 +165,7 @@ steps:
     group: publish
     settings:
       api_key:
-        from_secret: gitea-token
+        from_secret: 'gitea-token'
       base_url: https://git.44net.ch
       files: manga-dlp-${DRONE_TAG}.tar.gz
       title: 'manga-dlp release: ${DRONE_TAG}'
@@ -177,7 +177,7 @@ steps:
       group: publish
       settings:
         api_key:
-          from_secret: github-token
+          from_secret: 'github-token'
         files: manga-dlp-${DRONE_TAG}.tar.gz
         title: 'manga-dlp release: ${DRONE_TAG}'
         note: CHANGELOG.md
