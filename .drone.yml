@@ -190,14 +190,15 @@ gitea_plugin: &gitea_plugin
 
 # publish release on gitea
 steps:
-  - name: 'publish or update pypi package'
+  - name: 'publish gitea release'
     <<: *gitea_plugin
     settings:
+      <<: *gitea_secrets
       base_url: https://git.44net.ch
       files: ./*
       title: 'manga-dlp release: ${DRONE_TAG}'
       note: CHANGELOG.md
-      <<: *gitea_secrets
+
 
 #---
 #################
