@@ -14,9 +14,8 @@ trigger:
   event:
     - push
 
-# steps
+# test python code and upload analysis to sonarqube
 steps:
-  # test python code
   - name: 'test code and generate coverage report'
     image: 'cr.44net.ch/drone-plugins/test'
     pull: if-not-exists
@@ -27,7 +26,6 @@ steps:
       - coverage run -m pytest --verbose
       - coverage xml -i
 
-  # upload analysis to sonarqube
   - name: 'sonarqube: analyse code'
     image: 'cr.44net.ch/drone-plugins/sonarqube'
     pull: if-not-exists
@@ -35,7 +33,7 @@ steps:
     settings:
       sonar_host: 'https://sonarqube.44net.ch'
       sonar_token:
-        from_secret: sq_44net_token
+        from_secret: sq-44net-token
       usingProperties: true
 
 
