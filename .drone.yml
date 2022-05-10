@@ -188,14 +188,24 @@ gitea_plugin: &gitea_plugin
   pull: if-not-exists
   group: publish
 
+tar_plugin: &tar_plugin
+  image: 'cr.44net.ch/baseimages/debian-base'
+  pull: if-not-exists
+  group: publish
+
 # publish release on gitea
 steps:
+  - name: 'publish gitea release'
+    <<: *tar_plugin
+    commands:
+      - tar -czf manga-dlp-${DRONE_TAG}.tar.gz --files-from=release-files.txt
+
   - name: 'publish gitea release'
     <<: *gitea_plugin
     settings:
       <<: *gitea_secrets
       base_url: https://git.44net.ch
-      files: ./*
+      files: manga-dlp-${DRONE_TAG}.tar.gz
       title: 'manga-dlp release: ${DRONE_TAG}'
       note: CHANGELOG.md
 

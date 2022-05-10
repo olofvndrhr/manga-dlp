@@ -1,0 +1,8 @@
+mangadlp/
+manga-dlp.py
+requirements.txt
+setup.py
+MANIFEST.in
+README.md
+CHANGELOG.md
+LICENSE
