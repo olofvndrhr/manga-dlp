@@ -11,6 +11,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.0.4] - 2022-05-10
+
+### Added
+- New test cases for more coverage
+- Github release
+- Updated docker baseimage
+
+
 ## [2.0.3] - 2022-05-10
 
 ### Fixed

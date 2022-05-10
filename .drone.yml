@@ -14,27 +14,13 @@ trigger:
   event:
     - push
 
-# anchors
-sq_secrets: &sq_secrets
-  sonar_host: 'https://sonarqube.44net.ch'
-  sonar_token:
-    from_secret: sq-44net-token
-
-sq_analysis: &sq_analysis
-  image: 'cr.44net.ch/drone-plugins/sonarqube'
-  pull: if-not-exists
-  group: test
-
-test_plugin: &test_plugin
-  image: 'cr.44net.ch/drone-plugins/test'
-  pull: if-not-exists
-  group: publish
-
 # steps
 steps:
   # test python code
   - name: 'test code and generate coverage report'
-    <<: *test_plugin
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: if-not-exists
+    group: publish
     commands:
       - pip install -r requirements.txt
       - coverage erase
@@ -43,9 +29,13 @@ steps:
 
   # upload analysis to sonarqube
   - name: 'sonarqube: analyse code'
-    <<: *sq_analysis
+    image: 'cr.44net.ch/drone-plugins/sonarqube'
+    pull: if-not-exists
+    group: test
     settings:
-      <<: *sq_secrets
+      sonar_host: 'https://sonarqube.44net.ch'
+      sonar_token:
+        from_secret: sq-44net-token
       usingProperties: true
 
 
@@ -65,29 +55,22 @@ trigger:
   event:
     - tag
 
-# anchors
-cr_secrets: &cr_secrets
-  username:
-    from_secret: cr-dhub-username
-  password:
-    from_secret: cr-dhub-key
-
-docker_build: &docker_build
-  image: plugins/docker
-  pull: if-not-exists
-  group: build
-
 # build steps arm64
 steps:
   - name: 'build and publish docker image'
-    <<: *docker_build
+    image: plugins/docker
+    pull: if-not-exists
+    group: build
     settings:
       repo: olofvndrhr/manga-dlp
       context: docker
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64
-      <<: *cr_secrets
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
 
 
 ---
@@ -103,29 +86,22 @@ trigger:
   event:
     - tag
 
-# anchors
-cr_secrets: &cr_secrets
-  username:
-    from_secret: cr-dhub-username
-  password:
-    from_secret: cr-dhub-key
-
-docker_build: &docker_build
-  image: plugins/docker
-  pull: if-not-exists
-  group: build
-
 # build steps amd64
 steps:
   - name: 'build and publish docker image'
-    <<: *docker_build
+    image: plugins/docker
+    pull: if-not-exists
+    group: build
     settings:
       repo: olofvndrhr/manga-dlp
       context: docker
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      <<: *cr_secrets
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
 
 
 ---
@@ -141,13 +117,6 @@ trigger:
   event:
     - tag
 
-# anchors
-cr_secrets: &cr_secrets
-  username:
-    from_secret: cr-dhub-username
-  password:
-    from_secret: cr-dhub-key
-
 # build steps
 steps:
   - name: 'publish manifest'
@@ -156,16 +125,19 @@ steps:
       spec: docker/manifest.tmpl
       auto_tag: true
       ignore_missing: true
-      <<: *cr_secrets
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
 
 depends_on:
   - docker-build-amd64
   - docker-build-arm64
 
 ---
-#################
-# gitea release #
-#################
+###############
+# git release #
+###############
 kind: pipeline
 type: docker
 name: gitea-release
@@ -178,37 +150,37 @@ trigger:
   event:
     - tag
 
-# anchors
-gitea_secrets: &gitea_secrets
-  api_key:
-    from_secret: gitea-token
-
-gitea_plugin: &gitea_plugin
-  image: plugins/gitea-release
-  pull: if-not-exists
-  group: publish
-
-tar_plugin: &tar_plugin
-  image: 'cr.44net.ch/baseimages/debian-base'
-  pull: if-not-exists
-  group: publish
-
-# publish release on gitea
+# publish release on gitea and github
 steps:
   - name: 'create release tar'
-    <<: *tar_plugin
+    image: 'cr.44net.ch/baseimages/debian-base'
+    pull: if-not-exists
+    group: publish
     commands:
       - tar -czf manga-dlp-${DRONE_TAG}.tar.gz --files-from=release-files.txt
 
   - name: 'publish gitea release'
-    <<: *gitea_plugin
+    image: plugins/gitea-release
+    pull: if-not-exists
+    group: publish
     settings:
-      <<: *gitea_secrets
+      api_key:
+        from_secret: gitea-token
       base_url: https://git.44net.ch
       files: manga-dlp-${DRONE_TAG}.tar.gz
       title: 'manga-dlp release: ${DRONE_TAG}'
       note: CHANGELOG.md
 
+  - name: 'publish github release'
+      image: plugins/github-release
+      pull: if-not-exists
+      group: publish
+      settings:
+        api_key:
+          from_secret: github-token
+        files: manga-dlp-${DRONE_TAG}.tar.gz
+        title: 'manga-dlp release: ${DRONE_TAG}'
+        note: CHANGELOG.md
 
 #---
 #################

@@ -8,12 +8,16 @@ from zipfile import ZipFile
 def make_archive(chapter_path):
     image_folder = Path(chapter_path)
     zip_path = Path(f"{chapter_path}.zip")
+    if not image_folder.exists():
+        print(f"ERR: Folder: {image_folder} does not exist")
+        return False
     with ZipFile(f"{image_folder}.zip", "w") as zip_archive:
         for file in image_folder.iterdir():
             zip_archive.write(file, file.name)
-
     zip_path.rename(zip_path.with_suffix(".cbz"))
     shutil.rmtree(image_folder)
+
+    return True
 
 
 # check if the file already exists
