@@ -19,7 +19,6 @@ steps:
   - name: 'test code and generate coverage report'
     image: 'cr.44net.ch/drone-plugins/test'
     pull: if-not-exists
-    group: test
     commands:
       - pip install -r requirements.txt
       - coverage erase
@@ -29,7 +28,6 @@ steps:
   - name: 'sonarqube: analyse code'
     image: 'cr.44net.ch/drone-plugins/sonarqube'
     pull: if-not-exists
-    group: test
     settings:
       sonar_host: 'https://sonarqube.44net.ch'
       sonar_token:
@@ -41,37 +39,6 @@ steps:
 ################
 # docker build #
 ################
-kind: pipeline
-type: docker
-name: docker-build-arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-trigger:
-  event:
-    - tag
-
-# build steps arm64
-steps:
-  - name: 'build and publish docker image'
-    image: plugins/docker
-    pull: if-not-exists
-    group: build
-    settings:
-      repo: olofvndrhr/manga-dlp
-      context: docker
-      dockerfile: docker/Dockerfile.arm64
-      auto_tag: true
-      auto_tag_suffix: linux-arm64
-      username:
-        from_secret: cr-dhub-username
-      password:
-        from_secret: cr-dhub-key
-
-
----
 kind: pipeline
 type: docker
 name: docker-build-amd64
@@ -89,13 +56,42 @@ steps:
   - name: 'build and publish docker image'
     image: plugins/docker
     pull: if-not-exists
-    group: build
     settings:
       repo: olofvndrhr/manga-dlp
       context: docker
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
+
+
+---
+kind: pipeline
+type: docker
+name: docker-build-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+trigger:
+  event:
+    - tag
+
+# build steps arm64
+steps:
+  - name: 'build and publish docker image'
+    image: plugins/docker
+    pull: if-not-exists
+    settings:
+      repo: olofvndrhr/manga-dlp
+      context: docker
+      dockerfile: docker/Dockerfile.arm64
+      auto_tag: true
+      auto_tag_suffix: linux-arm64
       username:
         from_secret: cr-dhub-username
       password:
@@ -153,14 +149,12 @@ steps:
   - name: 'create release tar'
     image: 'cr.44net.ch/baseimages/debian-base'
     pull: if-not-exists
-    group: publish
     commands:
       - tar -czf manga-dlp-${DRONE_TAG}.tar.gz --files-from=release-files.txt
 
   - name: 'publish gitea release'
     image: plugins/gitea-release
     pull: if-not-exists
-    group: publish
     settings:
       api_key:
         from_secret: gitea-token
@@ -170,15 +164,14 @@ steps:
       note: CHANGELOG.md
 
   - name: 'publish github release'
-      image: plugins/github-release
-      pull: if-not-exists
-      group: publish
-      settings:
-        api_key:
-          from_secret: github-token
-        files: manga-dlp-${DRONE_TAG}.tar.gz
-        title: 'manga-dlp release: ${DRONE_TAG}'
-        note: CHANGELOG.md
+    image: plugins/github-release
+    pull: if-not-exists
+    settings:
+      api_key:
+        from_secret: github-token
+      files: manga-dlp-${DRONE_TAG}.tar.gz
+      title: 'manga-dlp release: ${DRONE_TAG}'
+      note: CHANGELOG.md
 
 #---
 #################
@@ -196,23 +189,15 @@ steps:
 #  event:
 #    - tag
 #
-## anchors
-#pypi_secrets: &pypi_secrets
-#  username:
-#    from_secret: pypi-username
-#  password:
-#    from_secret: pypi-token
-#
-#pypi_plugin: &pypi_plugin
-#  image: plugins/pypi
-#  pull: if-not-exists
-#  group: publish
-#
 ## publish package on pypi
 #steps:
 #  - name: 'publish or update pypi package'
-#    <<: *pypi_plugin
+#    image: plugins/pypi
+#    pull: if-not-exists
 #    settings:
-#      # repository:
+#      #repository:
 #      setupfile: setup.py
-#      <<: *pypi_secrets
+#      username:
+#        from_secret: pypi-username
+#      password:
+#        from_secret: pypi-token
