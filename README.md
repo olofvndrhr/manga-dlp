@@ -3,10 +3,13 @@
 ## python script to download mangas
 
 [![Build Status](https://drone.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://drone.44net.ch/olofvndrhr/manga-dlp)
-[![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=677dfde6a5c7ea85463eb2fe4133c47f71494494)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
+[![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
+[![Coverage](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=coverage&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
+[![Bugs](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=bugs&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Description
+
 A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support
 for other sites is planned.
 
