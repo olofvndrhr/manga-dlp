@@ -46,6 +46,7 @@ steps:
     <<: *sq_analysis
     settings:
       <<: *sq_secrets
+      usingProperties: true
 
 
 ---
