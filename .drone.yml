@@ -195,7 +195,7 @@ tar_plugin: &tar_plugin
 
 # publish release on gitea
 steps:
-  - name: 'publish gitea release'
+  - name: 'create release tar'
     <<: *tar_plugin
     commands:
       - tar -czf manga-dlp-${DRONE_TAG}.tar.gz --files-from=release-files.txt
