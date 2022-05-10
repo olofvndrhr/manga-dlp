@@ -46,7 +46,6 @@ steps:
     <<: *sq_analysis
     settings:
       <<: *sq_secrets
-      exclusions: contrib/**, docker/**
 
 
 ---
