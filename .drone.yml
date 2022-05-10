@@ -36,6 +36,7 @@ steps:
   - name: 'test code and generate coverage report'
     <<: *test_plugin
     commands:
+      - pip install -r requirements.txt
       - coverage erase
       - coverage run -m pytest
       - coverage xml -i
