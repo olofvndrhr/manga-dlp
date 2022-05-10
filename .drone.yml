@@ -38,7 +38,7 @@ steps:
     commands:
       - pip install -r requirements.txt
       - coverage erase
-      - coverage run -m pytest
+      - coverage run -m pytest --verbose
       - coverage xml -i
 
   # upload analysis to sonarqube
@@ -46,7 +46,6 @@ steps:
     <<: *sq_analysis
     settings:
       <<: *sq_secrets
-      sources: .
       exclusions: contrib/**, docker/**
 
 
