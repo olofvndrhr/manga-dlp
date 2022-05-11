@@ -69,7 +69,7 @@ def test_fix_name():
     filename_in1 = "..hello?; @test1-*<>test2.cbz"
     filename_in2 = "!hello: >test1-/test2<!.cbz"
     filename_in3 = "  hello test1-test2.cbz    "
-    filename_in4 = "hello test1-test2..cbz."
+    filename_in4 = 'hello "test1"-test2..cbz.'
     # out
     filename_out = "hello test1-test2.cbz"
     assert utils.fix_name(filename_in1) == filename_out
