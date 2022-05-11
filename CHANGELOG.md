@@ -9,6 +9,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+
+## [2.0.6] - 2022-05-11
+
+### Fixed
+- Filenames on windows (ntfs). Removed double quote from file and folder names
+
+
 ## [2.0.5] - 2022-05-11
 
 ### Fixed

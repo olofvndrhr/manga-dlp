@@ -7,7 +7,7 @@ long_description = readme.read_text()
 
 setuptools.setup(
     name="manga-dlp",
-    version="2.0.5",
+    version="2.0.6",
     author="Ivan Schaller",
     author_email="ivan@schaller.sh",
     description="A cli manga downloader",
