@@ -185,7 +185,11 @@ def get_manga(
         chapter_infos = Api.get_chapter_infos(chapter)
 
         # get image urls for chapter
-        chapter_image_urls = Api.get_chapter_images(chapter, download_wait)
+        try:
+            chapter_image_urls = Api.get_chapter_images(chapter, download_wait)
+        except KeyboardInterrupt:
+            print("ERR: Stopping")
+            exit(1)
 
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
@@ -223,7 +227,7 @@ def get_manga(
                 if manga_nocbz
                 else f"INFO: Filename: '{chapter_filename}.cbz'\n"
             )
-            print(f"INFO: Image URLS: {chapter_image_urls}")
+            print(f"INFO: Image URLS:\n{chapter_image_urls}\n")
 
         # log
         print(f"INFO: Downloading: '{chapter_filename}'")

@@ -21,7 +21,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Script to download mangas from various sites"
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
         "-u",
         "--url",
         "--uuid",
@@ -56,7 +57,7 @@ if __name__ == "__main__":
         action="store",
         default="en",
     )
-    parser.add_argument(
+    group.add_argument(
         "--read",
         dest="read",
         required=False,

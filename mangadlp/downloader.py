@@ -12,6 +12,9 @@ def download_chapter(image_urls, chapter_path, md_wait, md_verbose):
         try:
             # print('Try getting ' + img)
             req = requests.get(img, stream=True)
+        except KeyboardInterrupt:
+            print("ERR: Stopping")
+            exit(1)
         except:
             print(f"ERR: Request for image {img} failed, retrying")
             sleep(md_wait)

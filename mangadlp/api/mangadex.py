@@ -34,7 +34,7 @@ class Mangadex:
         if self.verbose:
             print(f"INFO: Getting manga data for: {self.manga_uuid}")
         counter = 1
-        while counter < 3:
+        while counter <= 3:
             try:
                 manga_data = requests.get(
                     f"{self.api_base_url}/manga/{self.manga_uuid}"
@@ -180,7 +180,7 @@ class Mangadex:
         # retry up to two times if the api applied ratelimits
         api_error = False
         counter = 1
-        while counter < 3:
+        while counter <= 3:
             try:
                 r = requests.get(f"{athome_url}/{chapter_uuid}")
                 api_data = r.json()
@@ -196,10 +196,11 @@ class Mangadex:
                     api_error = False
                     break
             except:
+                if counter >= 3:
+                    api_error = True
                 print(f"ERR: Retrying in a few seconds")
                 counter += 1
                 sleep(wait_time + 2)
-                continue
         # check if result is ok
         else:
             if api_error:
