@@ -152,6 +152,12 @@ steps:
     commands:
       - tar -czf manga-dlp-${DRONE_TAG}.tar.gz --files-from=release-files.txt
 
+  - name: 'create release-notes'
+    image: 'cr.44net.ch/baseimages/debian-base'
+    pull: if-not-exists
+    commands:
+      - bash 'release.sh' '--get_changelog' '${DRONE_TAG}'
+
   - name: 'publish gitea release'
     image: plugins/gitea-release
     pull: if-not-exists
@@ -161,7 +167,7 @@ steps:
       base_url: https://git.44net.ch
       files: manga-dlp-${DRONE_TAG}.tar.gz
       title: 'manga-dlp release: ${DRONE_TAG}'
-      note: CHANGELOG.md
+      note: RELEASENOTES.md
 
   - name: 'publish github release'
     image: plugins/github-release
@@ -171,7 +177,7 @@ steps:
         from_secret: github-token
       files: manga-dlp-${DRONE_TAG}.tar.gz
       title: 'manga-dlp release: ${DRONE_TAG}'
-      note: CHANGELOG.md
+      note: RELEASENOTES.md
 
 #---
 #################

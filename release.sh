@@ -33,8 +33,8 @@ function set_ver_pypi() {
   printf 'Done\n'
 }
 
-# main function
-function main () {
+# set version number in files
+function set_version () {
   mdlp_version="${1}"
   # check for version
   if [[ -z "${mdlp_version}" ]]; then
@@ -49,13 +49,32 @@ function main () {
     printf 'Error\n'; fi
 }
 
+# create changelog for release
+function get_changelog () {
+  mdlp_version="${1}"
+  # check for version
+  if [[ -z "${mdlp_version}" ]]; then
+    printf 'You need to specify a version with $1\n'
+    exit 1
+  fi
+  awk -v ver="[${1}]" \
+        '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p && NF' \
+          'CHANGELOG.md' > 'RELEASENOTES.md'
+}
+
 # check options
 case "${1}" in
   '--help'|'-h'|'help')
     show_help
   ;;
+  '--set-version')
+    set_version "${@}"
+  ;;
+  '--get-changelog')
+    get_changelog "${@}"
+  ;;
   *)
-    main "${@}"
+    exit 1
   ;;
 esac
 
