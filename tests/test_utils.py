@@ -1,17 +1,32 @@
-from pathlib import Path
 import shutil
+from pathlib import Path
+
 import mangadlp.utils as utils
 
 
 def test_existence_true():
-    path = "README.md"
+    path = "tests/test_file"
+    nocbz = False
+    test = utils.check_existence(path, nocbz)
+    assert test
+
+
+def test_existence_true_nocbz():
+    path = "tests/test_file"
     nocbz = True
     test = utils.check_existence(path, nocbz)
     assert test
 
 
 def test_existence_false():
-    path = "DONTEXIST.md"
+    path = "tests/test_file_nonexistent"
+    nocbz = False
+    test = utils.check_existence(path, nocbz)
+    assert not test
+
+
+def test_existence_false_nocbz():
+    path = "tests/test_file_nonexistent"
     nocbz = True
     test = utils.check_existence(path, nocbz)
     assert not test
@@ -44,6 +59,12 @@ def test_chapter_list():
     assert utils.get_chapter_list(chapters_in) == chapters_out
 
 
+def test_chapter_list_forcevol():
+    chapters_in = "1:1-1:4,2:8,3:11,4:14-4:15,5:22"
+    chapters_out = ["1:1", "1:2", "1:3", "1:4", "2:8", "3:11", "4:14", "4:15", "5:22"]
+    assert utils.get_chapter_list(chapters_in) == chapters_out
+
+
 def test_fix_name():
     filename_in1 = "..hello?; @test1-*<>test2.cbz"
     filename_in2 = "!hello: >test1-/test2<!.cbz"
@@ -68,6 +89,17 @@ def test_get_filename_forcevol():
     )
 
 
+def test_get_filename_forcevol_noname():
+    chapter_name = ""
+    chapter_vol = "2"
+    chapter_num = "44"
+    forcevol = True
+    filename = "Vol. 2 Ch. 44"
+    assert (
+        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+    )
+
+
 def test_get_filename():
     chapter_name = "The holy test Chapter"
     chapter_vol = "2"
@@ -85,6 +117,17 @@ def test_get_filename_oneshot():
     chapter_num = ""
     forcevol = False
     filename = "Oneshot"
+    assert (
+        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+    )
+
+
+def test_get_filename_noname():
+    chapter_name = ""
+    chapter_vol = "1"
+    chapter_num = "1"
+    forcevol = False
+    filename = "Ch. 1"
     assert (
         utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
     )

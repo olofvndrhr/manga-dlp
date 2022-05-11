@@ -1,4 +1,5 @@
 import pytest
+import requests
 
 from mangadlp.api.mangadex import Mangadex
 
@@ -7,8 +8,9 @@ def test_uuid_link():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.manga_uuid == "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
 
 
@@ -16,17 +18,31 @@ def test_uuid_pure():
     url = "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.manga_uuid == "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
+
+
+def test_uuid_link_false():
+    url = "https://mangadex.org/title/a966-76e-5-8a-e2-42-5e-b-549-7f15dd-34a6d8/komi-san-wa-komyushou-desu"
+    lang = "en"
+    forcevol = False
+    verbose = True
+
+    with pytest.raises(SystemExit) as e:
+        Mangadex(url, lang, forcevol, verbose)
+    assert e.type == SystemExit
+    assert e.value.code == 1
 
 
 def test_title():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.manga_title == "Komi-san wa Komyushou Desu"
 
 
@@ -34,13 +50,14 @@ def test_chapter_infos():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
     chapter_infos = test.get_chapter_infos("1")
     chapter_uuid = chapter_infos["uuid"]
     chapter_name = chapter_infos["name"]
     chapter_num = chapter_infos["chapter"]
     chapter_volume = chapter_infos["volume"]
+
     assert [chapter_uuid, chapter_name, chapter_volume, chapter_num] == [
         "e86ec2c4-c5e4-4710-bfaa-7604f00939c7",
         "A Normal Person",
@@ -49,20 +66,63 @@ def test_chapter_infos():
     ]
 
 
+def test_non_existing_manga():
+    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-999999999999/komi-san-wa-komyushou-desu"
+    lang = "en"
+    forcevol = False
+    verbose = True
+
+    with pytest.raises(SystemExit) as e:
+        Mangadex(url, lang, forcevol, verbose)
+    assert e.type == SystemExit
+    assert e.value.code == 1
+
+
+def test_api_failure(monkeypatch):
+    fail_url = (
+        "https://api.mangadex.nonexistant/manga/a96676e5-8ae2-425e-b549-7f15dd34a6d8"
+    )
+    monkeypatch.setattr(requests, "get", fail_url)
+    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    lang = "en"
+    forcevol = False
+    verbose = True
+
+    with pytest.raises(SystemExit) as e:
+        Mangadex(url, lang, forcevol, verbose)
+    assert e.type == SystemExit
+    assert e.value.code == 1
+
+
 def test_chapter_lang_en():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.check_chapter_lang() > 0
+
+
+def test_empty_chapter_lang():
+    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    lang = "ch"
+    forcevol = False
+    verbose = True
+
+    with pytest.raises(SystemExit) as e:
+        Mangadex(url, lang, forcevol, verbose)
+        Mangadex(url, lang, forcevol, verbose).check_chapter_lang()
+    assert e.type == KeyError or e.type == SystemExit
+    assert e.value.code == 1
 
 
 def test_not_existing_lang():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "zz"
     forcevol = False
-    verbose = False
+    verbose = True
+
     with pytest.raises(SystemExit) as e:
         Mangadex(url, lang, forcevol, verbose)
     assert e.type == SystemExit
@@ -73,8 +133,9 @@ def test_filename():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.get_filename("1") == "Ch. 1 - A Normal Person"
 
 
@@ -82,8 +143,9 @@ def test_filename_forcevol():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = True
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
+
     assert test.get_filename("1:4") == "Vol. 1 Ch. 4 - Bad at This"
 
 
@@ -91,7 +153,7 @@ def test_create_chapter_list():
     url = "https://mangadex.org/title/6fef1f74-a0ad-4f0d-99db-d32a7cd24098/fire-punch"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
     test_list = [
         "1",
@@ -116,6 +178,7 @@ def test_create_chapter_list():
         "20",
         "21",
     ]
+
     assert test.create_chapter_list() == test_list
 
 
@@ -123,7 +186,7 @@ def test_create_chapter_list_forcevol():
     url = "https://mangadex.org/title/6fef1f74-a0ad-4f0d-99db-d32a7cd24098/fire-punch"
     lang = "en"
     forcevol = True
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
     test_list = [
         "1:1",
@@ -148,6 +211,7 @@ def test_create_chapter_list_forcevol():
         "3:20",
         "3:21",
     ]
+
     assert test.create_chapter_list() == test_list
 
 
@@ -155,7 +219,7 @@ def test_get_chapter_images():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     lang = "en"
     forcevol = False
-    verbose = False
+    verbose = True
     test = Mangadex(url, lang, forcevol, verbose)
     img_base_url = "https://uploads.mangadex.org"
     chapter_hash = "0752bc5db298beff6b932b9151dd8437"
@@ -178,3 +242,18 @@ def test_get_chapter_images():
         f"{img_base_url}/data/{chapter_hash}/x14-f6ed71bbb9af2bceab51028b460813c57935c923e1872fb277beb21d54425434.jpg",
     ]
     assert test.get_chapter_images(chapter_num, 0.5) == test_list
+
+
+def test_get_chapter_images_error(monkeypatch):
+    fail_url = (
+        "https://api.mangadex.org/at-home/server/e86ec2c4-c5e4-4710-bfaa-999999999999"
+    )
+    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    lang = "en"
+    forcevol = False
+    verbose = True
+    test = Mangadex(url, lang, forcevol, verbose)
+    chapter_num = "1"
+    monkeypatch.setattr(requests, "get", fail_url)
+
+    assert not test.get_chapter_images(chapter_num, 0.5)
