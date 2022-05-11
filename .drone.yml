@@ -156,7 +156,7 @@ steps:
     image: 'cr.44net.ch/baseimages/debian-base'
     pull: if-not-exists
     commands:
-      - bash 'release.sh' '--get-changelog' '${DRONE_TAG}'
+      - bash 'release.sh' '--get-releasenotes' '${DRONE_TAG}'
 
   - name: 'publish gitea release'
     image: plugins/gitea-release

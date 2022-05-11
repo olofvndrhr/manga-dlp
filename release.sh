@@ -1,18 +1,28 @@
 #!/bin/bash
 
-# script to set the version numbers on all files
+# script to set the version numbers on all files or generate changelogs for a release
 
-# precheck
-if [[ -z "${1}" ]] || [[ -z "${2}" ]]; then
-  printf 'Error\n'
-  exit 1
-fi
-
-# set mdlp version
-mdlp_version="${2}"
+function pre_checks() {
+  # prechecks
+  if [[ -z "${2}" ]]; then
+    printf 'No version was provided\n'
+    printf 'Error\n'
+    exit 1
+  fi
+  # set mdlp version
+  mdlp_version="${2}"
+}
 
 function show_help(){
-  return
+  printf 'Script to change the version numbers of mangadlp in the build files, or generate release-notes for a release\n'
+  printf '\nUsage:\n'
+  printf '  ./release.sh <option> <mdlp-version>\n'
+  printf '\nOptions:\n'
+  printf '  --set-version         - Set version number on all build files\n'
+  printf '  --get-changelog       - Create RELEASENOTES.md for github/gitea release\n'
+  printf '\nExample:\n'
+  printf '  ./release.sh --get-releasenotes "2.0.5"\n'
+  exit 1
 }
 
 function set_ver_docker() {
@@ -43,7 +53,7 @@ function set_ver_pypi() {
 }
 
 # set version number in files
-function set_version () {
+function set_version() {
   # check for version
   if [[ -z "${mdlp_version}" ]]; then
     printf 'You need to specify a version with $1\n'
@@ -58,8 +68,8 @@ function set_version () {
 }
 
 # create changelog for release
-function get_changelog () {
-  printf 'Creating changelog\n'
+function get_releasenotes() {
+  printf 'Creating release-notes\n'
   # check for version
   if [[ -z "${mdlp_version}" ]]; then
     printf 'You need to specify a version with $1\n'
@@ -77,14 +87,15 @@ case "${1}" in
     show_help
   ;;
   '--set-version')
+    pre_checks "${@}"
     set_version
   ;;
-  '--get-changelog')
-    get_changelog
+  '--get-releasenotes')
+    pre_checks "${@}"
+    get_releasenotes
   ;;
   *)
-    printf 'Error\n'
-    exit 1
+    show_help
   ;;
 esac
 
