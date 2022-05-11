@@ -2,6 +2,15 @@
 
 # script to set the version numbers on all files
 
+# precheck
+if [[ -z "${1}" ]] || [[ -z "${2}" ]]; then
+  printf 'Error\n'
+  exit 1
+fi
+
+# set mdlp version
+mdlp_version="${2}"
+
 function show_help(){
   return
 }
@@ -35,7 +44,6 @@ function set_ver_pypi() {
 
 # set version number in files
 function set_version () {
-  mdlp_version="${1}"
   # check for version
   if [[ -z "${mdlp_version}" ]]; then
     printf 'You need to specify a version with $1\n'
@@ -51,15 +59,16 @@ function set_version () {
 
 # create changelog for release
 function get_changelog () {
-  mdlp_version="${1}"
+  printf 'Creating changelog\n'
   # check for version
   if [[ -z "${mdlp_version}" ]]; then
     printf 'You need to specify a version with $1\n'
     exit 1
   fi
-  awk -v ver="[${1}]" \
+  awk -v ver="[${mdlp_version}]" \
         '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p && NF' \
           'CHANGELOG.md' > 'RELEASENOTES.md'
+  printf 'Done\n'
 }
 
 # check options
@@ -68,12 +77,13 @@ case "${1}" in
     show_help
   ;;
   '--set-version')
-    set_version "${@}"
+    set_version
   ;;
   '--get-changelog')
-    get_changelog "${@}"
+    get_changelog
   ;;
   *)
+    printf 'Error\n'
     exit 1
   ;;
 esac
