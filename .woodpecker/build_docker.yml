@@ -24,10 +24,6 @@ pipeline:
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      username:
-        from_secret: cr-dhub-username
-      password:
-        from_secret: cr-dhub-key
 
   # build docker image for arm64
   dryrun-build-arm64:
@@ -44,8 +40,4 @@ pipeline:
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64
-      username:
-        from_secret: cr-dhub-username
-      password:
-        from_secret: cr-dhub-key
 
