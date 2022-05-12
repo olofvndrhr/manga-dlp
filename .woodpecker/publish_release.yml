@@ -1,0 +1,61 @@
+###################
+# publish release #
+###################
+# branch: master
+# event: tag
+
+platform: linux/amd64
+
+depends_on:
+  - tests
+
+pipeline:
+
+  # create release tar
+  create-release-tar:
+    when:
+      branch: master
+      event: tag
+    image: 'cr.44net.ch/baseimages/debian-base'
+    pull: if-not-exists
+    commands:
+      - tar -czf manga-dlp-${CI_COMMIT_TAG}.tar.gz --files-from=release-files.txt
+
+  # create release-notes
+  create-release-notes:
+    when:
+      branch: master
+      event: tag
+    image: 'cr.44net.ch/baseimages/debian-base'
+    pull: if-not-exists
+    commands:
+      - bash 'release.sh' '--get-releasenotes' '${CI_COMMIT_TAG}'
+
+  # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
+  publish-release-gitea:
+    when:
+      branch: master
+      event: tag
+    image: plugins/gitea-release
+    pull: if-not-exists
+    settings:
+      api_key:
+        from_secret: gitea-token
+      base_url: https://git.44net.ch
+      files: manga-dlp-${CI_COMMIT_TAG}.tar.gz
+      title: 'manga-dlp release: ${CI_COMMIT_TAG}'
+      note: RELEASENOTES.md
+
+  # publish release on github (github.com/olofvndrhr/manga-dlp)
+  publish-release-github:
+    when:
+      branch: master
+      event: tag
+    image: plugins/github-release
+    pull: if-not-exists
+    settings:
+      api_key:
+        from_secret: github-token
+      files: manga-dlp-${CI_COMMIT_TAG}.tar.gz
+      title: 'manga-dlp release: ${CI_COMMIT_TAG}'
+      note: RELEASENOTES.md

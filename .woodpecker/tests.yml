@@ -1,6 +1,8 @@
 ##############################
 # code testing and analysis #
 #############################
+# branch: all
+# event: all
 
 platform: linux/amd64
 

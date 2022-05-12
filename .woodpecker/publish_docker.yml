@@ -1,0 +1,65 @@
+###################################
+# build and publish docker images #
+###################################
+# branch: master
+# event: tag
+
+depends_on:
+  - tests
+
+pipeline:
+
+  # build and publish docker image for amd64 - x86
+  build-amd64:
+    when:
+      branch: master
+      event: tag
+      platform: linux/amd64
+    image: plugins/docker
+    pull: if-not-exists
+    settings:
+      repo: olofvndrhr/manga-dlp
+      context: docker
+      dockerfile: docker/Dockerfile.amd64
+      auto_tag: true
+      auto_tag_suffix: linux-amd64
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
+
+  # build and publish docker image for arm64
+  build-arm64:
+    when:
+      branch: master
+      event: tag
+      platform: linux/arm64
+    image: plugins/docker
+    pull: if-not-exists
+    settings:
+      repo: olofvndrhr/manga-dlp
+      context: docker
+      dockerfile: docker/Dockerfile.arm64
+      auto_tag: true
+      auto_tag_suffix: linux-arm64
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
+
+  # publish docker manifest for automatic multi arch pulls
+  publish-manifest:
+    when:
+      branch: master
+      event: tag
+      platform: linux/amd64
+    image: plugins/manifest
+    settings:
+      spec: docker/manifest.tmpl
+      auto_tag: true
+      ignore_missing: true
+      username:
+        from_secret: cr-dhub-username
+      password:
+        from_secret: cr-dhub-key
+
