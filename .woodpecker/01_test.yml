@@ -2,7 +2,7 @@
 # code testing and analysis #
 #############################
 
-platform: linux/arm64
+platform: linux/amd64
 
 pipeline:
 
