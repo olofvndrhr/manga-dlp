@@ -16,6 +16,18 @@ trigger:
 
 # test python code and upload analysis to sonarqube
 steps:
+  - name: 'check shell scripts with shfmt'
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: if-not-exists
+    commands:
+      - shfmt -d -i 4 -bn -ci -sr .
+
+  - name: 'check python scripts with black'
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: if-not-exists
+    commands:
+      - black --check --diff --color .
+
   - name: 'test code and generate coverage report'
     image: 'cr.44net.ch/drone-plugins/test'
     pull: if-not-exists

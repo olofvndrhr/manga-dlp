@@ -80,24 +80,24 @@ function get_releasenotes() {
     fi
     awk -v ver="[${mdlp_version}]" \
         '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p && NF' \
-        'CHANGELOG.md' >'RELEASENOTES.md'
+        'CHANGELOG.md' > 'RELEASENOTES.md'
     printf 'Done\n'
 }
 
 # check options
 case "${1}" in
-'--help' | '-h' | 'help')
-    show_help
-    ;;
-'--set-version')
-    pre_checks "${@}"
-    set_version
-    ;;
-'--get-releasenotes')
-    pre_checks "${@}"
-    get_releasenotes
-    ;;
-*)
-    show_help
-    ;;
+    '--help' | '-h' | 'help')
+        show_help
+        ;;
+    '--set-version')
+        pre_checks "${@}"
+        set_version
+        ;;
+    '--get-releasenotes')
+        pre_checks "${@}"
+        get_releasenotes
+        ;;
+    *)
+        show_help
+        ;;
 esac
