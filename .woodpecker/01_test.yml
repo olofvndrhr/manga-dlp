@@ -1,0 +1,42 @@
+##############################
+# code testing and analysis #
+#############################
+
+platform: linux/arm64
+
+pipeline:
+
+  # check shell scripts with shfmt
+  test-shfmt:
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: true
+    commands:
+      - shfmt -d -i 4 -bn -ci -sr .
+
+  # check python scripts with black
+  test-black:
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: true
+    commands:
+      - black --check --diff --color .
+
+  # test code and generate coverage report
+  test-coverage-pytest:
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: true
+    commands:
+      - pip install -r requirements.txt
+      - coverage erase
+      - coverage run -m pytest --verbose --exitfirst
+      - coverage xml -i
+
+  # analyse code with sonarqube and upload it
+  sonarqube-analysis:
+    image: 'cr.44net.ch/drone-plugins/sonarqube'
+    pull: true
+    settings:
+      sonar_host: 'https://sonarqube.44net.ch'
+      sonar_token:
+        from_secret: sq-44net-token
+      usingProperties: true
+
