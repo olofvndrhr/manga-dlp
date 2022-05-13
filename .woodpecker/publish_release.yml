@@ -4,8 +4,6 @@
 # branch: master
 # event: tag
 
-platform: linux/amd64
-
 depends_on:
   - tests
 
@@ -17,7 +15,7 @@ pipeline:
       branch: master
       event: tag
     image: 'cr.44net.ch/baseimages/debian-base'
-    pull: if-not-exists
+    pull: true
     commands:
       - tar -czf manga-dlp-${CI_COMMIT_TAG}.tar.gz --files-from=release-files.txt
 
@@ -27,7 +25,7 @@ pipeline:
       branch: master
       event: tag
     image: 'cr.44net.ch/baseimages/debian-base'
-    pull: if-not-exists
+    pull: true
     commands:
       - bash 'release.sh' '--get-releasenotes' '${CI_COMMIT_TAG}'
 
@@ -37,7 +35,7 @@ pipeline:
       branch: master
       event: tag
     image: plugins/gitea-release
-    pull: if-not-exists
+    pull: true
     settings:
       api_key:
         from_secret: gitea-olofvndrhr-token
@@ -52,7 +50,7 @@ pipeline:
       branch: master
       event: tag
     image: plugins/github-release
-    pull: if-not-exists
+    pull: true
     settings:
       api_key:
         from_secret: github-olofvndrhr-token

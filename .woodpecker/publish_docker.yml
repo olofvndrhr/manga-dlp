@@ -14,11 +14,11 @@ pipeline:
     when:
       branch: master
       event: tag
-      platform: linux/amd64
-    image: plugins/docker
-    pull: if-not-exists
+    image: woodpeckerci/plugin-docker-buildx
+    pull: true
     settings:
       repo: olofvndrhr/manga-dlp
+      platforms: linux/amd64
       context: docker
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
@@ -33,11 +33,11 @@ pipeline:
     when:
       branch: master
       event: tag
-      platform: linux/arm64
-    image: plugins/docker
-    pull: if-not-exists
+    image: woodpeckerci/plugin-docker-buildx
+    pull: true
     settings:
       repo: olofvndrhr/manga-dlp
+      platforms: linux/arm64/v8
       context: docker
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
@@ -52,8 +52,8 @@ pipeline:
     when:
       branch: master
       event: tag
-      platform: linux/amd64
     image: plugins/manifest
+    pull: true
     settings:
       spec: docker/manifest.tmpl
       auto_tag: true

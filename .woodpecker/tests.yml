@@ -4,8 +4,6 @@
 # branch: all
 # event: all
 
-platform: linux/amd64
-
 pipeline:
 
   # check shell scripts with shfmt
