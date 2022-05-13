@@ -53,6 +53,19 @@ function set_ver_pypi() {
     printf 'Done\n'
 }
 
+function set_ver_project() {
+    printf 'Changing version in project-files\n'
+    local project_files project_regex
+    project_files=(
+        'mangadlp/input.py'
+    )
+    project_regex='s/mangadlp_version =.*$/mangadlp_version = \"'"${mdlp_version}"'\",/g'
+    for file in "${project_files[@]}"; do
+        if ! sed -i "${project_regex}" "${file}"; then return 1; fi
+    done
+    printf 'Done\n'
+}
+
 # set version number in files
 function set_version() {
     # check for version
@@ -62,11 +75,15 @@ function set_version() {
     fi
     # set docker versions
     if ! set_ver_docker; then
-        printf 'Error\n'
+        printf 'Docker: Error\n'
     fi
     # set pypi versions
     if ! set_ver_pypi; then
-        printf 'Error\n'
+        printf 'PyPi: Error\n'
+    fi
+    # set project versions
+    if ! set_ver_project; then
+        printf 'Project: Error\n'
     fi
 }
 

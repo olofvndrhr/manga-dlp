@@ -5,7 +5,7 @@ import requests
 import mangadlp.utils as utils
 
 # download images
-def download_chapter(image_urls, chapter_path, md_wait, md_verbose):
+def download_chapter(image_urls, chapter_path, download_wait, verbose):
     img_num = 1
     total_img = len(image_urls)
     for img in image_urls:
@@ -15,26 +15,26 @@ def download_chapter(image_urls, chapter_path, md_wait, md_verbose):
         utils.progress_bar(img_num, total_img)
         try:
             # print('Try getting ' + img)
-            req = requests.get(img, stream=True)
+            r = requests.get(img, stream=True)
         except KeyboardInterrupt:
             print("ERR: Stopping")
             exit(1)
         except:
             print(f"ERR: Request for image {img} failed, retrying")
-            sleep(md_wait)
+            sleep(download_wait)
             req = requests.get(img, stream=True)
 
-        if req.status_code == 200:
-            req.raw.decode_content = True
+        if r.status_code == 200:
+            r.raw.decode_content = True
             with image_path.open("wb") as file:
-                shutil.copyfileobj(req.raw, file)
+                shutil.copyfileobj(r.raw, file)
 
             # verbose logging
-            if md_verbose:
+            if verbose:
                 print(f"INFO: Downloaded image {img_num}")
 
             img_num += 1
-            sleep(md_wait)
+            sleep(download_wait)
         else:
             print(f"ERR: Image {img} could not be downloaded. Exiting")
             exit(1)

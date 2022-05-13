@@ -5,7 +5,10 @@ from zipfile import ZipFile
 
 
 # create a cbz archive
-def make_archive(chapter_path):
+def make_archive(chapter_path, file_format):
+    # set manga format suffix
+    if file_format and "." not in file_format:
+        file_format = f".{file_format}"
     image_folder = Path(chapter_path)
     zip_path = Path(f"{chapter_path}.zip")
     if not image_folder.exists():
@@ -14,21 +17,21 @@ def make_archive(chapter_path):
     with ZipFile(f"{image_folder}.zip", "w") as zip_archive:
         for file in image_folder.iterdir():
             zip_archive.write(file, file.name)
-    zip_path.rename(zip_path.with_suffix(".cbz"))
+    zip_path.rename(zip_path.with_suffix(file_format))
     shutil.rmtree(image_folder)
 
     return True
 
 
 # check if the file already exists
-def check_existence(chapter_path, manga_nocbz):
-    # check for folder if option nocbz is given. if nocbz is not given, the folder will be overwritten
-    chapter_path = Path(chapter_path)
-    cbz_path = chapter_path.parent / f"{chapter_path.name}.cbz"
-    if manga_nocbz and chapter_path.exists():
-        return True
-    # check for cbz archive
-    elif not manga_nocbz and cbz_path.exists():
+def check_existence(chapter_path, file_format):
+    # set manga format suffix
+    if file_format and "." not in file_format:
+        file_format = f".{file_format}"
+    # check for folder if no format is given (empty string)
+    # if no format is given, the folder will be overwritten if it exists
+    chapter_path = Path(chapter_path).with_suffix(file_format)
+    if chapter_path.exists():
         return True
     else:
         return False
@@ -38,16 +41,22 @@ def check_existence(chapter_path, manga_nocbz):
 def get_chapter_list(chapters):
     chapter_list = []
     for chapter in chapters.split(","):
+        # check if chapter list is with volumes and ranges
         if "-" in chapter and ":" in chapter:
+            # split chapters and volumes apart for list generation
             lower = chapter.split("-")[0].split(":")
             upper = chapter.split("-")[1].split(":")
+            # generate range inbetween start and end --> 1-3 == 1,2,3
             for n in range(int(lower[1]), int(upper[1]) + 1):
                 chapter_list.append(str(f"{lower[0]}:{n}"))
+        # no volumes, just chapter ranges
         elif "-" in chapter:
             lower = chapter.split("-")[0]
             upper = chapter.split("-")[1]
+            # generate range inbetween start and end --> 1-3 == 1,2,3
             for n in range(int(lower), int(upper) + 1):
                 chapter_list.append(str(n))
+        # single chapters without a range given
         else:
             chapter_list.append(chapter)
 
@@ -69,20 +78,24 @@ def fix_name(filename):
 
 
 # create name for chapter
-def get_filename(chapter_name, chapter_vol, chapter_num, manga_forcevol):
-    # filename for chapter
+def get_filename(chapter_name, chapter_vol, chapter_num, forcevol):
+    # if chapter is a oneshot
     if chapter_name == "Oneshot" or chapter_num == "Oneshot":
-        chapter_filename = "Oneshot"
-    elif not chapter_name and manga_forcevol:
-        chapter_filename = f"Vol. {chapter_vol} Ch. {chapter_num}"
-    elif not chapter_name:
-        chapter_filename = f"Ch. {chapter_num}"
-    elif manga_forcevol:
-        chapter_filename = f"Vol. {chapter_vol} Ch. {chapter_num} - {chapter_name}"
-    else:
-        chapter_filename = f"Ch. {chapter_num} - {chapter_name}"
-
-    return chapter_filename
+        return "Oneshot"
+    # if the chapter has no name
+    if not chapter_name:
+        return (
+            f"Vol. {chapter_vol} Ch. {chapter_num}"
+            if forcevol
+            else f"Ch. {chapter_num}"
+        )
+    # if the chapter has a name
+    # return with volume if option is set, else just the chapter num and name
+    return (
+        f"Vol. {chapter_vol} Ch. {chapter_num} - {chapter_name}"
+        if forcevol
+        else f"Ch. {chapter_num} - {chapter_name}"
+    )
 
 
 def progress_bar(progress, total):

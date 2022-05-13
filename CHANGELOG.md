@@ -10,6 +10,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.0.8] - 2022-05-13
+
+### Changed
+- Rewrote parts of script to be easier to maintain
+- Moved the input script to the base folder
+- Moved all arguments to a class
+
+
 ## [2.0.7] - 2022-05-13
 
 ### Changed

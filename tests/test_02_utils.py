@@ -4,42 +4,58 @@ from pathlib import Path
 import mangadlp.utils as utils
 
 
-def test_existence_true():
+def test_existence_true_folder():
     path = "tests/test_file"
-    nocbz = False
-    test = utils.check_existence(path, nocbz)
+    file_format = ""
+    test = utils.check_existence(path, file_format)
     assert test
 
 
-def test_existence_true_nocbz():
+def test_existence_true_cbz():
     path = "tests/test_file"
-    nocbz = True
-    test = utils.check_existence(path, nocbz)
+    file_format = "cbz"
+    test = utils.check_existence(path, file_format)
     assert test
 
 
-def test_existence_false():
+def test_existence_true_cbz_dot():
+    path = "tests/test_file"
+    file_format = ".cbz"
+    test = utils.check_existence(path, file_format)
+    assert test
+
+
+def test_existence_false_folder():
     path = "tests/test_file_nonexistent"
-    nocbz = False
-    test = utils.check_existence(path, nocbz)
+    file_format = ""
+    test = utils.check_existence(path, file_format)
     assert not test
 
 
-def test_existence_false_nocbz():
+def test_existence_false_cbz():
     path = "tests/test_file_nonexistent"
-    nocbz = True
-    test = utils.check_existence(path, nocbz)
+    file_format = "cbz"
+    test = utils.check_existence(path, file_format)
+    assert not test
+
+
+def test_existence_false_cbz_dot():
+    path = "tests/test_file_nonexistent"
+    file_format = ".cbz"
+    test = utils.check_existence(path, file_format)
     assert not test
 
 
 def test_archive_true():
     img_path = Path("tests/test_dir")
+    img_path_str = "tests/test_dir"
     archive_path = Path("tests/test_dir.cbz")
+    file_format = ".cbz"
     img_path.mkdir(parents=True, exist_ok=True)
     for n in range(5):
         img_name = img_path / f"page{n}"
         img_name.with_suffix(".png").touch(exist_ok=True)
-    assert utils.make_archive("tests/test_dir")
+    assert utils.make_archive(img_path_str, file_format)
     assert archive_path.exists()
     # cleanup
     archive_path.unlink(missing_ok=True)
@@ -49,7 +65,9 @@ def test_archive_true():
 
 def test_archive_false():
     archive_path = Path("tests/test_dir2.cbz")
-    assert not utils.make_archive("tests/test_dir2")
+    img_path_str = "tests/test_dir2"
+    file_format = "cbz"
+    assert not utils.make_archive(img_path_str, file_format)
     assert not archive_path.exists()
 
 
