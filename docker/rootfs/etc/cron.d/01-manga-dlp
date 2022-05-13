@@ -3,4 +3,3 @@
 # the file mangas.txt
 
 0 3 * * *   abc    python3 /app/manga-dlp.py --read /app/mangas.txt -c all
-

@@ -3,7 +3,9 @@
 
 # set all env variables for further use. If variable is unset, it will have the defaults on the right side after ":="
 
-
 # custom env vars
-#: "${var1:=/path1}"
-
+: "${MDLP_LANGUAGE:=en}"
+: "${MDLP_FORCEVOL:=false}"
+: "${MDLP_FILE_FORMAT:=cbz}"
+: "${MDLP_DOWNLOAD_WAIT:=2}"
+: "${MDLP_VERBOSE:=false}"
