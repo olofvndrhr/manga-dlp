@@ -42,7 +42,7 @@ pipeline:
     settings:
       dry_run: true
       repo: olofvndrhr/manga-dlp
-      platforms: linux/armhf,linux/arm64
+      platforms: linux/arm64
       context: docker
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
