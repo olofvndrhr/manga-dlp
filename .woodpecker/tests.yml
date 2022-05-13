@@ -36,6 +36,8 @@ pipeline:
 
   # analyse code with sonarqube and upload it
   sonarqube-analysis:
+    when:
+      branch: master
     image: 'cr.44net.ch/drone-plugins/sonarqube'
     pull: true
     settings:

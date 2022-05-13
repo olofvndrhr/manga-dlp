@@ -11,16 +11,16 @@ class Mangadex:
     img_base_url = "https://uploads.mangadex.org"
     # get infos to initiate class
 
-    def __init__(self, manga_url_uuid, manga_lang, forcevol, verbose):
+    def __init__(self, url_uuid, language, forcevol, verbose):
         # static info
-        self.manga_url_uuid = manga_url_uuid
-        self.manga_lang = manga_lang
+        self.url_uuid = url_uuid
+        self.language = language
         self.forcevol = forcevol
         self.verbose = verbose
 
         # api stuff
         self.api_content_ratings = "contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic"
-        self.api_language = f"translatedLanguage[]={self.manga_lang}"
+        self.api_language = f"translatedLanguage[]={self.language}"
         self.api_additions = f"{self.api_language}&{self.api_content_ratings}"
 
         # infos from functions
@@ -63,10 +63,10 @@ class Mangadex:
             "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
         )
         # check for new mangadex id
-        if not uuid_regex.search(self.manga_url_uuid):
+        if not uuid_regex.search(self.url_uuid):
             print("ERR: No valid UUID found")
             exit(1)
-        manga_uuid = uuid_regex.search(self.manga_url_uuid)[0]
+        manga_uuid = uuid_regex.search(self.url_uuid)[0]
         return manga_uuid
 
     # get the title of the manga (and fix the filename)
@@ -75,14 +75,14 @@ class Mangadex:
             print(f"INFO: Getting manga title for: {self.manga_uuid}")
         manga_data = self.manga_data.json()
         try:
-            title = manga_data["data"]["attributes"]["title"][self.manga_lang]
+            title = manga_data["data"]["attributes"]["title"][self.language]
         except:
             # search in alt titles
             try:
                 alt_titles = {}
                 for title in manga_data["data"]["attributes"]["altTitles"]:
                     alt_titles.update(title)
-                title = alt_titles[self.manga_lang]
+                title = alt_titles[self.language]
             except:  # no title on requested language found
                 print("ERR: Chapter in requested language not found.")
                 exit(1)
