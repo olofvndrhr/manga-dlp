@@ -59,7 +59,7 @@ function set_ver_project() {
     project_files=(
         'mangadlp/input.py'
     )
-    project_regex='s/mangadlp_version =.*$/mangadlp_version = \"'"${mdlp_version}"'\",/g'
+    project_regex='s/mangadlp_version =.*$/mangadlp_version = \"'"${mdlp_version}"'\"/g'
     for file in "${project_files[@]}"; do
         if ! sed -i "${project_regex}" "${file}"; then return 1; fi
     done

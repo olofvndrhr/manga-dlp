@@ -4,7 +4,7 @@ import mangadlp.app as app
 
 def call_app(args):
     # check if --version was used
-    mangadlp_version = "2.0.8",
+    mangadlp_version = "2.0.8"
     if args.version:
         print(f"manga-dlp version: {mangadlp_version}")
         exit(0)
