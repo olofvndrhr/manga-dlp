@@ -28,18 +28,18 @@ RUN \
     /var/tmp/*
 
 
-# install app
-RUN git -C /app/ clone --depth 1 --branch ${MDLP_VERSION} \
-        https://git.44net.ch/olofvndrhr/manga-dlp.git /app && \
-    pip install -r /app/requirements.txt && \
-    rm -rf \
-      /app/docker \
-      /app/contrib \
-      /app/tests
-
-
 # copy files to container
-COPY rootfs /
+# copy files to container
+COPY docker/rootfs /
+COPY mangadlp/ /app/mangadlp/
+COPY manga-dlp.py \
+     requirements.txt \
+     LICENSE \
+        /app/
+
+
+# install requirements
+RUN pip install -r /app/requirements.txt
+
 
 WORKDIR /app
-

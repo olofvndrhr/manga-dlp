@@ -26,7 +26,6 @@ pipeline:
     settings:
       repo: olofvndrhr/manga-dlp
       platforms: linux/amd64
-      context: docker
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
@@ -45,7 +44,6 @@ pipeline:
     settings:
       repo: olofvndrhr/manga-dlp
       platforms: linux/arm64
-      context: docker
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64

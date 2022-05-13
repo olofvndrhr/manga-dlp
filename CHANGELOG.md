@@ -16,7 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Rewrote parts of script to be easier to maintain
 - Moved the input script to the base folder
 - Moved all arguments to a class
-
+- Docker container creation
 
 ## [2.0.7] - 2022-05-13
 
