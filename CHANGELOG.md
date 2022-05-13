@@ -10,6 +10,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.0.7] - 2022-05-13
+
+### Changed
+- Changed CI/CD Platform from Drone-CI to Woodpecker-CI
+- Release title is now only the version
+
 ## [2.0.6] - 2022-05-11
 
 ### Fixed
