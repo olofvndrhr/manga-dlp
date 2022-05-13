@@ -6,16 +6,12 @@
 
 clone:
   git:
-    when:
-      event: [ push, tag, deployment ]
     image: woodpeckerci/plugin-git
 
 pipeline:
 
   # check shell scripts with shfmt
   test-shfmt:
-    when:
-      event: [ push, tag, deployment ]
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
@@ -23,8 +19,6 @@ pipeline:
 
   # check python scripts with black
   test-black:
-    when:
-      event: [ push, tag, deployment ]
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
@@ -32,8 +26,6 @@ pipeline:
 
   # test code and generate coverage report
   test-coverage-pytest:
-    when:
-      event: [ push, tag, deployment ]
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
@@ -46,7 +38,6 @@ pipeline:
   sonarqube-analysis:
     when:
       branch: master
-      event: [ push, tag, deployment ]
     image: 'cr.44net.ch/drone-plugins/sonarqube'
     pull: true
     settings:
