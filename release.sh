@@ -79,7 +79,7 @@ function get_releasenotes() {
         exit 1
     fi
     awk -v ver="[${mdlp_version}]" \
-        '/^## / { if (p) { exit }; if ($2 == ver) { p=1; next } } p && NF' \
+        '/^## / { if (p) { exit }; if ($2 == ver) { p=1 } } p && NF' \
         'CHANGELOG.md' > 'RELEASENOTES.md'
     printf 'Done\n'
 }
