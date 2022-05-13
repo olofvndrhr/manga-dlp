@@ -19,7 +19,7 @@ pipeline:
   # create release tar
   create-release-tar:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: 'cr.44net.ch/baseimages/debian-base'
     pull: true
@@ -54,7 +54,7 @@ pipeline:
   # publish release on github (github.com/olofvndrhr/manga-dlp)
   publish-release-github:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: plugins/github-release
     pull: true
