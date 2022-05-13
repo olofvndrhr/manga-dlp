@@ -56,7 +56,7 @@ pipeline:
     when:
       #branch: master
       event: tag
-    image: plugins/github-release
+    image: woodpeckerci/plugin-github-release
     pull: true
     settings:
       api_key:

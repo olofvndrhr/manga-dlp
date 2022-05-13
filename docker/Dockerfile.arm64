@@ -30,7 +30,7 @@ RUN \
 
 # install app
 RUN git -C /app/ clone --depth 1 --branch ${MDLP_VERSION} \
-        https://github.com/olofvndrhr/manga-dlp.git /app && \
+        https://git.44net.ch/olofvndrhr/manga-dlp.git /app && \
     pip install -r /app/requirements.txt && \
     rm -rf \
       /app/docker \
