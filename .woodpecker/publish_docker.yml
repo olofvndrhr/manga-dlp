@@ -10,7 +10,7 @@ depends_on:
 clone:
   git:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: woodpeckerci/plugin-git
 
@@ -19,7 +19,7 @@ pipeline:
   # build and publish docker image for amd64 - x86
   build-amd64:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: woodpeckerci/plugin-docker-buildx
     pull: true
@@ -38,7 +38,7 @@ pipeline:
   # build and publish docker image for arm64
   build-arm64:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: woodpeckerci/plugin-docker-buildx
     pull: true
@@ -57,7 +57,7 @@ pipeline:
   # publish docker manifest for automatic multi arch pulls
   publish-manifest:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: plugins/manifest
     pull: true

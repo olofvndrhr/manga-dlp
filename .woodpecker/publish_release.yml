@@ -10,7 +10,7 @@ depends_on:
 clone:
   git:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: woodpeckerci/plugin-git
 
@@ -29,7 +29,7 @@ pipeline:
   # create release-notes
   create-release-notes:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: 'cr.44net.ch/baseimages/debian-base'
     pull: true
@@ -39,7 +39,7 @@ pipeline:
   # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
   publish-release-gitea:
     when:
-      branch: master
+      #branch: master
       event: tag
     image: plugins/gitea-release
     pull: true
