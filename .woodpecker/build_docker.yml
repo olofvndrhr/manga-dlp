@@ -16,6 +16,16 @@ clone:
 
 pipeline:
 
+  # setup qemu for multi arch builds
+  dryrun-setup-qemu:
+    when:
+      branch: master
+      event: pull_request
+    image: multiarch/qemu-user-static
+    pull: true
+    commands:
+      - /register --reset -p yes
+
   # build docker image for amd64 - x86
   dryrun-build-amd64:
     when:

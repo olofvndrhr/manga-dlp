@@ -16,6 +16,16 @@ clone:
 
 pipeline:
 
+  # setup qemu for multi arch builds
+  setup-qemu:
+    when:
+      #branch: master
+      event: tag
+    image: multiarch/qemu-user-static
+    pull: true
+    commands:
+      - /register --reset -p yes
+
   # build and publish docker image for amd64 - x86
   build-amd64:
     when:
