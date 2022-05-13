@@ -83,3 +83,15 @@ def get_filename(chapter_name, chapter_vol, chapter_num, manga_forcevol):
         chapter_filename = f"Ch. {chapter_num} - {chapter_name}"
 
     return chapter_filename
+
+
+def progress_bar(progress, total):
+    percent = int(progress / (int(total) / 100))
+    bar_length = 50
+    bar_progress = int(progress / (int(total) / bar_length))
+    bar_texture = "■" * bar_progress
+    whitespace_texture = " " * (bar_length - bar_progress)
+    if progress == total:
+        print(f"\r❙{bar_texture}{whitespace_texture}❙ 100%", end="\n")
+    else:
+        print(f"\r❙{bar_texture}{whitespace_texture}❙ {percent}%", end="\r")

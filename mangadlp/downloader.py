@@ -2,13 +2,17 @@ import shutil
 from pathlib import Path
 from time import sleep
 import requests
+import mangadlp.utils as utils
 
 # download images
 def download_chapter(image_urls, chapter_path, md_wait, md_verbose):
     img_num = 1
+    total_img = len(image_urls)
     for img in image_urls:
         # set image path
         image_path = Path(f"{chapter_path}/{img_num:03d}")
+        # show progress bar
+        utils.progress_bar(img_num, total_img)
         try:
             # print('Try getting ' + img)
             req = requests.get(img, stream=True)
