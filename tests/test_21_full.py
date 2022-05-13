@@ -5,7 +5,7 @@ import mangadlp.main as MdlpMain
 
 
 def test_full_mangadex():
-    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    url = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     lang = "en"
     chapters = "1"
     readlist = ""
@@ -13,10 +13,10 @@ def test_full_mangadex():
     nocbz = False
     forcevol = False
     download_path = "tests"
-    download_wait = 1
+    download_wait = 0.5
     verbose = True
-    manga_path = Path("tests/Komi-san wa Komyushou Desu")
-    chapter_path = Path("tests/Komi-san wa Komyushou Desu/Ch. 1 - A Normal Person.cbz")
+    manga_path = Path("tests/Shikimori's Not Just a Cutie")
+    chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
     MdlpMain.main(
         url,
         lang,
@@ -37,12 +37,12 @@ def test_full_mangadex():
 
 
 def test_full_with_input():
-    url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    url = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     lang = "en"
     chapters = "1"
     download_path = "tests"
-    manga_path = Path("tests/Komi-san wa Komyushou Desu")
-    chapter_path = Path("tests/Komi-san wa Komyushou Desu/Ch. 1 - A Normal Person.cbz")
+    manga_path = Path("tests/Shikimori's Not Just a Cutie")
+    chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
     command_args = f"-u {url} -l {lang} -c {chapters} --path {download_path}"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
