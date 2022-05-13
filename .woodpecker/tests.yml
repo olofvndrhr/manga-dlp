@@ -4,6 +4,10 @@
 # branch: all
 # event: all
 
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+
 pipeline:
 
   # check shell scripts with shfmt

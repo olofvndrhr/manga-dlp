@@ -2,7 +2,7 @@
 
 ## python script to download mangas
 
-[![Build Status](https://drone.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://drone.44net.ch/olofvndrhr/manga-dlp)
+[![status-badge](https://ci.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://ci.44net.ch/olofvndrhr/manga-dlp)
 [![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Coverage](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=coverage&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Bugs](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=bugs&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
@@ -137,6 +137,8 @@ If you encounter any bugs, also just open a issue with a description of the prob
 
 * <del>Make docker container for easy distribution</del>
   --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
+* <del>Automate release</del>
+  --> Done with woodpecker-ci
 * Make pypi package
 * Add more supported sites
 

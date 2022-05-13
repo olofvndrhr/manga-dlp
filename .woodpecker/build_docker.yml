@@ -7,6 +7,13 @@
 depends_on:
   - tests
 
+clone:
+  git:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-git
+
 pipeline:
 
   # build docker image for amd64 - x86

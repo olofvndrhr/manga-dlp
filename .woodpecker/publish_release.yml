@@ -7,6 +7,13 @@
 depends_on:
   - tests
 
+clone:
+  git:
+    when:
+      branch: master
+      event: tag
+    image: woodpeckerci/plugin-git
+
 pipeline:
 
   # create release tar
