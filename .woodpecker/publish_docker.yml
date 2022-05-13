@@ -44,7 +44,7 @@ pipeline:
     pull: true
     settings:
       repo: olofvndrhr/manga-dlp
-      platforms: linux/arm64/v8
+      platforms: linux/armhf,linux/arm64
       context: docker
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
