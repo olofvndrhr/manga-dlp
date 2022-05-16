@@ -12,8 +12,9 @@ def download_chapter(image_urls, chapter_path, download_wait, verbose):
     for img_num, img in enumerate(image_urls, 1):
         # set image path
         image_path = Path(f"{chapter_path}/{img_num:03d}")
-        # show progress bar
-        utils.progress_bar(img_num, total_img, verbose)
+        # show progress bar if verbose logging is not active
+        if not verbose:
+            utils.progress_bar(img_num, total_img, verbose)
         counter = 1
         while counter <= 3:
             try:
@@ -36,7 +37,7 @@ def download_chapter(image_urls, chapter_path, download_wait, verbose):
 
         # verbose logging
         if verbose:
-            print(f"INFO: Downloaded image {img_num}")
+            print(f"INFO: Downloaded image {img_num}/{total_img}")
         # write image
         try:
             with image_path.open("wb") as file:
