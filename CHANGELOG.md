@@ -16,7 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Detection of files. Now it will skip them again
 
 ### Added
-- Ability to save the chapters as pdf
+- Ability to save the chapters as pdf (only on amd64/x86)
 - New output formats: rar, zip
 - Progress bar to show image download
 - Interactive input if no command line flags are given

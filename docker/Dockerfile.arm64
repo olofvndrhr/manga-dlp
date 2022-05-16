@@ -38,8 +38,9 @@ COPY manga-dlp.py \
         /app/
 
 
-# install requirements
-RUN pip install -r /app/requirements.txt
+# install requirements (without img2pdf)
+RUN grep -v img2pdf /app/requirements.txt > /app/requirements-arm64.txt
+RUN pip install -r /app/requirements-arm64.txt
 
 
 WORKDIR /app

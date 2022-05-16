@@ -40,6 +40,5 @@ COPY manga-dlp.py \
 
 # install requirements
 RUN pip install -r /app/requirements.txt
-RUN pip install img2pdf
 
 WORKDIR /app
