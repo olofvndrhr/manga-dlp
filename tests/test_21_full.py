@@ -8,7 +8,7 @@ import mangadlp.app as app
 def test_full_api_mangadex():
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
-    app.main(
+    mdlp = app.MangaDLP(
         url_uuid="https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie",
         language="en",
         chapters="1",
@@ -20,6 +20,7 @@ def test_full_api_mangadex():
         download_wait=0.5,
         verbose=True,
     )
+    mdlp.__main__()
 
     assert manga_path.exists() and manga_path.is_dir()
     assert chapter_path.exists() and chapter_path.is_file()
