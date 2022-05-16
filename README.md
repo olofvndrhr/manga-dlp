@@ -20,9 +20,9 @@ chapters without any additional setup.
 The default behaiviour is to pack the images to a [cbz archive](https://en.wikipedia.org/wiki/Comic_book_archive). If
 you just want the folder with all the pictures use the flag `--nocbz`.
 
-## *Currently* Supported sites
+## _Currently_ Supported sites
 
-* [Mangadex.org](https://mangadex.org/)
+- [Mangadex.org](https://mangadex.org/)
 
 ## Usage
 
@@ -60,19 +60,23 @@ See the docker [README](./docker/README.md)
 
 ## Options
 
-```txt
-usage: manga-dlp.py [-h] [-u URL] [-c CHAPTERS] [-p PATH] [-l LANG] [--read READ] [--list] [--nocbz] [--forcevol] [--wait WAIT]
-[--verbose]
+> "--format" currently only works with "", "pdf", "zip", "rar" and "cbz". As it just renames the zip file with the new suffix (except pdf)
 
-optional arguments:
--h, --help                          Show this help message and exit
--u URL/UUID, --url URL/UUID         URL or UUID of the manga
+```txt
+usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--verbose]
+
+Script to download mangas from various sites
+
+options:
+-h, --help                          show this help message and exit
+-u URL_UUID, --url URL_UUID         URL or UUID of the manga
+--read READ                         Path of file with manga links to download. One per line
+-v, --version                       Show version of manga-dlp and exit
 -c CHAPTERS, --chapters CHAPTERS    Chapters to download
 -p PATH, --path PATH                Download path. Defaults to "<script_dir>/downloads"
 -l LANG, --language LANG            Manga language. Defaults to "en" --> english
---read READ                         Path of file with manga links to download. One per line
 --list                              List all available chapters. Defaults to false
---nocbz                             Dont pack it to a cbz archive. Defaults to false
+--format FORMAT                     Archive format to create. An empty string means dont archive the folder. Defaults to 'cbz'
 --forcevol                          Force naming of volumes. For mangas where chapters reset each volume
 --wait WAIT                         Time to wait for each picture to download in seconds(float). Defaults 0.5
 --verbose                           Verbose logging. Defaults to false
@@ -135,12 +139,9 @@ If you encounter any bugs, also just open a issue with a description of the prob
 
 ## TODO's
 
-* <del>Make docker container for easy distribution</del>
+- <del>Make docker container for easy distribution</del>
   --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
-* <del>Automate release</del>
+- <del>Automate release</del>
   --> Done with woodpecker-ci
-* Make pypi package
-* Add more supported sites
-
-
-
+- Make pypi package
+- Add more supported sites

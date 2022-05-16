@@ -10,6 +10,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.1.0] - 2022-05-16
+
+### Fixed
+- Detection of files. Now it will skip them again
+
+### Added
+- Ability to save the chapters as pdf
+- New output formats: rar, zip
+- Progress bar to show image download
+- Interactive input if no command line flags are given
+- Better KeyboardInterrupt handling
+- Better error handling
+- Removed duplicate code
+
+### Changed
+- How the variables are used inside the script
+- Variables have now the same name as in other scripts (mostly)
+- Better retrying when a task fails
+
+
 ## [2.0.8] - 2022-05-13
 
 ### Changed

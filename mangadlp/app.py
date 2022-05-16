@@ -1,4 +1,5 @@
 import re
+import shutil
 from pathlib import Path
 
 import mangadlp.downloader as downloader
@@ -10,6 +11,7 @@ from mangadlp.api.mangadex import Mangadex
 
 class AppArguments:
     def __init__(self, args: dict):
+        # init parameters
         self.api = args["api"]
         self.url_uuid = args["url_uuid"]
         self.language = args["language"]
@@ -18,9 +20,14 @@ class AppArguments:
         self.list_chapters = args["list_chapters"]
         self.file_format = args["file_format"]
         self.forcevol = args["forcevol"]
-        self.download_path = args["chapter_path"]
+        self.download_path = args["download_path"]
         self.download_wait = args["download_wait"]
         self.verbose = args["verbose"]
+
+        # additional stuff
+        # set manga format suffix
+        if self.file_format and "." not in self.file_format:
+            self.file_format = f".{self.file_format}"
 
 
 def main(
@@ -68,6 +75,10 @@ def main(
     if url_uuid and readlist:
         print(f'ERR: You can only use "-u" or "--read". Dont specify both')
         exit(1)
+    # if forcevol is used, but didn't specify a volume in the chapters selected
+    if forcevol and ":" not in chapters:
+        print(f"ERR: You need to specify the volume if you use --forcevol.")
+        exit(1)
 
     # create arguments dict for class creation
     mdlp_args = {
@@ -78,7 +89,7 @@ def main(
         "list_chapters": list_chapters,
         "file_format": file_format,
         "forcevol": forcevol,
-        "chapter_path": download_path,
+        "download_path": download_path,
         "download_wait": download_wait,
         "verbose": verbose,
     }
@@ -93,6 +104,8 @@ def main(
                 continue
             # add api used to dict
             mdlp_args["api"] = api_used
+            # add url to dict
+            mdlp_args["url_uuid"] = url
             # create class
             args = AppArguments(mdlp_args)
             # get manga
@@ -155,9 +168,9 @@ def get_manga(args: AppArguments) -> None:
     # get manga title and uuid
     manga_uuid = api.manga_uuid
     manga_title = api.manga_title
-    # crate chapter list
-    manga_chapter_list = api.create_chapter_list()
-    # create skipped chapters list
+    # get chapter list
+    manga_chapter_list = api.chapter_list
+    # create empty skipped chapters list
     skipped_chapters = []
 
     # show infos
@@ -202,7 +215,7 @@ def get_manga(args: AppArguments) -> None:
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
             print(
-                f"ERR: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
+                f"ERR: No images: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
             )
             # add to skipped chapters list
             skipped_chapters.append(
@@ -211,21 +224,20 @@ def get_manga(args: AppArguments) -> None:
 
             continue
 
-        # get filename for chapter
-        chapter_filename = api.get_filename(chapter)
+        # get filename for chapter (without suffix)
+        chapter_filename = utils.get_filename(
+            chapter_infos["name"], chapter_infos["volume"], chapter, args.forcevol
+        )
 
-        # set download path for chapter
+        # set download path for chapter (image folder)
         chapter_path = manga_path / chapter_filename
+        # set archive path with file format
+        chapter_archive_path = Path(f"{chapter_path}{args.file_format}")
 
-        # check if chapter already exists.
-        # check for folder if option nocbz is given. if nocbz is not given, the folder will be overwritten
-
-        if utils.check_existence(chapter_path, args.file_format):
-            print(
-                f"INFO: '{chapter_filename}.{args.file_format}' already exists. Skipping\n"
-                if args.file_format
-                else f"'{chapter_filename}' already exists. Skipping\n"
-            )
+        # check if chapter already exists
+        # check for folder if file format is an empty string
+        if chapter_archive_path.exists():
+            print(f"INFO: '{chapter_archive_path}' already exists. Skipping\n")
             continue
 
         # create chapter folder (skips it if it already exists)
@@ -234,11 +246,8 @@ def get_manga(args: AppArguments) -> None:
         # verbose log
         if args.verbose:
             print(f"INFO: Chapter UUID: {chapter_infos['uuid']}")
-            print(
-                f"INFO: Filename: '{chapter_filename}.{args.file_format}'\n"
-                if args.file_format
-                else f"INFO: Filename: '{chapter_filename}'\n"
-            )
+            print(f"INFO: Filename: '{chapter_archive_path.name}'\n")
+            print(f"INFO: File path: '{chapter_archive_path}'\n")
             print(f"INFO: Image URLS:\n{chapter_image_urls}\n")
 
         # log
@@ -253,7 +262,12 @@ def get_manga(args: AppArguments) -> None:
             print("ERR: Stopping")
             exit(1)
         except:
-            print(f"ERR: Cant download: '{chapter_filename}'. Exiting")
+            print(f"ERR: Cant download: '{chapter_filename}'. Skipping")
+            # add to skipped chapters list
+            skipped_chapters.append(
+                f"{chapter_infos['volume']}:{chapter_infos['chapter']}"
+            ) if args.forcevol else skipped_chapters.append(chapter_infos["chapter"])
+            continue
 
         else:
             # Done with chapter
@@ -263,10 +277,25 @@ def get_manga(args: AppArguments) -> None:
         if args.file_format:
             print(f"INFO: Creating '{args.file_format}' archive")
             try:
-                utils.make_archive(chapter_path, args.file_format)
+                # check if image folder is existing
+                if not chapter_path.exists():
+                    print(f"ERR: Image folder: {chapter_path} does not exist")
+                    raise IOError
+                if args.file_format == ".pdf":
+                    utils.make_pdf(chapter_path)
+                else:
+                    utils.make_archive(chapter_path, args.file_format)
             except:
-                print("ERR: Could not create '{file_format}' archive")
-                exit(1)
+                print(f"ERR: Archive error. Skipping chapter")
+                skipped_chapters.append(
+                    f"{chapter_infos['volume']}:{chapter_infos['chapter']}"
+                ) if args.forcevol else skipped_chapters.append(
+                    chapter_infos["chapter"]
+                )
+                continue
+            else:
+                # remove image folder
+                shutil.rmtree(chapter_path)
 
         # done with chapter
         print("INFO: Done with chapter")
