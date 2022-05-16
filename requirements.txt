@@ -1,3 +1,1 @@
 requests>=2.24.0
-
-img2pdf>=0.4.4
