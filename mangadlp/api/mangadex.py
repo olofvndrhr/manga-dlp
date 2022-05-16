@@ -28,6 +28,7 @@ class Mangadex:
         self.manga_data = self.get_manga_data()
         self.manga_title = self.get_manga_title()
         self.manga_chapter_data = self.get_chapter_data()
+        self.chapter_list = self.create_chapter_list()
 
     # make initial request
     def get_manga_data(self):
@@ -232,19 +233,6 @@ class Mangadex:
                 chapter_list.append(chapter_number)
 
         return chapter_list
-
-    # create filename for chapter
-    def get_filename(self, chapter):
-        if self.verbose:
-            print(f"INFO: Creating filename for: {self.manga_uuid}")
-        chapter_info = self.get_chapter_infos(chapter)
-        chapter_name = chapter_info["name"]
-        chapter_num = chapter_info["chapter"]
-        volume_number = chapter_info["volume"]
-
-        return utils.get_filename(
-            chapter_name, volume_number, chapter_num, self.forcevol
-        )
 
     # create easy to access chapter infos
     def get_chapter_infos(self, chapter):

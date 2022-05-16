@@ -2,6 +2,8 @@
 
 ## Quick start
 
+> the pdf creation only works on amd64 images, as it unfortunately is incompatible with arm64.
+
 ```sh
 # with docker-compose
 curl -O docker-compose.yml https://raw.githubusercontent.com/olofvndrhr/manga-dlp/master/docker/docker-compose.yml

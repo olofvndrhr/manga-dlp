@@ -1,10 +1,11 @@
 import argparse
 import mangadlp.app as app
 
+mangadlp_version = "2.1.0"
+
 
 def call_app(args):
     # check if --version was used
-    mangadlp_version = "2.0.8"
     if args.version:
         print(f"manga-dlp version: {mangadlp_version}")
         exit(0)
@@ -23,7 +24,7 @@ def call_app(args):
     )
 
 
-def get_input():
+def get_args():
     parser = argparse.ArgumentParser(
         description="Script to download mangas from various sites"
     )
@@ -123,4 +124,4 @@ def get_input():
 
 
 if __name__ == "__main__":
-    get_input()
+    get_args()

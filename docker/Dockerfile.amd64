@@ -7,7 +7,7 @@ LABEL build_version="Version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="Ivan Schaller"
 
 # manga-dlp version
-ENV MDLP_VERSION=2.0.8
+ENV MDLP_VERSION=2.1.0
 
 # install packages
 RUN \
@@ -40,6 +40,5 @@ COPY manga-dlp.py \
 
 # install requirements
 RUN pip install -r /app/requirements.txt
-
 
 WORKDIR /app

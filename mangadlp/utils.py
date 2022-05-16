@@ -1,40 +1,38 @@
 import re
-import shutil
 from pathlib import Path
 from zipfile import ZipFile
 
 
-# create a cbz archive
+# create an archive of the chapter images
 def make_archive(chapter_path, file_format):
-    # set manga format suffix
-    if file_format and "." not in file_format:
-        file_format = f".{file_format}"
-    image_folder = Path(chapter_path)
     zip_path = Path(f"{chapter_path}.zip")
-    if not image_folder.exists():
-        print(f"ERR: Folder: {image_folder} does not exist")
-        return False
-    with ZipFile(f"{image_folder}.zip", "w") as zip_archive:
-        for file in image_folder.iterdir():
-            zip_archive.write(file, file.name)
-    zip_path.rename(zip_path.with_suffix(file_format))
-    shutil.rmtree(image_folder)
+    try:
+        # create zip
+        with ZipFile(zip_path, "w") as zipfile:
+            for file in chapter_path.iterdir():
+                zipfile.write(file, file.name)
+        # rename zip to file format requested
+        zip_path.rename(zip_path.with_suffix(file_format))
+    except:
+        raise IOError
 
-    return True
 
+def make_pdf(chapter_path):
+    try:
+        import img2pdf
+    except:
+        print("Cant import img2pdf. Please install it first")
+        raise ImportError
 
-# check if the file already exists
-def check_existence(chapter_path, file_format):
-    # set manga format suffix
-    if file_format and "." not in file_format:
-        file_format = f".{file_format}"
-    # check for folder if no format is given (empty string)
-    # if no format is given, the folder will be overwritten if it exists
-    chapter_path = Path(chapter_path).with_suffix(file_format)
-    if chapter_path.exists():
-        return True
-    else:
-        return False
+    pdf_path = Path(f"{chapter_path}.pdf")
+    images = []
+    for file in chapter_path.iterdir():
+        images.append(str(file))
+    try:
+        pdf_path.write_bytes(img2pdf.convert(images))
+    except:
+        print("ERR: Can't create '.pdf' archive")
+        raise IOError
 
 
 # create a list of chapters
@@ -98,13 +96,14 @@ def get_filename(chapter_name, chapter_vol, chapter_num, forcevol):
     )
 
 
-def progress_bar(progress, total):
+def progress_bar(progress, total, verbose):
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
     bar_texture = "■" * bar_progress
     whitespace_texture = " " * (bar_length - bar_progress)
     if progress == total:
-        print(f"\r❙{bar_texture}{whitespace_texture}❙ 100%", end="\n")
+        full_bar = "■" * bar_length
+        print(f"\r❙{full_bar}❙ 100%", end="\n")
     else:
         print(f"\r❙{bar_texture}{whitespace_texture}❙ {percent}%", end="\r")

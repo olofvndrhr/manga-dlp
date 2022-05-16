@@ -129,26 +129,6 @@ def test_not_existing_lang():
     assert e.value.code == 1
 
 
-def test_filename():
-    url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
-    language = "en"
-    forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
-
-    assert test.get_filename("1") == "Ch. 1 - A Normal Person"
-
-
-def test_filename_forcevol():
-    url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
-    language = "en"
-    forcevol = True
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
-
-    assert test.get_filename("1:4") == "Vol. 1 Ch. 4 - Bad at This"
-
-
 def test_create_chapter_list():
     url_uuid = (
         "https://mangadex.org/title/6fef1f74-a0ad-4f0d-99db-d32a7cd24098/fire-punch"

@@ -7,7 +7,7 @@ LABEL build_version="Version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="Ivan Schaller"
 
 # manga-dlp version
-ENV MDLP_VERSION=2.0.8
+ENV MDLP_VERSION=2.1.0
 
 # install packages
 RUN \
@@ -38,8 +38,9 @@ COPY manga-dlp.py \
         /app/
 
 
-# install requirements
-RUN pip install -r /app/requirements.txt
+# install requirements (without img2pdf)
+RUN grep -v img2pdf /app/requirements.txt > /app/requirements-arm64.txt
+RUN pip install -r /app/requirements-arm64.txt
 
 
 WORKDIR /app

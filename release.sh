@@ -33,7 +33,7 @@ function set_ver_docker() {
         'docker/Dockerfile.amd64'
         'docker/Dockerfile.arm64'
     )
-    docker_regex='s,^ARG MDLP_VERSION=.*$,ARG MDLP_VERSION='"${mdlp_version}"',g'
+    docker_regex='s,^ENV MDLP_VERSION=.*$,ENV MDLP_VERSION='"${mdlp_version}"',g'
     for file in "${docker_files[@]}"; do
         if ! sed -i "${docker_regex}" "${file}"; then return 1; fi
     done
@@ -58,6 +58,7 @@ function set_ver_project() {
     local project_files project_regex
     project_files=(
         'mangadlp/input.py'
+        'manga-dlp.py'
     )
     project_regex='s/mangadlp_version =.*$/mangadlp_version = \"'"${mdlp_version}"'\"/g'
     for file in "${project_files[@]}"; do
