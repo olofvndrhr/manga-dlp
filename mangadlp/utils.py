@@ -64,11 +64,11 @@ def get_chapter_list(chapters):
 # remove illegal characters etc
 def fix_name(filename):
     # remove illegal characters
-    filename = re.sub('[\\\/\<\>\:\;\|\?\*\!\@"]', "", filename)
+    filename = re.sub(r'[/\\<>:;|?*!@"]', "", filename)
     # remove multiple dots
-    filename = re.sub("([\.]{2,})", ".", filename)
+    filename = re.sub(r"([.]{2,})", ".", filename)
     # remove dot(s) at the beginning and end of the filename
-    filename = re.sub("(^[\.]{1,})|([\.]{1,}$)", "", filename)
+    filename = re.sub(r"(^[.]+)|([.]+$)", "", filename)
     # remove trailing and beginning spaces
     filename = re.sub("([ \t]+$)|(^[ \t]+)", "", filename)
 
