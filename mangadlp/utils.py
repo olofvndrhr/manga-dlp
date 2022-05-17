@@ -44,7 +44,7 @@ def get_chapter_list(chapters):
             # split chapters and volumes apart for list generation
             lower = chapter.split("-")[0].split(":")
             upper = chapter.split("-")[1].split(":")
-            # generate range inbetween start and end --> 1-3 == 1,2,3
+            # generate range inbetween start and end --> 1:1-1:3 == 1:1,1:2,1:3
             for n in range(int(lower[1]), int(upper[1]) + 1):
                 chapter_list.append(str(f"{lower[0]}:{n}"))
         # no volumes, just chapter ranges
@@ -96,7 +96,7 @@ def get_filename(chapter_name, chapter_vol, chapter_num, forcevol):
     )
 
 
-def progress_bar(progress, total, verbose):
+def progress_bar(progress, total):
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
