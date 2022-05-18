@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+import mangadlp.app as app
 import mangadlp.utils as utils
 
 
@@ -44,6 +45,41 @@ def test_chapter_list_forcevol():
     chapters_in = "1:1-1:4,2:8,3:11,4:14-4:15,5:22"
     chapters_out = ["1:1", "1:2", "1:3", "1:4", "2:8", "3:11", "4:14", "4:15", "5:22"]
     assert utils.get_chapter_list(chapters_in) == chapters_out
+
+
+def test_chapter_list_full():
+    mdlp = app.MangaDLP(
+        url_uuid="https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie",
+        language="en",
+        chapters="",
+        readlist="",
+        list_chapters=True,
+        file_format="cbz",
+        forcevol=True,
+        download_path="tests",
+        download_wait=0.5,
+        verbose=True,
+    )
+    mdlp.__main__()
+    chap_list = utils.get_chapter_list("1:1,1:2,1:4-1:7,2:", mdlp.manga_chapter_list)
+    assert chap_list == [
+        "1:1",
+        "1:2",
+        "1:4",
+        "1:5",
+        "1:6",
+        "1:7",
+        "2:17",
+        "2:18",
+        "2:19",
+        "2:20",
+        "2:21",
+        "2:22",
+        "2:23",
+        "2:24",
+        "2:25",
+        "2:26",
+    ]
 
 
 def test_fix_name():
