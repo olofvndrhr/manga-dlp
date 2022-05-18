@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 
 # create an archive of the chapter images
-def make_archive(chapter_path, file_format):
+def make_archive(chapter_path: Path, file_format: str) -> None:
     zip_path = Path(f"{chapter_path}.zip")
     try:
         # create zip
@@ -17,7 +17,7 @@ def make_archive(chapter_path, file_format):
         raise IOError
 
 
-def make_pdf(chapter_path):
+def make_pdf(chapter_path: Path) -> None:
     try:
         import img2pdf
     except:
@@ -36,24 +36,38 @@ def make_pdf(chapter_path):
 
 
 # create a list of chapters
-def get_chapter_list(chapters):
+def get_chapter_list(chapters: str, available_chapters: list = None) -> list:
     chapter_list = []
     for chapter in chapters.split(","):
         # check if chapter list is with volumes and ranges
         if "-" in chapter and ":" in chapter:
             # split chapters and volumes apart for list generation
-            lower = chapter.split("-")[0].split(":")
-            upper = chapter.split("-")[1].split(":")
+            lower_num = chapter.split("-")[0].split(":")
+            upper_num = chapter.split("-")[1].split(":")
+            vol = lower_num[0]
+            chap_beg = int(lower_num[1])
+            chap_end = int(upper_num[1])
             # generate range inbetween start and end --> 1:1-1:3 == 1:1,1:2,1:3
-            for n in range(int(lower[1]), int(upper[1]) + 1):
-                chapter_list.append(str(f"{lower[0]}:{n}"))
+            for chap in range(chap_beg, chap_end + 1):
+                chapter_list.append(str(f"{vol}:{chap}"))
         # no volumes, just chapter ranges
         elif "-" in chapter:
-            lower = chapter.split("-")[0]
-            upper = chapter.split("-")[1]
+            lower_num = int(chapter.split("-")[0])
+            upper_num = int(chapter.split("-")[1])
             # generate range inbetween start and end --> 1-3 == 1,2,3
-            for n in range(int(lower), int(upper) + 1):
-                chapter_list.append(str(n))
+            for chap in range(lower_num, upper_num + 1):
+                chapter_list.append(str(chap))
+        # check if full volume should be downloaded
+        elif ":" in chapter:
+            vol = chapter.split(":")[0]
+            chap = chapter.split(":")[1]
+            # select all chapters from the volume --> 1: == 1:1,1:2,1:3...
+            if vol and not chap:
+                regex = re.compile(f"{vol}:[0-9]{{1,4}}")
+                vol_list = [n for n in available_chapters if regex.match(n)]
+                chapter_list.extend(vol_list)
+            else:
+                chapter_list.append(chapter)
         # single chapters without a range given
         else:
             chapter_list.append(chapter)
@@ -62,7 +76,7 @@ def get_chapter_list(chapters):
 
 
 # remove illegal characters etc
-def fix_name(filename):
+def fix_name(filename: str) -> str:
     # remove illegal characters
     filename = re.sub(r'[/\\<>:;|?*!@"]', "", filename)
     # remove multiple dots
@@ -76,7 +90,9 @@ def fix_name(filename):
 
 
 # create name for chapter
-def get_filename(chapter_name, chapter_vol, chapter_num, forcevol):
+def get_filename(
+    chapter_name: str, chapter_vol: str, chapter_num: str, forcevol: bool
+) -> str:
     # if chapter is a oneshot
     if chapter_name == "Oneshot" or chapter_num == "Oneshot":
         return "Oneshot"
@@ -96,7 +112,7 @@ def get_filename(chapter_name, chapter_vol, chapter_num, forcevol):
     )
 
 
-def progress_bar(progress, total):
+def progress_bar(progress: float, total: float) -> None:
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
