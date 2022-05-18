@@ -106,7 +106,7 @@ class MangaDLP:
             # if forcevol is not used, but a volume is specified
             if not self.forcevol and ":" in self.chapters:
                 print(f"ERR: Don't specify the volume without --forcevol")
-            exit(1)
+                exit(1)
 
     # check the api which needs to be used
     def check_api(self, url_uuid: str) -> type:
