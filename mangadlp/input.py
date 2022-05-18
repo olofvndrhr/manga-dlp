@@ -1,7 +1,7 @@
 import argparse
 import mangadlp.app as app
 
-mangadlp_version = "2.1.0"
+mangadlp_version = "2.1.1"
 
 
 def call_app(args):
@@ -10,7 +10,7 @@ def call_app(args):
         print(f"manga-dlp version: {mangadlp_version}")
         exit(0)
     # call main function with all input arguments
-    app.main(
+    mdlp = app.MangaDLP(
         args.url_uuid,
         args.lang,
         args.chapters,
@@ -22,6 +22,7 @@ def call_app(args):
         args.wait,
         args.verbose,
     )
+    mdlp.__main__()
 
 
 def get_args():

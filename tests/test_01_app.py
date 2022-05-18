@@ -5,8 +5,10 @@ from mangadlp.api.mangadex import Mangadex
 
 
 def test_readin_list():
-    list_file = Path("tests/test_list.txt")
-    test_list = app.readin_list(list_file)
+    list_file = "tests/test_list.txt"
+    test = app.MangaDLP(readlist=list_file, list_chapters=True)
+    test.__main__()
+    test_list = test.url_list
 
     assert test_list == [
         "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu",
@@ -17,6 +19,7 @@ def test_readin_list():
 
 def test_check_api():
     url = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
-    test = app.check_api(url)
+    test = app.MangaDLP(url_uuid=url, list_chapters=True)
+    test.__main__()
 
-    assert test == Mangadex
+    assert test.api_used == Mangadex

@@ -1,6 +1,8 @@
 import shutil
 from pathlib import Path
+
 import pytest
+
 import mangadlp.utils as utils
 
 
@@ -45,16 +47,18 @@ def test_chapter_list_forcevol():
 
 
 def test_fix_name():
-    filename_in1 = "..hello?; @test1-*<>test2.cbz"
-    filename_in2 = "!hello: >test1-/test2<!.cbz"
-    filename_in3 = "  hello test1-test2.cbz    "
-    filename_in4 = 'hello "test1"-test2..cbz.'
+    filename_in1 = r"..hello?; @test1-*<\>test2.cbz.."
+    filename_in2 = r"!hello: >test1-/test2<!.cbz"
+    filename_in3 = r"  hello test1-test2.cbz@    "
+    filename_in4 = r'hello "test1"-test2..cbz.'
+    filename_in5 = r'..   hello "test1"-\/test2..cbz   .'
     # out
     filename_out = "hello test1-test2.cbz"
     assert utils.fix_name(filename_in1) == filename_out
     assert utils.fix_name(filename_in2) == filename_out
     assert utils.fix_name(filename_in3) == filename_out
     assert utils.fix_name(filename_in4) == filename_out
+    assert utils.fix_name(filename_in5) == filename_out
 
 
 def test_get_filename_forcevol():

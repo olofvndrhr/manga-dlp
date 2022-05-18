@@ -9,8 +9,8 @@ class Mangadex:
     # api information
     api_base_url = "https://api.mangadex.org"
     img_base_url = "https://uploads.mangadex.org"
-    # get infos to initiate class
 
+    # get infos to initiate class
     def __init__(self, url_uuid, language, forcevol, verbose):
         # static info
         self.url_uuid = url_uuid

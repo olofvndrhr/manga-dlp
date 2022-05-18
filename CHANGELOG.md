@@ -10,6 +10,22 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.1.1] - 2022-05-18
+
+### Fixed
+- Progress bar on verbose output
+- Sonarqube link for CI
+- A few typos
+- Removed unnecessary escapes from file rename regex
+
+### Added
+- API template
+
+### Changed
+- Updated docker baseimage
+- Rewrote app.py to a class
+
+
 ## [2.1.0] - 2022-05-16
 
 ### Fixed
