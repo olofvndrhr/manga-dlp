@@ -1,7 +1,7 @@
 import argparse
 import mangadlp.app as app
 
-mangadlp_version = "2.1.0"
+mangadlp_version = "2.1.1"
 
 
 def call_app(args):

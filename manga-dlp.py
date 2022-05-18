@@ -2,7 +2,7 @@ from mangadlp.input import get_args
 import os
 import sys
 
-mangadlp_version = "2.1.0"
+mangadlp_version = "2.1.1"
 
 
 def get_input():
