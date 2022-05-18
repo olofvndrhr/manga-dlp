@@ -80,12 +80,6 @@ class MangaDLP:
 
     def pre_checks(self) -> None:
         # prechecks userinput/options
-        if not self.list_chapters and self.chapters is None:
-            # no chapters to download were given
-            print(
-                f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
-            )
-            exit(1)
         # no url and no readin list given
         if not self.url_uuid and not self.readlist:
             print(
@@ -96,13 +90,22 @@ class MangaDLP:
         if self.url_uuid and self.readlist:
             print(f'ERR: You can only use "-u" or "--read". Dont specify both')
             exit(1)
-        # if forcevol is used, but didn't specify a volume in the chapters selected
-        if self.forcevol and ":" not in self.chapters:
-            print(f"ERR: You need to specify the volume if you use --forcevol")
-            exit(1)
-        # if forcevol is not used, but a volume is specified
-        if not self.forcevol and ":" in self.chapters:
-            print(f"ERR: Don't specify the volume without --forcevol")
+
+        # checks if --list is not used
+        if not self.list_chapters:
+            if self.chapters is None:
+                # no chapters to download were given
+                print(
+                    f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
+                )
+                exit(1)
+            # if forcevol is used, but didn't specify a volume in the chapters selected
+            if self.forcevol and ":" not in self.chapters:
+                print(f"ERR: You need to specify the volume if you use --forcevol")
+                exit(1)
+            # if forcevol is not used, but a volume is specified
+            if not self.forcevol and ":" in self.chapters:
+                print(f"ERR: Don't specify the volume without --forcevol")
             exit(1)
 
     # check the api which needs to be used
