@@ -164,10 +164,13 @@ class MangaDLP:
                 return_infos = self.archive_chapter(return_infos["chapter_path"])
                 error_chapters.append(return_infos.get("error"))
                 skipped_chapters.append(return_infos.get("skipped"))
-
-            # done with chapter
-            print("INFO: Done with chapter")
-            print("-----------------------------------------\n")
+            # check if chapter was skipped
+            try:
+                return_infos["skipped"]
+            # chapter was not skipped
+            except KeyError:
+                # done with chapter
+                print("INFO: Done with chapter\n")
 
         # done with manga
         print(f"{print_divider}")
@@ -176,6 +179,10 @@ class MangaDLP:
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
             print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
+        # filter error list
+        error_chapters = list(filter(None, error_chapters))
+        if len(error_chapters) >= 1:
+            print(f"INFO: Chapters with errors:\n{', '.join(error_chapters)}")
         print(f"{print_divider}\n")
 
     # once called per chapter
