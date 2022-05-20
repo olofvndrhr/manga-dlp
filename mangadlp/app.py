@@ -16,7 +16,6 @@ class MangaDLP:
     :param url_uuid: URL or UUID of the manga
     :param language: Manga language with country codes. "en" --> english
     :param chapters: Chapters to download, "all" for every chapter available
-    :param readlist: Path of file with manga links to download. One per line
     :param list_chapters: List all available chapters and exit
     :param file_format: Archive format to create. An empty string means don't archive the folder
     :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
@@ -29,10 +28,9 @@ class MangaDLP:
 
     def __init__(
         self,
-        url_uuid: str = "",
+        url_uuid: str,
         language: str = "en",
-        chapters: str = None,
-        readlist: str = "",
+        chapters: str = "",
         list_chapters: bool = False,
         file_format: str = "cbz",
         forcevol: bool = False,
@@ -44,67 +42,65 @@ class MangaDLP:
         self.url_uuid = url_uuid
         self.language = language
         self.chapters = chapters
-        self.readlist = readlist
         self.list_chapters = list_chapters
         self.file_format = file_format
         self.forcevol = forcevol
         self.download_path = download_path
         self.download_wait = download_wait
         self.verbose = verbose
+        # prepare everything
+        self.__prepare__()
 
-    def __main__(self):
+    def __prepare__(self) -> None:
         # additional stuff
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
             self.file_format = f".{self.file_format}"
         # start prechecks
         self.pre_checks()
-        # check if a list was provided
-        if self.readlist:
-            self.url_list = self.readin_list(self.readlist)
-        else:
-            self.url_list = [self.url_uuid]
-        # loop through every link
-        for url in self.url_list:
-            # init api
-            self.api_used = self.check_api(url)
-            self.api = self.api_used(url, self.language, self.forcevol, self.verbose)
-            # get manga title and uuid
-            self.manga_uuid = self.api.manga_uuid
-            self.manga_title = self.api.manga_title
-            # get chapter list
-            self.manga_chapter_list = self.api.chapter_list
-            self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
-            # start flow
-            self.get_manga()
+        # init api
+        self.api_used = self.check_api(self.url_uuid)
+        self.api = self.api_used(
+            self.url_uuid, self.language, self.forcevol, self.verbose
+        )
+        # get manga title and uuid
+        self.manga_uuid = self.api.manga_uuid
+        self.manga_title = self.api.manga_title
+        # get chapter list
+        self.manga_chapter_list = self.api.chapter_list
+        self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
 
-    def pre_checks(self):
+    def __main__(self):
+        # start flow
+        self.get_manga()
+
+    def pre_checks(self) -> None:
         # prechecks userinput/options
-        if not self.list_chapters and self.chapters is None:
-            # no chapters to download were given
-            print(
-                f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
-            )
-            exit(1)
         # no url and no readin list given
-        if not self.url_uuid and not self.readlist:
+        if not self.url_uuid:
             print(
                 f'ERR: You need to specify a manga url/uuid with "-u" or a list with "--read"'
             )
             exit(1)
-        # url and readin list given
-        if self.url_uuid and self.readlist:
-            print(f'ERR: You can only use "-u" or "--read". Dont specify both')
-            exit(1)
-        # when chapters are not being listed
+        # checks if --list is not used
         if not self.list_chapters:
+            if self.chapters is None:
+                # no chapters to download were given
+                print(
+                    f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
+                )
+                exit(1)
             # if forcevol is used, but didn't specify a volume in the chapters selected
             if self.forcevol and ":" not in self.chapters:
-                print(f"ERR: You need to specify the volume if you use --forcevol.")
+                print(f"ERR: You need to specify the volume if you use --forcevol")
+                exit(1)
+            # if forcevol is not used, but a volume is specified
+            if not self.forcevol and ":" in self.chapters:
+                print(f"ERR: Don't specify the volume without --forcevol")
                 exit(1)
 
     # check the api which needs to be used
-    def check_api(self, url_uuid):
+    def check_api(self, url_uuid: str) -> type:
         # apis to check
         api_mangadex = re.compile("mangadex.org")
         api_mangadex2 = re.compile(
@@ -125,19 +121,8 @@ class MangaDLP:
         print(f"ERR: No supported api in link/uuid found: {url_uuid}")
         raise ValueError
 
-    # read in the list of links from a file
-    def readin_list(self, readlist):
-        list_file = Path(readlist)
-        try:
-            url_str = list_file.read_text()
-            url_list = url_str.splitlines()
-        except:
-            raise IOError
-
-        return url_list
-
     # once called per manga
-    def get_manga(self):
+    def get_manga(self) -> None:
         # create empty skipped chapters list
         skipped_chapters = []
         error_chapters = []
@@ -159,7 +144,9 @@ class MangaDLP:
         if self.chapters.lower() == "all":
             chapters_to_download = self.manga_chapter_list
         else:
-            chapters_to_download = utils.get_chapter_list(self.chapters)
+            chapters_to_download = utils.get_chapter_list(
+                self.chapters, self.manga_chapter_list
+            )
 
         # show chapters to download
         print(f"INFO: Chapters selected:\n{', '.join(chapters_to_download)}")
@@ -192,7 +179,7 @@ class MangaDLP:
         print(f"{print_divider}\n")
 
     # once called per chapter
-    def get_chapter(self, chapter) -> dict:
+    def get_chapter(self, chapter: str) -> dict:
         # get chapter infos
         chapter_infos = self.api.get_chapter_infos(chapter)
 
@@ -283,7 +270,7 @@ class MangaDLP:
             return {"chapter_path": chapter_path}
 
     # create an archive of the chapter if needed
-    def archive_chapter(self, chapter_path):
+    def archive_chapter(self, chapter_path: Path) -> dict:
         print(f"INFO: Creating '{self.file_format}' archive")
         try:
             # check if image folder is existing

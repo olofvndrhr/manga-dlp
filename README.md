@@ -97,6 +97,47 @@ options:
 ./downloads/mangatitle/chaptertitle(.cbz)
 ```
 
+### Select chapters to download
+
+> With the option `-c "all"` you download every chapter available in the selected language
+
+To download specific chapters you can use the option `-c` or `--chapters`. That you don't have to specify all chapters
+individually, the script has some logic to fill in the blanks.
+
+Examples:
+
+```sh
+# if you want to download chapters 1 to 5
+python3 manga-dlp -u <url> -c 1-5
+
+# if you want to download chapters 1 and 5
+python3 manga-dlp -u <url> -c 1,5
+```
+
+If you use `--forcevol` it's the same, just with the volume number
+
+```sh
+# if you want to download chapters 1:1 to 1:5
+python3 manga-dlp -u <url> -c 1:1-1:5
+
+# if you want to download chapters 1:1 and 1:5
+python3 manga-dlp -u <url> -c 1:1,1:5
+
+# to download the whole volume 1
+python3 manga-dlp -u <url> -c 1:
+```
+
+And a combination of all
+
+```sh
+# if you want to download chapters 1 to 5 and 9
+python3 manga-dlp -u <url> -c 1-5,9
+
+# with --forcevol
+# if you want to download chapters 1:1 to 1:5 and 9, also the whole volume 4
+python3 manga-dlp -u <url> -c 1:1-1:5,1:9,4:
+```
+
 ### Read list of links from file
 
 With the option `--read` you can specify a file with links to multiple mangas. They will be parsed from top to bottom
