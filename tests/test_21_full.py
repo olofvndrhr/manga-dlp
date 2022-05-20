@@ -12,7 +12,6 @@ def test_full_api_mangadex():
         url_uuid="https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie",
         language="en",
         chapters="1",
-        readlist="",
         list_chapters=False,
         file_format="cbz",
         forcevol=False,

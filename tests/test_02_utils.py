@@ -52,7 +52,6 @@ def test_chapter_list_full():
         url_uuid="https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie",
         language="en",
         chapters="",
-        readlist="",
         list_chapters=True,
         file_format="cbz",
         forcevol=True,
@@ -60,7 +59,6 @@ def test_chapter_list_full():
         download_wait=0.5,
         verbose=True,
     )
-    mdlp.__main__()
     chap_list = utils.get_chapter_list("1:1,1:2,1:4-1:7,2:", mdlp.manga_chapter_list)
     assert chap_list == [
         "1:1",

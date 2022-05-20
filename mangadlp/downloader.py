@@ -8,7 +8,7 @@ import mangadlp.utils as utils
 
 # download images
 def download_chapter(
-    image_urls: list, chapter_path: str, download_wait: float, verbose: bool
+    image_urls: list, chapter_path: str or Path, download_wait: float, verbose: bool
 ) -> None:
     total_img = len(image_urls)
     for img_num, img in enumerate(image_urls, 1):

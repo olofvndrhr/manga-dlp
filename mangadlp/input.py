@@ -1,20 +1,45 @@
 import argparse
 import mangadlp.app as app
+from pathlib import Path
 
 mangadlp_version = "2.1.1"
 
 
-def call_app(args):
+def check_args(args):
     # check if --version was used
     if args.version:
         print(f"manga-dlp version: {mangadlp_version}")
         exit(0)
+    # check if a readin list was provided
+    if not args.read:
+        # single manga, no readin list
+        call_app(args)
+    else:
+        # multiple mangas
+        url_list = readin_list(args.read)
+        for url in url_list:
+            args.url_uuid = url
+            call_app(args)
+
+
+# read in the list of links from a file
+def readin_list(readlist: str) -> list:
+    list_file = Path(readlist)
+    try:
+        url_str = list_file.read_text()
+        url_list = url_str.splitlines()
+    except:
+        raise IOError
+
+    return url_list
+
+
+def call_app(args):
     # call main function with all input arguments
     mdlp = app.MangaDLP(
         args.url_uuid,
         args.lang,
         args.chapters,
-        args.read,
         args.list,
         args.format,
         args.forcevol,
@@ -121,7 +146,7 @@ def get_args():
     # parser.print_help()
     args = parser.parse_args()
 
-    call_app(args)
+    check_args(args)
 
 
 if __name__ == "__main__":
