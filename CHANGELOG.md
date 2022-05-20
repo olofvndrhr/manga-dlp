@@ -10,6 +10,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add support for more sites
 
 
+## [2.1.2] - 2022-05-20
+
+### Fixed
+- List chapters when none were specified
+- Typos
+
+### Added
+- Ability to download whole volumes
+
+### Changed
+- Moved processing of list with links to input.py
+- Updated README for volume and chapter selection
+
+
 ## [2.1.1] - 2022-05-18
 
 ### Fixed

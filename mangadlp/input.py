@@ -2,7 +2,7 @@ import argparse
 import mangadlp.app as app
 from pathlib import Path
 
-mangadlp_version = "2.1.1"
+mangadlp_version = "2.1.2"
 
 
 def check_args(args):
