@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 import mangadlp.app as app
