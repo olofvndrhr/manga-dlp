@@ -49,7 +49,7 @@ def call_app(args):
         args.wait,
         args.verbose,
     )
-    mdlp.__main__()
+    mdlp.get_manga()
 
 
 def get_args():

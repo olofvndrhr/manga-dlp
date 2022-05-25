@@ -12,7 +12,7 @@ from mangadlp.api.mangadex import Mangadex
 
 class MangaDLP:
     """Download Mangas from supported sites.
-    After initialization, start the script with the function __main__().
+    After initialization, start the script with the function get_manga().
 
     :param url_uuid: URL or UUID of the manga
     :param language: Manga language with country codes. "en" --> english
@@ -50,9 +50,9 @@ class MangaDLP:
         self.download_wait = download_wait
         self.verbose = verbose
         # prepare everything
-        self.__prepare__()
+        self._prepare()
 
-    def __prepare__(self) -> None:
+    def _prepare(self) -> None:
         # additional stuff
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
@@ -70,10 +70,6 @@ class MangaDLP:
         # get chapter list
         self.manga_chapter_list = self.api.chapter_list
         self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
-
-    def __main__(self):
-        # start flow
-        self.get_manga()
 
     def pre_checks(self) -> None:
         # prechecks userinput/options
