@@ -7,7 +7,7 @@ mangadlp_version = "2.1.2"
 
 
 def get_input():
-    print(f"Manga-DLP Version {mangadlp_version}")
+    print(f"manga-dlp version: {mangadlp_version}")
     print("Enter details of the manga you want to download:")
     while True:
         try:
