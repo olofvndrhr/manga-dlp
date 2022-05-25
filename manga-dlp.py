@@ -1,6 +1,7 @@
-from mangadlp.input import get_args
-import os
+import subprocess
 import sys
+
+from mangadlp.input import get_args
 
 mangadlp_version = "2.1.2"
 
@@ -12,22 +13,36 @@ def get_input():
         try:
             url_uuid = str(input("Url or UUID: "))
             readlist = str(input("List with links (optional): "))
-            language = str(input("Language: "))
-            chapters = str(input("Chapters: "))
+            language = str(input("Language: ")) or "en"
+            list_chapters = str(input("List chapters? y/N: "))
+            if list_chapters.lower() != "y" or list_chapters.lower() != "yes":
+                chapters = str(input("Chapters: "))
         except KeyboardInterrupt:
-            exit(1)
+            sys.exit(1)
         except:
             continue
         else:
             break
-    args = [f"-l {language}", f"-c {chapters}"]
+
+    args = [
+        "python3",
+        "manga-dlp.py",
+        "-l",
+        language,
+        "-c",
+        chapters,
+    ]
     if url_uuid:
-        args.append(f"-u {url_uuid}")
+        args.append("-u")
+        args.append(url_uuid)
     if readlist:
-        args.append(f"--read {readlist}")
+        args.append("--read")
+        args.append(readlist)
+    if list_chapters.lower() == "y" or list_chapters.lower() == "yes":
+        args.append("--list")
 
     # start script again with the arguments
-    os.system(f"python3 manga-dlp.py {' '.join(args)}")
+    subprocess.call(args)
 
 
 if __name__ == "__main__":

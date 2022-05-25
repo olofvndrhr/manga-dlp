@@ -1,6 +1,8 @@
+import shutil
+import sys
 from pathlib import Path
 from time import sleep
-import shutil
+
 import requests
 
 import mangadlp.utils as utils
@@ -29,7 +31,7 @@ def download_chapter(
                     raise ConnectionError
             except KeyboardInterrupt:
                 print("ERR: Stopping")
-                exit(1)
+                sys.exit(1)
             except:
                 if counter >= 3:
                     print("ERR: Maybe the MangaDex Servers are down?")

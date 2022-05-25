@@ -1,6 +1,9 @@
 import re
+import sys
 from time import sleep
+
 import requests
+
 import mangadlp.utils as utils
 
 
@@ -43,7 +46,7 @@ class Mangadex:
             except:
                 if counter >= 3:
                     print("ERR: Maybe the MangaDex API is down?")
-                    exit(1)
+                    sys.exit(1)
                 else:
                     print("ERR: Mangadex API not reachable. Retrying")
                     sleep(2)
@@ -53,7 +56,7 @@ class Mangadex:
         # check if manga exists
         if manga_data.json()["result"] != "ok":
             print("ERR: Manga not found")
-            exit(1)
+            sys.exit(1)
 
         return manga_data
 
@@ -66,7 +69,7 @@ class Mangadex:
         # check for new mangadex id
         if not uuid_regex.search(self.url_uuid):
             print("ERR: No valid UUID found")
-            exit(1)
+            sys.exit(1)
         manga_uuid = uuid_regex.search(self.url_uuid)[0]
         return manga_uuid
 
@@ -86,7 +89,7 @@ class Mangadex:
                 title = alt_titles[self.language]
             except:  # no title on requested language found
                 print("ERR: Chapter in requested language not found.")
-                exit(1)
+                sys.exit(1)
         return utils.fix_name(title)
 
     # check if chapters are available in requested language
@@ -120,7 +123,7 @@ class Mangadex:
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
         if total_chapters == 0:
-            exit(1)
+            sys.exit(1)
 
         chapter_data = {}
         last_chapter = ["", ""]

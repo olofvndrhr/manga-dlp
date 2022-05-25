@@ -1,5 +1,6 @@
 import re
 import shutil
+import sys
 from pathlib import Path
 
 import mangadlp.downloader as downloader
@@ -81,7 +82,7 @@ class MangaDLP:
             print(
                 f'ERR: You need to specify a manga url/uuid with "-u" or a list with "--read"'
             )
-            exit(1)
+            sys.exit(1)
         # checks if --list is not used
         if not self.list_chapters:
             if self.chapters is None:
@@ -89,15 +90,15 @@ class MangaDLP:
                 print(
                     f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
                 )
-                exit(1)
+                sys.exit(1)
             # if forcevol is used, but didn't specify a volume in the chapters selected
             if self.forcevol and ":" not in self.chapters:
                 print(f"ERR: You need to specify the volume if you use --forcevol")
-                exit(1)
+                sys.exit(1)
             # if forcevol is not used, but a volume is specified
             if not self.forcevol and ":" in self.chapters:
                 print(f"ERR: Don't specify the volume without --forcevol")
-                exit(1)
+                sys.exit(1)
 
     # check the api which needs to be used
     def check_api(self, url_uuid: str) -> type:
@@ -115,7 +116,7 @@ class MangaDLP:
         # this is only for testing multiple apis
         if api_test.search(url_uuid):
             print("Not supported yet")
-            exit(1)
+            sys.exit(1)
 
         # no supported api found
         print(f"ERR: No supported api in link/uuid found: {url_uuid}")
@@ -197,7 +198,7 @@ class MangaDLP:
             )
         except KeyboardInterrupt:
             print("ERR: Stopping")
-            exit(1)
+            sys.exit(1)
 
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
@@ -258,7 +259,7 @@ class MangaDLP:
             )
         except KeyboardInterrupt:
             print("ERR: Stopping")
-            exit(1)
+            sys.exit(1)
         except:
             print(f"ERR: Cant download: '{chapter_filename}'. Skipping")
             # add to skipped chapters list
