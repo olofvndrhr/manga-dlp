@@ -24,6 +24,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Replace `exit()` with `sys.exit()`
 - Renamed class methods to not look like dunder methods
+- Script execution moved from `os.system()` to `subprocess.call()`
 
 ## [2.1.2] - 2022-05-20
 
