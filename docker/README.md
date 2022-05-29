@@ -46,13 +46,16 @@ docker exec <container name> python3 manga-dlp.py <options>
 The default config runs `manga-dlp.py` once a day at 12:00 and fetches every chapter of the mangas listed in the file
 `mangas.txt` in the root directory of this repo.
 
-#### The default options used are:
+#### The default schedule:
 
 ```sh
---read mangas.txt
---chapters all
---path /app/downloads
---wait 2
+#!/bin/bash
+
+python3 /app/manga-dlp.py \
+    --path /app/downloads \
+    --read /app/mangas.txt \
+    --chapters all \
+    --wait 2
 ```
 
 To use your own schedule you need to mount (override) the default schedule or add new ones to the crontab.
@@ -62,15 +65,15 @@ To use your own schedule you need to mount (override) the default schedule or ad
 ```yml
 # docker-compose.yml
 volumes:
-  - ./crontab:/etc/cron.d/01_mangadlp # overwrites the default crontab
-  - ./crontab2:/etc/cron.d/02_something # adds a new one crontab file
+  - ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
+  - ./crontab2:/etc/cron.d/something # adds a new one crontab file
   - ./schedule1:/app/schedules/daily # overwrites the default schedule
   - ./schedule2:/app/schedules/weekly # adds a new schedule
 ```
 
 ```sh
-docker run -v ./crontab:/etc/cron.d/01_mangadlp # overwrites the default crontab
-docker run -v ./crontab2:/etc/cron.d/02_something # adds a new one crontab file
+docker run -v ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
+docker run -v ./crontab2:/etc/cron.d/something # adds a new one crontab file
 docker run -v ./schedule1:/app/schedules/daily # overwrites the default schedule
 docker run -v ./schedule2:/app/schedules/weekly # adds a new schedule
 ```
@@ -78,7 +81,16 @@ docker run -v ./schedule2:/app/schedules/weekly # adds a new schedule
 #### The default crontab file:
 
 ```sh
-0 12 * * * root /app/schedule > /proc/1/fd/1 2>&1
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# default crontab to run manga-dlp once a day
+# and get all (new) chapters of the mangas in
+# the file mangas.txt
+# "/proc/1/fd/1 2>&1" is to show the logs in the container
+# "s6-setuidgid abc" is used to set the permissions
+
+0 12 * * * root s6-setuidgid abc /app/schedules/daily > /proc/1/fd/1 2>&1
 ```
 
 ## Add mangas to mangas.txt
