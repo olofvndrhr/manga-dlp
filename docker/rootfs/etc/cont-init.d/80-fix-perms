@@ -10,3 +10,6 @@ find '/app' -type 'f' \( -not -perm 664 -and -not -path '/app/downloads*' \) -ex
 
 find '/app' \( -not -user abc -and -not -path '/app/downloads*' \) -exec chown abc '{}' \+
 find '/app' \( -not -group abc -and -not -path '/app/downloads*' \) -exec chown :abc '{}' \+
+
+# fix schedules
+chmod -R +x /app/schedules

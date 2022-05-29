@@ -29,7 +29,6 @@ RUN \
 
 
 # copy files to container
-# copy files to container
 COPY docker/rootfs /
 COPY mangadlp/ /app/mangadlp/
 COPY manga-dlp.py \
