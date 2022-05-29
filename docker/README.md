@@ -33,6 +33,8 @@ docker run -e PUID=<userid> -e PGID=<groupid>
 
 ## Run commands in container
 
+> You don't need to use the full path of manga-dlp.py because `/app` already is the working directory
+
 You can simply use the `docker exec` command to run the scripts like normal.
 
 ```sh
@@ -41,21 +43,54 @@ docker exec <container name> python3 manga-dlp.py <options>
 
 ## Run your own schedule
 
-The default config runs manga-dlp.py once a day at 03:00 and fetches every chapter of the mangas listed in the file
-mangas.txt in the root directory of this repo.
+The default config runs `manga-dlp.py` once a day at 12:00 and fetches every chapter of the mangas listed in the file
+`mangas.txt` in the root directory of this repo.
 
-To use your own schedule you need to mount (override) the default crontab or add new ones to the cron directory.
+#### The default schedule:
+
+```sh
+#!/bin/bash
+
+python3 /app/manga-dlp.py \
+    --path /app/downloads \
+    --read /app/mangas.txt \
+    --chapters all \
+    --wait 2
+```
+
+To use your own schedule you need to mount (override) the default schedule or add new ones to the crontab.
+
+> Don't forget to add the cron entries for every new schedule
 
 ```yml
 # docker-compose.yml
 volumes:
-  - ./crontab:/etc/cron.d/01_manga-dlp # overwrites the default one
-  - ./crontab2:/etc/cron.d/02_something # adds a new one
+  - ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
+  - ./crontab2:/etc/cron.d/something # adds a new one crontab file
+  - ./schedule1:/app/schedules/daily # overwrites the default schedule
+  - ./schedule2:/app/schedules/weekly # adds a new schedule
 ```
 
 ```sh
-docker run -v ./crontab:/etc/cron.d/01_manga-dlp # overwrites the default one
-docker run -v ./crontab2:/etc/cron.d/02_something # adds a new one
+docker run -v ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
+docker run -v ./crontab2:/etc/cron.d/something # adds a new one crontab file
+docker run -v ./schedule1:/app/schedules/daily # overwrites the default schedule
+docker run -v ./schedule2:/app/schedules/weekly # adds a new schedule
+```
+
+#### The default crontab file:
+
+```sh
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# default crontab to run manga-dlp once a day
+# and get all (new) chapters of the mangas in
+# the file mangas.txt
+# "/proc/1/fd/1 2>&1" is to show the logs in the container
+# "s6-setuidgid abc" is used to set the permissions
+
+0 12 * * * root s6-setuidgid abc /app/schedules/daily > /proc/1/fd/1 2>&1
 ```
 
 ## Add mangas to mangas.txt
@@ -77,15 +112,15 @@ docker run -v ./mangas.txt:/app/mangas.txt
 
 Per default as in the script, it downloads everything to "downloads" in the scripts root directory. This data does not
 persist with container recreation, so you need to mount it. This is already done in the quick start section. If you want
-to change the path of the host, simply change `./media/mangas/` to a path of your choice.
+to change the path of the host, simply change `./downloads/` to a path of your choice.
 
 ```yml
 # docker-compose.yml
 volumes:
-  - ./media/mangas/:/app/downloads
+  - ./downloads/:/app/downloads
 ```
 
 ```sh
-docker run -v ./media/mangas/:/app/downloads
+docker run -v ./downloads/:/app/downloads
 ```
 

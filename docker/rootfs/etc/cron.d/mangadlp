@@ -1,0 +1,11 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# default crontab to run manga-dlp once a day
+# and get all (new) chapters of the mangas in
+# the file mangas.txt
+# "/proc/1/fd/1 2>&1" is to show the logs in the container
+# "s6-setuidgid abc" is used to set the permissions
+
+0 12 * * * root s6-setuidgid abc /app/schedules/daily > /proc/1/fd/1 2>&1
+

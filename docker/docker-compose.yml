@@ -12,6 +12,8 @@ services:
     volumes:
       - ./downloads/:/app/downloads/ # default manga download directory
       - ./mangas.txt:/app/mangas.txt # default file for manga links to download
+      #- ./crontab:/etc/cron.d/mangadlp # path to default crontab
+      #- ./schedule:/app/schedules/daily # path to the default schedule which is run daily
     environment:
       - TZ=Europe/Zurich
       # - PUID= # custom userid - defaults to 4444
