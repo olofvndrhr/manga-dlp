@@ -4,7 +4,7 @@ from pathlib import Path
 
 import mangadlp.app as app
 
-mangadlp_version = "2.1.2"
+mangadlp_version = "2.1.3"
 
 
 def check_args(args):
