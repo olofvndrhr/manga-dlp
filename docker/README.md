@@ -49,12 +49,12 @@ To use your own schedule you need to mount (override) the default crontab or add
 ```yml
 # docker-compose.yml
 volumes:
-  - ./crontab:/etc/cron.d/01_manga-dlp # overwrites the default one
+  - ./crontab:/etc/cron.d/01_mangadlp # overwrites the default one
   - ./crontab2:/etc/cron.d/02_something # adds a new one
 ```
 
 ```sh
-docker run -v ./crontab:/etc/cron.d/01_manga-dlp # overwrites the default one
+docker run -v ./crontab:/etc/cron.d/01_mangadlp # overwrites the default one
 docker run -v ./crontab2:/etc/cron.d/02_something # adds a new one
 ```
 

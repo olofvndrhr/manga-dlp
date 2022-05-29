@@ -2,4 +2,4 @@
 # and get all (new) chapters of the mangas in
 # the file mangas.txt
 
-0 3 * * *   abc    python3 /app/manga-dlp.py --read /app/mangas.txt -c all
+0 3 * * *   abc    python3 /app/manga-dlp.py --read /app/mangas.txt -c all --wait 2
