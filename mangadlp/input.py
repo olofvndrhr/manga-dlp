@@ -1,15 +1,17 @@
 import argparse
-import mangadlp.app as app
+import sys
 from pathlib import Path
 
-mangadlp_version = "2.1.2"
+import mangadlp.app as app
+
+mangadlp_version = "2.1.3"
 
 
 def check_args(args):
     # check if --version was used
     if args.version:
         print(f"manga-dlp version: {mangadlp_version}")
-        exit(0)
+        sys.exit(0)
     # check if a readin list was provided
     if not args.read:
         # single manga, no readin list
@@ -47,7 +49,7 @@ def call_app(args):
         args.wait,
         args.verbose,
     )
-    mdlp.__main__()
+    mdlp.get_manga()
 
 
 def get_args():

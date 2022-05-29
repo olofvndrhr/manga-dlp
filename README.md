@@ -60,7 +60,8 @@ See the docker [README](./docker/README.md)
 
 ## Options
 
-> "--format" currently only works with "", "pdf", "zip", "rar" and "cbz". As it just renames the zip file with the new suffix (except pdf). For pdf creation you have to install img2pdf.
+> "--format" currently only works with "", "pdf", "zip", "rar" and "cbz". As it just renames the zip file with the new
+> suffix (except pdf). For pdf creation you have to install img2pdf.
 
 ```txt
 usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--verbose]

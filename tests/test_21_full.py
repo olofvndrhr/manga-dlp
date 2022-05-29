@@ -19,7 +19,7 @@ def test_full_api_mangadex():
         download_wait=0.5,
         verbose=True,
     )
-    mdlp.__main__()
+    mdlp.get_manga()
 
     assert manga_path.exists() and manga_path.is_dir()
     assert chapter_path.exists() and chapter_path.is_file()

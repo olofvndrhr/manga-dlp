@@ -1,5 +1,6 @@
 import re
 import shutil
+import sys
 from pathlib import Path
 
 import mangadlp.downloader as downloader
@@ -11,7 +12,7 @@ from mangadlp.api.mangadex import Mangadex
 
 class MangaDLP:
     """Download Mangas from supported sites.
-    After initialization, start the script with the function __main__().
+    After initialization, start the script with the function get_manga().
 
     :param url_uuid: URL or UUID of the manga
     :param language: Manga language with country codes. "en" --> english
@@ -49,9 +50,9 @@ class MangaDLP:
         self.download_wait = download_wait
         self.verbose = verbose
         # prepare everything
-        self.__prepare__()
+        self._prepare()
 
-    def __prepare__(self) -> None:
+    def _prepare(self) -> None:
         # additional stuff
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
@@ -70,10 +71,6 @@ class MangaDLP:
         self.manga_chapter_list = self.api.chapter_list
         self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
 
-    def __main__(self):
-        # start flow
-        self.get_manga()
-
     def pre_checks(self) -> None:
         # prechecks userinput/options
         # no url and no readin list given
@@ -81,7 +78,7 @@ class MangaDLP:
             print(
                 f'ERR: You need to specify a manga url/uuid with "-u" or a list with "--read"'
             )
-            exit(1)
+            sys.exit(1)
         # checks if --list is not used
         if not self.list_chapters:
             if self.chapters is None:
@@ -89,15 +86,15 @@ class MangaDLP:
                 print(
                     f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
                 )
-                exit(1)
+                sys.exit(1)
             # if forcevol is used, but didn't specify a volume in the chapters selected
             if self.forcevol and ":" not in self.chapters:
                 print(f"ERR: You need to specify the volume if you use --forcevol")
-                exit(1)
+                sys.exit(1)
             # if forcevol is not used, but a volume is specified
             if not self.forcevol and ":" in self.chapters:
                 print(f"ERR: Don't specify the volume without --forcevol")
-                exit(1)
+                sys.exit(1)
 
     # check the api which needs to be used
     def check_api(self, url_uuid: str) -> type:
@@ -115,7 +112,7 @@ class MangaDLP:
         # this is only for testing multiple apis
         if api_test.search(url_uuid):
             print("Not supported yet")
-            exit(1)
+            sys.exit(1)
 
         # no supported api found
         print(f"ERR: No supported api in link/uuid found: {url_uuid}")
@@ -164,10 +161,13 @@ class MangaDLP:
                 return_infos = self.archive_chapter(return_infos["chapter_path"])
                 error_chapters.append(return_infos.get("error"))
                 skipped_chapters.append(return_infos.get("skipped"))
-
-            # done with chapter
-            print("INFO: Done with chapter")
-            print("-----------------------------------------\n")
+            # check if chapter was skipped
+            try:
+                return_infos["skipped"]
+            # chapter was not skipped
+            except KeyError:
+                # done with chapter
+                print("INFO: Done with chapter\n")
 
         # done with manga
         print(f"{print_divider}")
@@ -176,6 +176,10 @@ class MangaDLP:
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
             print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
+        # filter error list
+        error_chapters = list(filter(None, error_chapters))
+        if len(error_chapters) >= 1:
+            print(f"INFO: Chapters with errors:\n{', '.join(error_chapters)}")
         print(f"{print_divider}\n")
 
     # once called per chapter
@@ -190,7 +194,7 @@ class MangaDLP:
             )
         except KeyboardInterrupt:
             print("ERR: Stopping")
-            exit(1)
+            sys.exit(1)
 
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
@@ -251,7 +255,7 @@ class MangaDLP:
             )
         except KeyboardInterrupt:
             print("ERR: Stopping")
-            exit(1)
+            sys.exit(1)
         except:
             print(f"ERR: Cant download: '{chapter_filename}'. Skipping")
             # add to skipped chapters list

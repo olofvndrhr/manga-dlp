@@ -9,43 +9,65 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.3] - 2022-05-29
+
+### Fixed
+
+- Error-chapters and skipped-chapters list are now shown again
+- The Interactive input version now matches `--version`
+
+### Added
+
+- Ability to list chapters with interactive input
+
+### Changed
+
+- Replace `exit()` with `sys.exit()`
+- Renamed class methods to not look like dunder methods
+- Script execution moved from `os.system()` to `subprocess.call()`
 
 ## [2.1.2] - 2022-05-20
 
 ### Fixed
+
 - List chapters when none were specified
 - Typos
 
 ### Added
+
 - Ability to download whole volumes
 
 ### Changed
+
 - Moved processing of list with links to input.py
 - Updated README for volume and chapter selection
-
 
 ## [2.1.1] - 2022-05-18
 
 ### Fixed
+
 - Progress bar on verbose output
 - Sonarqube link for CI
 - A few typos
 - Removed unnecessary escapes from file rename regex
 
 ### Added
+
 - API template
 
 ### Changed
+
 - Updated docker baseimage
 - Rewrote app.py to a class
-
 
 ## [2.1.0] - 2022-05-16
 
 ### Fixed
+
 - Detection of files. Now it will skip them again
 
 ### Added
+
 - Ability to save the chapters as pdf (only on amd64/x86)
 - New output formats: rar, zip
 - Progress bar to show image download
@@ -55,14 +77,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Removed duplicate code
 
 ### Changed
+
 - How the variables are used inside the script
 - Variables have now the same name as in other scripts (mostly)
 - Better retrying when a task fails
 
-
 ## [2.0.8] - 2022-05-13
 
 ### Changed
+
 - Rewrote parts of script to be easier to maintain
 - Moved the input script to the base folder
 - Moved all arguments to a class
@@ -71,24 +94,26 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [2.0.7] - 2022-05-13
 
 ### Changed
+
 - Changed CI/CD Platform from Drone-CI to Woodpecker-CI
 - Release title is now only the version
 
 ## [2.0.6] - 2022-05-11
 
 ### Fixed
-- Filenames on windows (ntfs). Removed double quote from file and folder names
 
+- Filenames on windows (ntfs). Removed double quote from file and folder names
 
 ## [2.0.5] - 2022-05-11
 
 ### Fixed
+
 - Better error handling on "KeyboardInterrupt"
 - Release notes now fixed
 
 ### Added
-- New test cases
 
+- New test cases
 
 ## [2.0.4] - 2022-05-10
 
