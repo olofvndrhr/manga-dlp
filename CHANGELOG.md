@@ -9,6 +9,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.4] - 2022-05-29
+
+### Fixed
+
+- Docker container now works again
+- Fixed cron in docker container
+
+### Changed
+
+- Docker container scheduling is now more practical
+
 ## [2.1.3] - 2022-05-29
 
 ### Fixed
