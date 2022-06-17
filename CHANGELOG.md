@@ -9,6 +9,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.5] - 2022-06-17
+
+### Fixed
+
+- Image names now have a suffix, as some comic readers have problems with no suffix
+
+### Added
+
+- `--format` section in the README
+
 ## [2.1.4] - 2022-05-29
 
 ### Fixed

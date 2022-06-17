@@ -3,7 +3,7 @@ import sys
 
 from mangadlp.input import get_args
 
-mangadlp_version = "2.1.4"
+mangadlp_version = "2.1.5"
 
 
 def get_input():

@@ -29,6 +29,7 @@ pipeline:
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
+      build_args: BUILD_DATE="$(date +%Y-%m-%d_%H:%M)"
       username:
         from_secret: cr-dhub-username
       password:
@@ -47,6 +48,7 @@ pipeline:
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64
+      build_args: BUILD_DATE="$(date +%Y-%m-%d_%H:%M)"
       username:
         from_secret: cr-dhub-username
       password:
