@@ -13,7 +13,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
-- Image names now have a suffix, as some comic readers have problems with no suffix
+- Image names now have a suffix, as some comic readers have problems with no
+  suffix [fixes issue #2]
 
 ### Added
 
