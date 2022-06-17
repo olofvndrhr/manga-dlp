@@ -1,8 +1,10 @@
+import shutil
 from pathlib import Path
+
 import pytest
 import requests
+
 import mangadlp.downloader as downloader
-import shutil
 
 
 def test_downloader():
@@ -21,7 +23,7 @@ def test_downloader():
         images.append(file.name)
 
     print(images)
-    assert images == ["001", "002", "003", "004", "005"]
+    assert images == ["001.png", "002.png", "003.png", "004.png", "005.png"]
     # cleanup
     shutil.rmtree(chapter_path, ignore_errors=True)
 
