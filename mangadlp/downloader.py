@@ -13,21 +13,23 @@ def download_chapter(
     image_urls: list, chapter_path: str or Path, download_wait: float, verbose: bool
 ) -> None:
     total_img = len(image_urls)
-    for img_num, img in enumerate(image_urls, 1):
+    for image_num, image in enumerate(image_urls, 1):
+        # get image suffix
+        image_suffix = str(Path(image).suffix) or ".png"
         # set image path
-        image_path = Path(f"{chapter_path}/{img_num:03d}")
+        image_path = Path(f"{chapter_path}/{image_num:03d}{image_suffix}")
         # show progress bar if verbose logging is not active
         if verbose:
-            print(f"INFO: Downloading image {img_num}/{total_img}")
+            print(f"INFO: Downloading image {image_num}/{total_img}")
         else:
-            utils.progress_bar(img_num, total_img)
+            utils.progress_bar(image_num, total_img)
 
         counter = 1
         while counter <= 3:
             try:
-                r = requests.get(img, stream=True)
+                r = requests.get(image, stream=True)
                 if r.status_code != 200:
-                    print(f"ERR: Request for image {img} failed, retrying")
+                    print(f"ERR: Request for image {image} failed, retrying")
                     raise ConnectionError
             except KeyboardInterrupt:
                 print("ERR: Stopping")
@@ -50,5 +52,5 @@ def download_chapter(
             print("ERR: Can't write file")
             raise IOError
 
-        img_num += 1
+        image_num += 1
         sleep(download_wait)

@@ -60,9 +60,6 @@ See the docker [README](./docker/README.md)
 
 ## Options
 
-> "--format" currently only works with "", "pdf", "zip", "rar" and "cbz". As it just renames the zip file with the new
-> suffix (except pdf). For pdf creation you have to install img2pdf.
-
 ```txt
 usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--verbose]
 
@@ -168,6 +165,33 @@ is `<script_dir>/downloads`. Absolute and relative paths are supported.
 `python3 manga-dlp.py <other options> --path /media/mangas`
 
 This will save all mangas/chapters in the path `/media/mangas/<manga title>/<chapter name>`
+
+### Set output format
+
+> `--format` currently only works with `""`, `"pdf"`, `"zip"`, `"rar"` and `"cbz"`.
+> As it just renames the zip file with the new
+> suffix (except pdf).
+
+You can specify the output format of the manga images with the `--format` option.
+The default is set to `.cbz`, so if no format is given it falls back to `<manga-name>/<chapter_name>.cbz`
+
+For pdf creation you have to install [img2pdf](https://pypi.org/project/img2pdf/).
+With the amd64 docker image it is already installed
+see more in the Docker [README.md](docker/README.md).
+
+#### Supported format options are:
+
+* cbz - `--format "cbz"` or `--format ".cbz"` **- default**
+* cbr - `--format "cbr"` or `--format ".cbr"`
+* zip - `--format "zip"` or `--format ".zip"`
+* pdf - `--format "pdf"` or `--format ".pdf"`
+* _none_ - `--format ""` - this saves the images just in a folder
+
+#### Example:
+
+`python3 manga-dlp.py <other options> --format "zip"`
+
+This will download the chapter and save it as a zip archive.
 
 ## Contribution / Bugs
 
