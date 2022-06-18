@@ -30,7 +30,7 @@ pipeline:
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      build_args: BUILD_DATE="$(date +%Y-%m-%d_%H:%M)"
+      build_args: BUILD_VERSION=${CI_COMMIT_TAG}
 
   # build docker image for arm64
   dryrun-build-arm64:
@@ -46,5 +46,5 @@ pipeline:
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64#
-      build_args: BUILD_DATE="$(date +%Y-%m-%d_%H:%M)"
+      build_args: BUILD_VERSION=${CI_COMMIT_TAG}
 
