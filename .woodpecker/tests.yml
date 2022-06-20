@@ -36,7 +36,7 @@ pipeline:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
-      - mypy --install-types --non-interactive --show-error-context --show-column-numbers --show-error-codes mangadlp/
+      - mypy --install-types --non-interactive --show-error-context --show-column-numbers --show-error-codes --ignore-missing-imports mangadlp/
 
   # test code and generate coverage report
   test-coverage-pytest:

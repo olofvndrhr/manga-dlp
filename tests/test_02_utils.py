@@ -38,13 +38,13 @@ def test_make_archive_false():
 def test_chapter_list():
     chapters_in = "1-4,8,11,14-15,22"
     chapters_out = ["1", "2", "3", "4", "8", "11", "14", "15", "22"]
-    assert utils.get_chapter_list(chapters_in) == chapters_out
+    assert utils.get_chapter_list(chapters_in, []) == chapters_out
 
 
 def test_chapter_list_forcevol():
     chapters_in = "1:1-1:4,2:8,3:11,4:14-4:15,5:22"
     chapters_out = ["1:1", "1:2", "1:3", "1:4", "2:8", "3:11", "4:14", "4:15", "5:22"]
-    assert utils.get_chapter_list(chapters_in) == chapters_out
+    assert utils.get_chapter_list(chapters_in, []) == chapters_out
 
 
 def test_chapter_list_full():

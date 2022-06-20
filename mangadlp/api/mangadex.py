@@ -1,6 +1,7 @@
 import re
 import sys
 from time import sleep
+from typing import Any
 
 import requests
 
@@ -34,7 +35,7 @@ class Mangadex:
         self.chapter_list = self.create_chapter_list()
 
     # make initial request
-    def get_manga_data(self) -> requests:
+    def get_manga_data(self) -> requests.Response:
         if self.verbose:
             print(f"INFO: Getting manga data for: {self.manga_uuid}")
         counter = 1
@@ -63,7 +64,7 @@ class Mangadex:
     # get the uuid for the manga
     def get_manga_uuid(self) -> str:
         # isolate id from url
-        uuid_regex = re.compile(
+        uuid_regex: Any = re.compile(
             "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
         )
         # check for new mangadex id

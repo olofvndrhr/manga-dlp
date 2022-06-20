@@ -2,6 +2,7 @@ import re
 import shutil
 import sys
 from pathlib import Path
+from typing import Any
 
 import mangadlp.downloader as downloader
 import mangadlp.utils as utils
@@ -120,8 +121,8 @@ class MangaDLP:
     # once called per manga
     def get_manga(self) -> None:
         # create empty skipped chapters list
-        skipped_chapters = []
-        error_chapters = []
+        skipped_chapters: list[Any] = []
+        error_chapters: list[Any] = []
 
         # show infos
         print_divider = "========================================="
