@@ -29,7 +29,7 @@ pipeline:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
-      - isort --check-only --diff .
+      - isort --profile black --check-only --diff .
 
   # check static typing - python
   test-mypy:

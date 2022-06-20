@@ -6,6 +6,7 @@ from typing import Any
 
 import mangadlp.downloader as downloader
 import mangadlp.utils as utils
+
 # supported api's
 from mangadlp.api.mangadex import Mangadex
 
