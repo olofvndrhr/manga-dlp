@@ -10,19 +10,33 @@ clone:
 
 pipeline:
 
-  # check shell scripts with shfmt
+  # check code style - shell
   test-shfmt:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
       - shfmt -d -i 4 -bn -ci -sr .
 
-  # check python scripts with black
+  # check code style - python
   test-black:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
-      - black --check --diff --color .
+      - black --check --diff .
+
+  # check imports - python
+  test-isort:
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: true
+    commands:
+      - isort --check-only --diff .
+
+  # check static typing - python
+  test-mypy:
+    image: 'cr.44net.ch/drone-plugins/test'
+    pull: true
+    commands:
+      - mypy --install-types --non-interactive --show-error-context --show-column-numbers --show-error-codes mangadlp/
 
   # test code and generate coverage report
   test-coverage-pytest:
