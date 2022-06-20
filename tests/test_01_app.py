@@ -1,5 +1,7 @@
 from pathlib import Path
+
 import pytest
+
 import mangadlp.app as app
 from mangadlp.api.mangadex import Mangadex
 
