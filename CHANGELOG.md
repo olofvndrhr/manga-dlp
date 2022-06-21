@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
-## [2.1.6] - 2022-06-
+## [2.1.6] - 2022-06-21
 
 ### Fixed
 
@@ -30,6 +30,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `README.md` now has sorted badges
 - Imports are now sorted with `isort`
 - Static types are now checked with `mypy`
+- Release note generation is now simplified
 
 ## [2.1.5] - 2022-06-18
 
