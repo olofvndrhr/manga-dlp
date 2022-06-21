@@ -34,7 +34,7 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash 'get_release_notes.sh' '${CI_COMMIT_TAG}'
+      - bash get_release_notes.sh ${CI_COMMIT_TAG}
 
   # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
   publish-release-gitea:

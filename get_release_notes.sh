@@ -21,7 +21,7 @@ EOF
 
 # create changelog for release
 function get_release_notes() {
-    local l_version
+    local l_version="${1}"
 
     printf 'Creating release-notes\n'
     # check for version
