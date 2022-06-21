@@ -1,7 +1,7 @@
 mangadlp/
 manga-dlp.py
+pyproject.toml
 requirements.txt
-setup.py
 MANIFEST.in
 README.md
 CHANGELOG.md
