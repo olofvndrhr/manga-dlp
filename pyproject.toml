@@ -1,5 +1,5 @@
 [project]
-version = "2.1.5"
+version = "2.1.6"
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
