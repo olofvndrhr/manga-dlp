@@ -2,7 +2,7 @@ version: "3"
 services:
 
   manga-dlp:
-    image: olofvndrhr/manga-dlp:latest
+    image: olofvndrhr/manga-dlp:2.1.5
     container_name: manga-dlp
     restart: unless-stopped
     security_opt:

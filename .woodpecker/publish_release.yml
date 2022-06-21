@@ -21,7 +21,7 @@ pipeline:
     when:
       #branch: master
       event: tag
-    image: 'cr.44net.ch/baseimages/debian-base'
+    image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
       - tar -czf manga-dlp-${CI_COMMIT_TAG}.tar.gz --files-from=release-files.txt
@@ -31,10 +31,10 @@ pipeline:
     when:
       #branch: master
       event: tag
-    image: 'cr.44net.ch/baseimages/debian-base'
+    image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash 'release.sh' '--get-releasenotes' '${CI_COMMIT_TAG}'
+      - bash 'get_release_notes.sh' '${CI_COMMIT_TAG}'
 
   # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
   publish-release-gitea:
@@ -48,7 +48,7 @@ pipeline:
         from_secret: gitea-olofvndrhr-token
       base_url: https://git.44net.ch
       files: manga-dlp-${CI_COMMIT_TAG}.tar.gz
-      title: '${CI_COMMIT_TAG}'
+      title: ${CI_COMMIT_TAG}
       note: RELEASENOTES.md
 
   # publish release on github (github.com/olofvndrhr/manga-dlp)
@@ -62,5 +62,5 @@ pipeline:
       api_key:
         from_secret: github-olofvndrhr-token
       files: manga-dlp-${CI_COMMIT_TAG}.tar.gz
-      title: '${CI_COMMIT_TAG}'
+      title: ${CI_COMMIT_TAG}
       note: RELEASENOTES.md
