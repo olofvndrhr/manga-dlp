@@ -29,14 +29,14 @@ pipeline:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
-      - isort --skip-gitignore --line-length 88 --profile black --check-only --diff .
+      - isort --check-only --diff .
 
   # check static typing - python
   test-mypy:
     image: 'cr.44net.ch/drone-plugins/test'
     pull: true
     commands:
-      - mypy --install-types --non-interactive --show-error-context --show-column-numbers --show-error-codes --ignore-missing-imports mangadlp/
+      - mypy --install-types --non-interactive mangadlp/
 
   # test code and generate coverage report
   test-coverage-pytest:
@@ -45,7 +45,7 @@ pipeline:
     commands:
       - pip install -r requirements.txt
       - coverage erase
-      - coverage run -m pytest --verbose --exitfirst
+      - coverage run
       - coverage xml -i
 
   # analyse code with sonarqube and upload it
