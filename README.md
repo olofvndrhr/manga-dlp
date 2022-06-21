@@ -2,11 +2,28 @@
 
 ## python script to download mangas
 
+#### CI/CD:
+
 [![status-badge](https://ci.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://ci.44net.ch/olofvndrhr/manga-dlp)
+[![Last Release](https://img.shields.io/github/release-date/olofvndrhr/manga-DLP?label=last%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
+[![Version](https://img.shields.io/github/v/release/olofvndrhr/manga-dlp?label=version&sort=semver)](https://github.com/olofvndrhr/manga-dlp/releases)
+
+#### Code Analysis:
+
 [![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Coverage](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=coverage&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Bugs](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=bugs&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+#### Meta:
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![Types - Mypy](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
+[![Imports - isort](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://github.com/pycqa/isort)
+[![Tests](https://img.shields.io/badge/tests-pytest-yellow)](https://github.com/pytest-dev/pytest/)
+[![Coverage generation](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
+[![License - MIT](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
+
+---
 
 ## Description
 

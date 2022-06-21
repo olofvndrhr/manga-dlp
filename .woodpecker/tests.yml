@@ -10,38 +10,52 @@ clone:
 
 pipeline:
 
-  # check shell scripts with shfmt
+  # check code style - shell
   test-shfmt:
-    image: 'cr.44net.ch/drone-plugins/test'
+    image: cr.44net.ch/drone-plugins/test
     pull: true
     commands:
       - shfmt -d -i 4 -bn -ci -sr .
 
-  # check python scripts with black
+  # check code style - python
   test-black:
-    image: 'cr.44net.ch/drone-plugins/test'
+    image: cr.44net.ch/drone-plugins/test
     pull: true
     commands:
-      - black --check --diff --color .
+      - black --check --diff .
+
+  # check imports - python
+  test-isort:
+    image: cr.44net.ch/drone-plugins/test
+    pull: true
+    commands:
+      - isort --check-only --diff .
+
+  # check static typing - python
+  test-mypy:
+    image: cr.44net.ch/drone-plugins/test
+    pull: true
+    commands:
+      - mypy --install-types --non-interactive mangadlp/
 
   # test code and generate coverage report
   test-coverage-pytest:
-    image: 'cr.44net.ch/drone-plugins/test'
+    image: cr.44net.ch/drone-plugins/test
     pull: true
     commands:
       - pip install -r requirements.txt
       - coverage erase
-      - coverage run -m pytest --verbose --exitfirst
+      - coverage run
       - coverage xml -i
 
   # analyse code with sonarqube and upload it
   sonarqube-analysis:
     when:
       branch: master
-    image: 'cr.44net.ch/drone-plugins/sonarqube'
+    image: cr.44net.ch/drone-plugins/sonarqube
     pull: true
     settings:
-      sonar_host: 'https://sonarqube.44net.ch'
+      sonar_host: https://sonarqube.44net.ch
       sonar_token:
         from_secret: sq-44net-token
       usingProperties: true

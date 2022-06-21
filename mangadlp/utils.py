@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from typing import Any
 from zipfile import ZipFile
 
 
@@ -36,35 +37,36 @@ def make_pdf(chapter_path: Path) -> None:
 
 
 # create a list of chapters
-def get_chapter_list(chapters: str, available_chapters: list = None) -> list:
-    chapter_list = []
+def get_chapter_list(chapters: str, available_chapters: list) -> list:
+    # check if there are available chapter
+    chapter_list: list[str] = []
     for chapter in chapters.split(","):
-        # check if chapter list is with volumes and ranges
+        # check if chapter list is with volumes and ranges (forcevol)
         if "-" in chapter and ":" in chapter:
             # split chapters and volumes apart for list generation
-            lower_num = chapter.split("-")[0].split(":")
-            upper_num = chapter.split("-")[1].split(":")
-            vol = lower_num[0]
-            chap_beg = int(lower_num[1])
-            chap_end = int(upper_num[1])
+            lower_num_fv: list[str] = chapter.split("-")[0].split(":")
+            upper_num_fv: list[str] = chapter.split("-")[1].split(":")
+            vol_fv: str = lower_num_fv[0]
+            chap_beg_fv: int = int(lower_num_fv[1])
+            chap_end_fv: int = int(upper_num_fv[1])
             # generate range inbetween start and end --> 1:1-1:3 == 1:1,1:2,1:3
-            for chap in range(chap_beg, chap_end + 1):
-                chapter_list.append(str(f"{vol}:{chap}"))
+            for chap in range(chap_beg_fv, chap_end_fv + 1):
+                chapter_list.append(str(f"{vol_fv}:{chap}"))
         # no volumes, just chapter ranges
         elif "-" in chapter:
-            lower_num = int(chapter.split("-")[0])
-            upper_num = int(chapter.split("-")[1])
+            lower_num: int = int(chapter.split("-")[0])
+            upper_num: int = int(chapter.split("-")[1])
             # generate range inbetween start and end --> 1-3 == 1,2,3
             for chap in range(lower_num, upper_num + 1):
                 chapter_list.append(str(chap))
         # check if full volume should be downloaded
         elif ":" in chapter:
-            vol = chapter.split(":")[0]
-            chap = chapter.split(":")[1]
+            vol_num: str = chapter.split(":")[0]
+            chap_num: str = chapter.split(":")[1]
             # select all chapters from the volume --> 1: == 1:1,1:2,1:3...
-            if vol and not chap:
-                regex = re.compile(f"{vol}:[0-9]{{1,4}}")
-                vol_list = [n for n in available_chapters if regex.match(n)]
+            if vol_num and not chap_num:
+                regex: Any = re.compile(f"{vol_num}:[0-9]{{1,4}}")
+                vol_list: list[str] = [n for n in available_chapters if regex.match(n)]
                 chapter_list.extend(vol_list)
             else:
                 chapter_list.append(chapter)

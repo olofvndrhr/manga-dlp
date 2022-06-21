@@ -3,11 +3,11 @@ import sys
 
 from mangadlp.input import get_args
 
-mangadlp_version = "2.1.5"
+MDLP_VERSION = "2.1.6"
 
 
 def get_input():
-    print(f"manga-dlp version: {mangadlp_version}")
+    print(f"manga-dlp version: {MDLP_VERSION}")
     print("Enter details of the manga you want to download:")
     while True:
         try:

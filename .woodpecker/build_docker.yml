@@ -45,6 +45,6 @@ pipeline:
       platforms: linux/arm64
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
-      auto_tag_suffix: linux-arm64#
+      auto_tag_suffix: linux-arm64
       build_args: BUILD_VERSION=${CI_COMMIT_TAG}
 

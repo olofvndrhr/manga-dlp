@@ -4,13 +4,13 @@ from pathlib import Path
 
 import mangadlp.app as app
 
-mangadlp_version = "2.1.5"
+MDLP_VERSION = "2.1.6"
 
 
 def check_args(args):
     # check if --version was used
     if args.version:
-        print(f"manga-dlp version: {mangadlp_version}")
+        print(f"manga-dlp version: {MDLP_VERSION}")
         sys.exit(0)
     # check if a readin list was provided
     if not args.read:

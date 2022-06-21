@@ -1,7 +1,9 @@
-from pathlib import Path
-import pytest
-import mangadlp.input as mdlpinput
 import os
+from pathlib import Path
+
+import pytest
+
+import mangadlp.input as mdlpinput
 
 
 def test_read_and_url():
