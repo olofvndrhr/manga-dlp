@@ -23,7 +23,6 @@ classifiers = [
 dependencies = [
     "requests>=2.24.0",
 ]
-dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/olofvndrhr/manga-dlp"

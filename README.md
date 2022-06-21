@@ -5,6 +5,8 @@
 #### CI/CD:
 
 [![status-badge](https://ci.44net.ch/api/badges/olofvndrhr/manga-dlp/status.svg)](https://ci.44net.ch/olofvndrhr/manga-dlp)
+[![Last Release](https://img.shields.io/github/release-date/olofvndrhr/manga-DLP?label=last%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
+[![Version](https://img.shields.io/github/v/release/olofvndrhr/manga-dlp?label=version&sort=semver)](https://github.com/olofvndrhr/manga-dlp/releases)
 
 #### Code Analysis:
 
