@@ -9,6 +9,28 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.6] - 2022-06-
+
+### Fixed
+
+- Docker labels are now working
+- Global variables are now fully uppercase
+- Some errors with static types
+
+### Added
+
+- bump2version config for releases
+- More tests with: `mypy` and `isort`
+- New issue templates
+
+### Changed
+
+- Release workflow now is based on configuration files
+- Switched from `setup.py` to `pyproject.toml`
+- `README.md` now has sorted badges
+- Imports are now sorted with `isort`
+- Static types are now checked with `mypy`
+
 ## [2.1.5] - 2022-06-18
 
 ### Fixed
