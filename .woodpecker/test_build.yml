@@ -26,22 +26,22 @@ pipeline:
     commands:
       - hatch build
 
-  # test code with different python versions - amd64
-  test-tox-amd64:
-    when:
-      branch: master
-      event: pull_request
-    image: cr.44net.ch/drone-plugins/test:1-linux-amd64
-    pull: true
-    commands:
-      - tox
-
-  # test code with different python versions - arm64
-  test-tox-arm64:
-    when:
-      branch: master
-      event: pull_request
-    image: cr.44net.ch/drone-plugins/test:1-linux-arm64
-    pull: true
-    commands:
-      - tox
+#  # test code with different python versions - amd64
+#  test-tox-amd64:
+#    when:
+#      branch: master
+#      event: pull_request
+#    image: cr.44net.ch/drone-plugins/test:1-linux-amd64
+#    pull: true
+#    commands:
+#      - tox
+#
+#  # test code with different python versions - arm64
+#  test-tox-arm64:
+#    when:
+#      branch: master
+#      event: pull_request
+#    image: cr.44net.ch/drone-plugins/test:1-linux-arm64
+#    pull: true
+#    commands:
+#      - tox
