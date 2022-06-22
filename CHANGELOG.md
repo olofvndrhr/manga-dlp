@@ -9,6 +9,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.8] - 2022-06-22
+
+### Fixed
+
+- Interactive input
+
 ## [2.1.7] - 2022-06-22
 
 ### Added
