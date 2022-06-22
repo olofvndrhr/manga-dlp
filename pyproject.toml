@@ -37,7 +37,8 @@ Tracker = "https://github.com/olofvndrhr/manga-dlp/issues"
 Source = "https://github.com/olofvndrhr/manga-dlp"
 
 [project.scripts]
-hatch = "mangadlp.input:get_args"
+mangadlp = "mangadlp.input:main"
+manga-dlp = "mangadlp.input:main"
 
 # isort config
 [tool.isort]
