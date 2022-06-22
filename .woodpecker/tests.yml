@@ -59,4 +59,3 @@ pipeline:
       sonar_token:
         from_secret: sq-44net-token
       usingProperties: true
-

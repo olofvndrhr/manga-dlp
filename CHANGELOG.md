@@ -9,6 +9,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.7] - 2022-06-22
+
+### Added
+
+- tox version testing
+- New pre-release tests
+- Build info's with hatch
+- [Pypi](https://pypi.org/project/manga-dlp/) build with hatch
+- Pypi section in `README.md`
+- [Snyk](https://app.snyk.io/org/olofvndrhr-t6h/project/aae9609d-a4e4-41f8-b1ac-f2561b2ad4e3) test results
+  in `README.md`
+
+### Changed
+
+- Moved code from `manga-dlp.py` to `input.py` for uniformity
+- The default entrypoint is now `mangadlp.input:main`
+
 ## [2.1.6] - 2022-06-21
 
 ### Fixed

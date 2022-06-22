@@ -1,0 +1,39 @@
+########################
+# test publish release #
+########################
+# branch: master
+# event: pull_request
+
+depends_on:
+  - tests
+
+clone:
+  git:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-git
+
+pipeline:
+
+  # create release tar
+  test-create-release-tar:
+    when:
+      branch: master
+      event: pull_request
+    image: cr.44net.ch/baseimages/debian-base
+    pull: true
+    commands:
+      - tar -czf manga-dlp-2.1.7.tar.gz --files-from=release-files.txt
+      - tar -tzf manga-dlp-2.1.7.tar.gz
+
+      # create release-notes
+  test-create-release-notes:
+    when:
+      branch: master
+      event: pull_request
+    image: cr.44net.ch/baseimages/debian-base
+    pull: true
+    commands:
+      - bash get_release_notes.sh 2.1.7
+      - cat RELEASENOTES.md

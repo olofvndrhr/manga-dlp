@@ -1,12 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-version = "2.1.6"
+version = "2.1.7"
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
-author = "Ivan Schaller"
-author_email = "ivan@schaller.sh"
+authors = [
+    { name = "Ivan Schaller", email = "ivan@schaller.sh" },
+]
 keywords = [
     "manga",
     "downloader",
@@ -31,7 +36,8 @@ Tracker = "https://github.com/olofvndrhr/manga-dlp/issues"
 Source = "https://github.com/olofvndrhr/manga-dlp"
 
 [project.scripts]
-hatch = "mangadlp.input:get_args"
+mangadlp = "mangadlp.input:main"
+manga-dlp = "mangadlp.input:main"
 
 # isort config
 [tool.isort]
@@ -81,4 +87,21 @@ exclude_lines = [
 ]
 ignore_errors = true
 
+[tool.hatch.build]
+ignore-vcs = true
 
+[tool.hatch.build.targets.sdist]
+include = ["mangadlp"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
+
+[tool.hatch.build.targets.wheel]
+include = ["mangadlp"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
