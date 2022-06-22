@@ -69,4 +69,3 @@ pipeline:
         from_secret: cr-dhub-username
       password:
         from_secret: cr-dhub-key
-

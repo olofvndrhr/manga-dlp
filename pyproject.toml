@@ -92,6 +92,16 @@ ignore-vcs = true
 
 [tool.hatch.build.targets.sdist]
 include = ["mangadlp"]
-exclude = ["docker"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
 
 [tool.hatch.build.targets.wheel]
+include = ["mangadlp"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
