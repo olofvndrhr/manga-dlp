@@ -24,8 +24,8 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - tar -czf manga-dlp-2.1.7.tar.gz --files-from=release-files.txt
-      - tar -tzf manga-dlp-2.1.7.tar.gz
+      - tar -czf manga-dlp-2.1.8.tar.gz --files-from=release-files.txt
+      - tar -tzf manga-dlp-2.1.8.tar.gz
 
       # create release-notes
   test-create-release-notes:
@@ -35,5 +35,5 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash get_release_notes.sh 2.1.7
+      - bash get_release_notes.sh 2.1.8
       - cat RELEASENOTES.md
