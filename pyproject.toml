@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 version = "2.1.6"
 name = "manga-dlp"
@@ -5,8 +9,9 @@ description = "A cli manga downloader"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
-author = "Ivan Schaller"
-author_email = "ivan@schaller.sh"
+authors = [
+    { name = "Ivan Schaller", email = "ivan@schaller.sh" },
+]
 keywords = [
     "manga",
     "downloader",
@@ -19,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11"
 ]
 dependencies = [
     "requests>=2.24.0",
@@ -81,4 +87,11 @@ exclude_lines = [
 ]
 ignore_errors = true
 
+[tool.hatch.build]
+ignore-vcs = true
 
+[tool.hatch.build.targets.sdist]
+include = ["mangadlp"]
+exclude = ["docker"]
+
+[tool.hatch.build.targets.wheel]
