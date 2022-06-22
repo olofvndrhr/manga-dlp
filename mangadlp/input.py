@@ -72,8 +72,6 @@ def get_input():
             break
 
     args = [
-        "python3",
-        "manga-dlp.py",
         "-l",
         language,
         "-c",
@@ -89,7 +87,8 @@ def get_input():
         args.append("--list")
 
     # start script again with the arguments
-    subprocess.call(args)
+    sys.argv.extend(args)
+    get_args()
 
 
 def get_args():
