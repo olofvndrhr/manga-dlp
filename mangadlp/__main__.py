@@ -1,3 +1,6 @@
-import mangadlp.input
+import sys
 
-mangadlp.input.get_args()
+from mangadlp.input import main
+
+if __name__ == "__main__":
+    sys.exit(main())
