@@ -23,7 +23,7 @@
 [![Tests](https://img.shields.io/badge/tests-pytest-yellow)](https://github.com/pytest-dev/pytest/)
 [![Coverage generation](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
 [![License - MIT](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
-
+[![Compatibility](https://img.shields.io/pypi/pyversions/manga-dlp)](https://pypi.org/project/manga-dlp/)
 ---
 
 ## Description
@@ -68,9 +68,17 @@ python manga-dlp.py <options>
 python3 manga-dlp.py <options>
 ```
 
-### With pip (pypi)
+### With pip ([pypi](https://pypi.org/project/manga-dlp/))
 
-(not yet done)
+```sh
+python3 -m pip install manga-dlp # download the package from pypi
+
+python3 -m mangadlp <args> # start the script as a module
+OR
+manga-dlp <args> # call script directly
+OR
+mangadlp <args> # call script directly
+```
 
 ### With docker
 
@@ -227,5 +235,6 @@ If you encounter any bugs, also just open a issue with a description of the prob
   --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
 - <del>Automate release</del>
   --> Done with woodpecker-ci
-- Make pypi package
+- <del>Make pypi package</del>
+  --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
 - Add more supported sites
