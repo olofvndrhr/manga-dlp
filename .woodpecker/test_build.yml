@@ -21,7 +21,7 @@ pipeline:
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - hatch build
@@ -31,7 +31,7 @@ pipeline:
 #    when:
 #      branch: master
 #      event: pull_request
-#    image: cr.44net.ch/drone-plugins/test:1-linux-amd64
+#    image: cr.44net.ch/ci-plugins/tests:1-linux-amd64
 #    pull: true
 #    commands:
 #      - tox
@@ -41,7 +41,7 @@ pipeline:
 #    when:
 #      branch: master
 #      event: pull_request
-#    image: cr.44net.ch/drone-plugins/test:1-linux-arm64
+#    image: cr.44net.ch/ci-plugins/tests:1-linux-arm64
 #    pull: true
 #    commands:
 #      - tox
