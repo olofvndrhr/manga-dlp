@@ -12,35 +12,35 @@ pipeline:
 
   # check code style - shell
   test-shfmt:
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - shfmt -d -i 4 -bn -ci -sr .
 
   # check code style - python
   test-black:
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - black --check --diff .
 
   # check imports - python
   test-isort:
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - isort --check-only --diff .
 
   # check static typing - python
   test-mypy:
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - mypy --install-types --non-interactive mangadlp/
 
   # test code and generate coverage report
   test-coverage-pytest:
-    image: cr.44net.ch/drone-plugins/test
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - pip install -r requirements.txt
@@ -52,7 +52,7 @@ pipeline:
   sonarqube-analysis:
     when:
       branch: master
-    image: cr.44net.ch/drone-plugins/sonarqube
+    image: cr.44net.ch/ci-plugins/sonar-scanner
     pull: true
     settings:
       sonar_host: https://sonarqube.44net.ch
