@@ -1,0 +1,13 @@
+# application requirements
+requests>=2.24.0
+img2pdf>=0.4.4
+
+# dev and testing requirements
+pytest>=7.0.0
+coverage>=6.3.1
+black>=22.1.0
+isort>=5.10.0
+pylint>=2.13.0
+mypy>=0.940
+tox>=3.24.5
+hatch>=1.0.0
