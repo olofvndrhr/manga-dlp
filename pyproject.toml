@@ -105,3 +105,8 @@ exclude = [
     ".tox",
     ".mypy_cache"
 ]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
