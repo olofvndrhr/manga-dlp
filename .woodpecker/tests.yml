@@ -43,7 +43,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - pip install -r requirements.txt
+      - pip install -r requirements_dev.txt
       - coverage erase
       - coverage run
       - coverage xml -i
