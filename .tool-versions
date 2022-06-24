@@ -1,0 +1,5 @@
+python 3.9.13
+shfmt 3.5.1
+shellcheck 0.8.0
+just 1.2.0
+direnv 2.32.1
