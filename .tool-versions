@@ -1,4 +1,4 @@
-python 3.9.13
+python 3.9.13 3.10.5 3.8.13 3.7.13 3.6.15
 shfmt 3.5.1
 shellcheck 0.8.0
 just 1.2.0
