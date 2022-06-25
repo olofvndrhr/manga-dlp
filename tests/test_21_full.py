@@ -1,12 +1,27 @@
 import os
 import platform
 import shutil
+import time
 from pathlib import Path
+
+import pytest
 
 import mangadlp.app as app
 
 
-def test_full_api_mangadex():
+@pytest.fixture
+def wait_10s():
+    print("sleeping 10 seconds because of api timeouts")
+    time.sleep(10)
+
+
+@pytest.fixture
+def wait_20s():
+    print("sleeping 20 seconds because of api timeouts")
+    time.sleep(20)
+
+
+def test_full_api_mangadex(wait_20s):
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
     mdlp = app.MangaDLP(
@@ -28,7 +43,7 @@ def test_full_api_mangadex():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_input_cbz():
+def test_full_with_input_cbz(wait_20s):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
     chapters = "1"
@@ -46,7 +61,7 @@ def test_full_with_input_cbz():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_input_pdf():
+def test_full_with_input_pdf(wait_20s):
     # check if its arm64, if yes skip this step
     if platform.machine() != "x86_64":
         return True
@@ -68,7 +83,7 @@ def test_full_with_input_pdf():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_input_folder():
+def test_full_with_input_folder(wait_20s):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
     chapters = "1"
@@ -86,7 +101,7 @@ def test_full_with_input_folder():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_input_skip_cbz():
+def test_full_with_input_skip_cbz(wait_10s):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
     chapters = "1"
@@ -106,7 +121,7 @@ def test_full_with_input_skip_cbz():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_input_skip_folder():
+def test_full_with_input_skip_folder(wait_10s):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
     chapters = "1"
@@ -131,7 +146,7 @@ def test_full_with_input_skip_folder():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_read_cbz():
+def test_full_with_read_cbz(wait_20s):
     url_list = Path("tests/test_list2.txt")
     language = "en"
     chapters = "1"
@@ -153,7 +168,7 @@ def test_full_with_read_cbz():
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_read_skip_cbz():
+def test_full_with_read_skip_cbz(wait_10s):
     url_list = Path("tests/test_list2.txt")
     language = "en"
     chapters = "1"
