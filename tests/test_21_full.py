@@ -17,7 +17,7 @@ def test_full_api_mangadex():
         file_format="cbz",
         forcevol=False,
         download_path="tests",
-        download_wait=0.5,
+        download_wait=2,
         verbose=True,
     )
     mdlp.get_manga()
@@ -36,7 +36,7 @@ def test_full_with_input_cbz():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --wait 2"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
 
@@ -58,7 +58,7 @@ def test_full_with_input_pdf():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.pdf")
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --wait 2"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
 
@@ -76,7 +76,7 @@ def test_full_with_input_folder():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1")
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --verbose"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --verbose --wait 2"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
 
@@ -94,7 +94,7 @@ def test_full_with_input_skip_cbz():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --wait 2"
     script_path = "manga-dlp.py"
     manga_path.mkdir(parents=True, exist_ok=True)
     chapter_path.touch()
@@ -114,7 +114,7 @@ def test_full_with_input_skip_folder():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1")
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --verbose"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --verbose --wait 2"
     script_path = "manga-dlp.py"
     chapter_path.mkdir(parents=True, exist_ok=True)
 
@@ -139,7 +139,7 @@ def test_full_with_read_cbz():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
-    command_args = f"--read {str(url_list)} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"--read {str(url_list)} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --wait 2"
     script_path = "manga-dlp.py"
     url_list.write_text(
         "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
@@ -161,7 +161,7 @@ def test_full_with_read_skip_cbz():
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
-    command_args = f"--read {str(url_list)} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"--read {str(url_list)} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --wait 2"
     script_path = "manga-dlp.py"
     manga_path.mkdir(parents=True, exist_ok=True)
     chapter_path.touch()

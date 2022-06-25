@@ -225,7 +225,7 @@ def test_get_chapter_images():
         f"{img_base_url}/data/{chapter_hash}/x13-54d9718036b9d79e930e448b592c4a3df9045ed5b8c22ab411b09dadb864756f.jpg",
         f"{img_base_url}/data/{chapter_hash}/x14-f6ed71bbb9af2bceab51028b460813c57935c923e1872fb277beb21d54425434.jpg",
     ]
-    assert test.get_chapter_images(chapter_num, 0.5) == test_list
+    assert test.get_chapter_images(chapter_num, 2) == test_list
 
 
 def test_get_chapter_images_error(monkeypatch):
@@ -240,4 +240,4 @@ def test_get_chapter_images_error(monkeypatch):
     chapter_num = "1"
     monkeypatch.setattr(requests, "get", fail_url)
 
-    assert not test.get_chapter_images(chapter_num, 0.5)
+    assert not test.get_chapter_images(chapter_num, 2)
