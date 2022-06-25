@@ -38,12 +38,20 @@ pipeline:
     commands:
       - mypy --install-types --non-interactive mangadlp/
 
-  # test code with different python versions and generate coverage report
-  test-tox-pytest-coverage:
+  # test code with different python versions
+  test-tox-pytest:
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
       - tox
+
+  # generate coverage report
+  test-tox-coverage:
+    when:
+      branch: master
+    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
+    pull: true
+    commands:
       - tox -e coverage
 
   # analyse code with sonarqube and upload it
