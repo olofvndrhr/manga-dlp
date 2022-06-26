@@ -1,5 +1,4 @@
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
@@ -182,7 +181,7 @@ def get_args():
         "--lean",
         dest="verbosity",
         required=False,
-        help="Lean logging. Defaults to false",
+        help="Lean logging. Minimal log output. Defaults to false",
         action="store_const",
         const=1,
         default=0,
@@ -191,7 +190,7 @@ def get_args():
         "--verbose",
         dest="verbosity",
         required=False,
-        help="Verbose logging. Defaults to false",
+        help="Verbose logging. More log output. Defaults to false",
         action="store_const",
         const=2,
         default=0,
@@ -200,7 +199,7 @@ def get_args():
         "--debug",
         dest="verbosity",
         required=False,
-        help="Lean logging. Defaults to false",
+        help="Debug logging. Most log output. Defaults to false",
         action="store_const",
         const=3,
         default=0,
