@@ -87,7 +87,7 @@ pythonpath = [
 [tool.coverage.run]
 source = ["mangadlp"]
 branch = true
-command_line = "-m pytest --verbose --exitfirst"
+command_line = "-m pytest --exitfirst"
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
