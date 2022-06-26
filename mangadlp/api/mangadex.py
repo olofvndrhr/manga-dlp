@@ -15,12 +15,12 @@ class Mangadex:
     img_base_url = "https://uploads.mangadex.org"
 
     # get infos to initiate class
-    def __init__(self, url_uuid: str, language: str, forcevol: bool, verbose: bool):
+    def __init__(self, url_uuid: str, language: str, forcevol: bool, verbosity: int):
         # static info
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol
-        self.verbose = verbose
+        self.verbosity = verbosity
 
         # api stuff
         self.api_content_ratings = "contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic"
@@ -36,7 +36,7 @@ class Mangadex:
 
     # make initial request
     def get_manga_data(self) -> requests.Response:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Getting manga data for: {self.manga_uuid}")
         counter = 1
         while counter <= 3:
@@ -76,7 +76,7 @@ class Mangadex:
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Getting manga title for: {self.manga_uuid}")
         manga_data = self.manga_data.json()
         try:
@@ -95,7 +95,7 @@ class Mangadex:
 
     # check if chapters are available in requested language
     def check_chapter_lang(self) -> int:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(
                 f"INFO: Checking for chapters in specified language for: {self.manga_uuid}"
             )
@@ -118,7 +118,7 @@ class Mangadex:
 
     # get chapter data like name, uuid etc
     def get_chapter_data(self) -> dict:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Getting chapter data for: {self.manga_uuid}")
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
@@ -177,7 +177,7 @@ class Mangadex:
 
     # get images for the chapter (mangadex@home)
     def get_chapter_images(self, chapter: str, wait_time: float) -> list:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
         chapter_uuid = self.manga_chapter_data[chapter][0]
@@ -224,7 +224,7 @@ class Mangadex:
 
     # create list of chapters
     def create_chapter_list(self) -> list:
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Creating chapter list for: {self.manga_uuid}")
         chapter_list = []
         for chapter in self.manga_chapter_data.items():
@@ -240,7 +240,7 @@ class Mangadex:
 
     # create easy to access chapter infos
     def get_chapter_infos(self, chapter: str) -> dict:
-        if self.verbose:
+        if self.verbosity >= 3:
             print(
                 f"INFO: Getting chapter infos for: {self.manga_chapter_data[chapter][0]}"
             )

@@ -13,7 +13,7 @@ def test_read_and_url():
     chapters = "1"
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-u {url_uuid} --read {link_file} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-u {url_uuid} --read {link_file} -l {language} -c {chapters} --path {download_path} --format {file_format} --debug"
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 
@@ -25,7 +25,7 @@ def test_no_read_and_url():
     chapters = "1"
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-l {language} -c {chapters} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-l {language} -c {chapters} --path {download_path} --format {file_format} --debug"
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 
@@ -36,7 +36,7 @@ def test_no_chaps():
     chapters = ""
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-u {url_uuid} -l {language} --path {download_path} --format {file_format} --verbose"
+    command_args = f"-u {url_uuid} -l {language} --path {download_path} --format {file_format} --debug"
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 
@@ -47,7 +47,7 @@ def test_no_volume():
     chapters = "1"
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --verbose --forcevol"
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --debug --forcevol"
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 

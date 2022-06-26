@@ -8,8 +8,8 @@ def test_uuid_link():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
 
     assert test.manga_uuid == "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
 
@@ -18,8 +18,8 @@ def test_uuid_pure():
     url_uuid = "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
 
     assert test.manga_uuid == "a96676e5-8ae2-425e-b549-7f15dd34a6d8"
 
@@ -28,10 +28,10 @@ def test_uuid_link_false():
     url_uuid = "https://mangadex.org/title/a966-76e-5-8a-e2-42-5e-b-549-7f15dd-34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
+    verbosity = 3
 
     with pytest.raises(SystemExit) as e:
-        Mangadex(url_uuid, language, forcevol, verbose)
+        Mangadex(url_uuid, language, forcevol, verbosity)
     assert e.type == SystemExit
     assert e.value.code == 1
 
@@ -40,8 +40,8 @@ def test_title():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
 
     assert test.manga_title == "Komi-san wa Komyushou Desu"
 
@@ -50,8 +50,8 @@ def test_chapter_infos():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
     chapter_infos = test.get_chapter_infos("1")
     chapter_uuid = chapter_infos["uuid"]
     chapter_name = chapter_infos["name"]
@@ -70,10 +70,10 @@ def test_non_existing_manga():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-999999999999/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
+    verbosity = 3
 
     with pytest.raises(SystemExit) as e:
-        Mangadex(url_uuid, language, forcevol, verbose)
+        Mangadex(url_uuid, language, forcevol, verbosity)
     assert e.type == SystemExit
     assert e.value.code == 1
 
@@ -86,10 +86,10 @@ def test_api_failure(monkeypatch):
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
+    verbosity = 3
 
     with pytest.raises(SystemExit) as e:
-        Mangadex(url_uuid, language, forcevol, verbose)
+        Mangadex(url_uuid, language, forcevol, verbosity)
     assert e.type == SystemExit
     assert e.value.code == 1
 
@@ -98,8 +98,8 @@ def test_chapter_lang_en():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = True
+    test = Mangadex(url_uuid, language, forcevol, 3)
 
     assert test.check_chapter_lang() > 0
 
@@ -108,11 +108,11 @@ def test_empty_chapter_lang():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "ch"
     forcevol = False
-    verbose = True
+    verbosity = 3
 
     with pytest.raises(SystemExit) as e:
-        Mangadex(url_uuid, language, forcevol, verbose)
-        Mangadex(url_uuid, language, forcevol, verbose).check_chapter_lang()
+        Mangadex(url_uuid, language, forcevol, verbosity)
+        Mangadex(url_uuid, language, forcevol, verbosity).check_chapter_lang()
     assert e.type == KeyError or e.type == SystemExit
     assert e.value.code == 1
 
@@ -121,10 +121,10 @@ def test_not_existing_lang():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "zz"
     forcevol = False
-    verbose = True
+    verbosity = 3
 
     with pytest.raises(SystemExit) as e:
-        Mangadex(url_uuid, language, forcevol, verbose)
+        Mangadex(url_uuid, language, forcevol, verbosity)
     assert e.type == SystemExit
     assert e.value.code == 1
 
@@ -135,8 +135,8 @@ def test_create_chapter_list():
     )
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
     test_list = [
         "1",
         "2",
@@ -170,8 +170,8 @@ def test_create_chapter_list_forcevol():
     )
     language = "en"
     forcevol = True
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
     test_list = [
         "1:1",
         "1:2",
@@ -203,8 +203,8 @@ def test_get_chapter_images():
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
     img_base_url = "https://uploads.mangadex.org"
     chapter_hash = "0752bc5db298beff6b932b9151dd8437"
     chapter_uuid = "e86ec2c4-c5e4-4710-bfaa-7604f00939c7"
@@ -235,8 +235,8 @@ def test_get_chapter_images_error(monkeypatch):
     url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
     language = "en"
     forcevol = False
-    verbose = True
-    test = Mangadex(url_uuid, language, forcevol, verbose)
+    verbosity = 3
+    test = Mangadex(url_uuid, language, forcevol, verbosity)
     chapter_num = "1"
     monkeypatch.setattr(requests, "get", fail_url)
 
