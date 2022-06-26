@@ -40,6 +40,8 @@ pipeline:
 
   # test code with different python versions
   test-tox-pytest:
+    when:
+      event: [ push ]
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
@@ -49,6 +51,7 @@ pipeline:
   test-tox-coverage:
     when:
       branch: master
+      event: [ pull_request ]
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
@@ -58,6 +61,7 @@ pipeline:
   sonarqube-analysis:
     when:
       branch: master
+      event: [ pull_request ]
     image: cr.44net.ch/ci-plugins/sonar-scanner
     pull: true
     settings:
