@@ -79,7 +79,7 @@ test_mypy:
     @python3 -m mypy --install-types --non-interactive mangadlp/
 
 test_pytest:
-    @python3 -m pytest -x
+    @python3 -m tox -e basic
 
 test_tox:
     @python3 -m tox

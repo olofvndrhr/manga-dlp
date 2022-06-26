@@ -43,7 +43,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
-      - tox
+      - tox -e basic
 
   # generate coverage report
   test-tox-coverage:
