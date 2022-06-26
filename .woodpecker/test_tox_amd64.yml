@@ -1,0 +1,27 @@
+##################
+# test tox amd64 #
+##################
+# branch: master
+# event: pull_request
+
+depends_on:
+  - tests
+
+clone:
+  git:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-git
+
+pipeline:
+
+  # test code with different python versions - amd64
+  test-tox-amd64:
+    when:
+      branch: master
+      event: pull_request
+    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
+    pull: true
+    commands:
+      - tox
