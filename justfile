@@ -10,6 +10,7 @@ set dotenv-load := true
 alias s := show_receipts
 alias i := show_system_info
 alias p := prepare_workspace
+alias l := lint
 alias t := tests
 alias f := tests_full
 
@@ -102,6 +103,15 @@ prepare_workspace:
      just check_asdf
      just setup_asdf
      just create_venv
+
+lint:
+    just show_system_info
+    -just test_ci_conf
+    just test_shfmt
+    just test_black
+    just test_isort
+    just test_mypy
+    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
 tests:
     just show_system_info
