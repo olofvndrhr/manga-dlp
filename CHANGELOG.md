@@ -9,6 +9,29 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.9] - 2022-06-26
+
+### Fixed
+
+- Timeouts in tests, due to api limitations. Now added a wait time between tests
+- Pytest path
+
+### Added
+
+- `--lean` flag for less output
+- [justfile](https://github.com/casey/just) for setting up a dev environment and testing the code
+- [asdf](https://github.com/asdf-vm/asdf) for version management
+- Dev requirements in [contrib/requirements_dev.txt](contrib/requirements_dev.txt)
+- `README` in [contrib](contrib)
+
+### Changed
+
+- Handling of verbosity and logging. Now there are 4 types of verbosity: `normal`, `lean`, `verbose` and `debug`
+- CI/CD pipeline for testing and releases
+- Coverage testing now also done with `tox`
+- Default verbosity of docker container is now `--lean`
+- Reorganised [pyproject.toml](pyproject.toml)
+
 ## [2.1.8] - 2022-06-22
 
 ### Fixed
