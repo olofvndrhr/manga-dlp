@@ -1,0 +1,30 @@
+##################
+# test tox arm64 #
+##################
+# branch: master
+# event: pull_request
+
+depends_on:
+  - tests
+
+clone:
+  git:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-git
+
+pipeline:
+
+  # test code with different python versions - arm64
+  test-tox-arm64:
+    when:
+      branch: master
+      event: pull_request
+    image: cr.44net.ch/ci-plugins/multipy:1-linux-arm64
+    pull: true
+    commands:
+      - grep -v img2pdf contrib/requirements_dev.txt > contrib/requirements_dev_arm64.txt
+      - rm -f contrib/requirements_dev.txt
+      - mv contrib/requirements_dev_arm64.txt contrib/requirements_dev.txt
+      - tox

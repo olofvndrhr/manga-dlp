@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-version = "2.1.8"
+version = "2.1.9"
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
@@ -39,7 +39,25 @@ Source = "https://github.com/olofvndrhr/manga-dlp"
 mangadlp = "mangadlp.input:main"
 manga-dlp = "mangadlp.input:main"
 
-# isort config
+[tool.hatch.build]
+ignore-vcs = true
+
+[tool.hatch.build.targets.sdist]
+include = ["mangadlp"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
+
+[tool.hatch.build.targets.wheel]
+include = ["mangadlp"]
+exclude = [
+    "docker",
+    ".tox",
+    ".mypy_cache"
+]
+
 [tool.isort]
 py_version = 39
 skip_gitignore = true
@@ -49,7 +67,6 @@ multi_line_output = 3
 include_trailing_comma = true
 use_parentheses = true
 
-# mypy config
 [tool.mypy]
 python_version = "3.9"
 disallow_untyped_defs = false
@@ -62,11 +79,15 @@ show_column_numbers = true
 show_error_codes = true
 pretty = true
 
-# coverage.py config
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
+
 [tool.coverage.run]
 source = ["mangadlp"]
 branch = true
-command_line = "-m pytest --verbose --exitfirst"
+command_line = "-m pytest --exitfirst"
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
@@ -86,22 +107,3 @@ exclude_lines = [
     "@(abc.)?abstractmethod",
 ]
 ignore_errors = true
-
-[tool.hatch.build]
-ignore-vcs = true
-
-[tool.hatch.build.targets.sdist]
-include = ["mangadlp"]
-exclude = [
-    "docker",
-    ".tox",
-    ".mypy_cache"
-]
-
-[tool.hatch.build.targets.wheel]
-include = ["mangadlp"]
-exclude = [
-    "docker",
-    ".tox",
-    ".mypy_cache"
-]

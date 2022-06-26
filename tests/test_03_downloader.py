@@ -18,11 +18,11 @@ def test_downloader():
     chapter_path = Path("tests/test_folder1")
     chapter_path.mkdir(parents=True, exist_ok=True)
     images = []
-    downloader.download_chapter(urls, str(chapter_path), 0.5, True)
+    downloader.download_chapter(urls, str(chapter_path), 2, True)
     for file in chapter_path.iterdir():
         images.append(file.name)
 
-    print(images)
+    images.sort()
     assert images == ["001.png", "002.png", "003.png", "004.png", "005.png"]
     # cleanup
     shutil.rmtree(chapter_path, ignore_errors=True)
@@ -43,7 +43,7 @@ def test_downloader_fail(monkeypatch):
     chapter_path.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(requests, "get", fail_url)
     with pytest.raises(ConnectionError) as e:
-        downloader.download_chapter(images, str(chapter_path), 0.5, True)
+        downloader.download_chapter(images, str(chapter_path), 2, True)
 
     assert e.type == ConnectionError
     # cleanup

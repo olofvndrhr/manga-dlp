@@ -38,20 +38,30 @@ pipeline:
     commands:
       - mypy --install-types --non-interactive mangadlp/
 
-  # test code and generate coverage report
-  test-coverage-pytest:
-    image: cr.44net.ch/ci-plugins/tests
+  # test code with different python versions
+  test-tox-pytest:
+    when:
+      event: [ push ]
+    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
-      - pip install -r requirements.txt
-      - coverage erase
-      - coverage run
-      - coverage xml -i
+      - tox -e basic
+
+  # generate coverage report
+  test-tox-coverage:
+    when:
+      branch: master
+      event: [ pull_request ]
+    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
+    pull: true
+    commands:
+      - tox -e coverage
 
   # analyse code with sonarqube and upload it
   sonarqube-analysis:
     when:
       branch: master
+      event: [ pull_request ]
     image: cr.44net.ch/ci-plugins/sonar-scanner
     pull: true
     settings:

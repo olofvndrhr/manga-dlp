@@ -55,7 +55,8 @@ python3 /app/manga-dlp.py \
     --path /app/downloads \
     --read /app/mangas.txt \
     --chapters all \
-    --wait 2
+    --wait 2 \
+    --lean
 ```
 
 To use your own schedule you need to mount (override) the default schedule or add new ones to the crontab.

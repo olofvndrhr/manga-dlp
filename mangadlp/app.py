@@ -23,7 +23,7 @@ class MangaDLP:
     :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
     :param download_path: Download path. Defaults to '<script_dir>/downloads'
     :param download_wait: Time to wait for each picture to download in seconds
-    :param verbose: If verbose logging is enabled
+    :param verbosity: Verbosity of the output
 
     :return: Nothing. Just the files
     """
@@ -38,7 +38,7 @@ class MangaDLP:
         forcevol: bool = False,
         download_path: str = "downloads",
         download_wait: float = 0.5,
-        verbose: bool = False,
+        verbosity: int = 0,
     ) -> None:
         # init parameters
         self.url_uuid = url_uuid
@@ -49,7 +49,7 @@ class MangaDLP:
         self.forcevol = forcevol
         self.download_path = download_path
         self.download_wait = download_wait
-        self.verbose = verbose
+        self.verbosity = verbosity
         # prepare everything
         self._prepare()
 
@@ -63,7 +63,7 @@ class MangaDLP:
         # init api
         self.api_used = self.check_api(self.url_uuid)
         self.api = self.api_used(
-            self.url_uuid, self.language, self.forcevol, self.verbose
+            self.url_uuid, self.language, self.forcevol, self.verbosity
         )
         # get manga title and uuid
         self.manga_uuid = self.api.manga_uuid
@@ -125,12 +125,15 @@ class MangaDLP:
         skipped_chapters: list[Any] = []
         error_chapters: list[Any] = []
 
-        # show infos
         print_divider = "========================================="
-        print(f"\n{print_divider}")
-        print(f"INFO: Manga Name: {self.manga_title}")
-        print(f"INFO: Manga UUID: {self.manga_uuid}")
-        print(f"INFO: Total chapters: {len(self.manga_chapter_list)}")
+        # show infos
+        if self.verbosity == 1:
+            print(f"INFO: Manga Name: {self.manga_title}")
+        else:
+            print(f"{print_divider}")
+            print(f"INFO: Manga Name: {self.manga_title}")
+            print(f"INFO: Manga UUID: {self.manga_uuid}")
+            print(f"INFO: Total chapters: {len(self.manga_chapter_list)}")
 
         # list chapters if list_chapters is true
         if self.list_chapters:
@@ -147,8 +150,11 @@ class MangaDLP:
             )
 
         # show chapters to download
-        print(f"INFO: Chapters selected:\n{', '.join(chapters_to_download)}")
-        print(f"{print_divider}\n")
+        if self.verbosity == 1:
+            print(f"INFO: Chapters selected: {', '.join(chapters_to_download)}")
+        else:
+            print(f"INFO: Chapters selected:\n{', '.join(chapters_to_download)}")
+            print(f"{print_divider}")
 
         # create manga folder
         self.manga_path.mkdir(parents=True, exist_ok=True)
@@ -171,17 +177,25 @@ class MangaDLP:
                 print("INFO: Done with chapter\n")
 
         # done with manga
-        print(f"{print_divider}")
+        if self.verbosity != 1:
+            print(f"{print_divider}")
         print(f"INFO: Done with manga: {self.manga_title}")
         # filter skipped list
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
-            print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
+            if self.verbosity == 1:
+                print(f"INFO: Skipped chapters: {', '.join(skipped_chapters)}")
+            else:
+                print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
         # filter error list
         error_chapters = list(filter(None, error_chapters))
         if len(error_chapters) >= 1:
-            print(f"INFO: Chapters with errors:\n{', '.join(error_chapters)}")
-        print(f"{print_divider}\n")
+            if self.verbosity == 1:
+                print(f"INFO: Chapters with errors: {', '.join(error_chapters)}")
+            else:
+                print(f"INFO: Chapters with errors:\n{', '.join(error_chapters)}")
+        if self.verbosity != 1:
+            print(f"{print_divider}\n")
 
     # once called per chapter
     def get_chapter(self, chapter: str) -> dict:
@@ -225,7 +239,8 @@ class MangaDLP:
         # check if chapter already exists
         # check for folder, if file format is an empty string
         if chapter_archive_path.exists():
-            print(f"INFO: '{chapter_archive_path}' already exists. Skipping")
+            if self.verbosity != 1:
+                print(f"INFO: '{chapter_archive_path}' already exists. Skipping")
             # add to skipped chapters list
             return (
                 {
@@ -240,7 +255,7 @@ class MangaDLP:
         chapter_path.mkdir(parents=True, exist_ok=True)
 
         # verbose log
-        if self.verbose:
+        if self.verbosity >= 2:
             print(f"INFO: Chapter UUID: {chapter_infos['uuid']}")
             print(f"INFO: Filename: '{chapter_archive_path.name}'\n")
             print(f"INFO: File path: '{chapter_archive_path}'\n")
@@ -252,7 +267,7 @@ class MangaDLP:
         # download images
         try:
             downloader.download_chapter(
-                chapter_image_urls, chapter_path, self.download_wait, self.verbose
+                chapter_image_urls, chapter_path, self.download_wait, self.verbosity
             )
         except KeyboardInterrupt:
             print("ERR: Stopping")

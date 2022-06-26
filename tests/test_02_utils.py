@@ -56,8 +56,8 @@ def test_chapter_list_full():
         file_format="cbz",
         forcevol=True,
         download_path="tests",
-        download_wait=0.5,
-        verbose=True,
+        download_wait=2,
+        verbosity=3,
     )
     chap_list = utils.get_chapter_list("1:1,1:2,1:4-1:7,2:", mdlp.manga_chapter_list)
     assert chap_list == [

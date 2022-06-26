@@ -5,7 +5,7 @@ from pathlib import Path
 
 import mangadlp.app as app
 
-MDLP_VERSION = "2.1.8"
+MDLP_VERSION = "2.1.9"
 
 
 def check_args(args):
@@ -48,7 +48,7 @@ def call_app(args):
         args.forcevol,
         args.path,
         args.wait,
-        args.verbose,
+        args.verbosity,
     )
     mdlp.get_manga()
 
@@ -95,8 +95,10 @@ def get_args():
     parser = argparse.ArgumentParser(
         description="Script to download mangas from various sites"
     )
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    action = parser.add_mutually_exclusive_group(required=True)
+    verbosity = parser.add_mutually_exclusive_group(required=False)
+
+    action.add_argument(
         "-u",
         "--url",
         "--uuid",
@@ -105,14 +107,14 @@ def get_args():
         help="URL or UUID of the manga",
         action="store",
     )
-    group.add_argument(
+    action.add_argument(
         "--read",
         dest="read",
         required=False,
         help="Path of file with manga links to download. One per line",
         action="store",
     )
-    group.add_argument(
+    action.add_argument(
         "-v",
         "--version",
         dest="version",
@@ -176,12 +178,32 @@ def get_args():
         default=0.5,
         help="Time to wait for each picture to download in seconds(float). Defaults 0.5",
     )
-    parser.add_argument(
+    verbosity.add_argument(
+        "--lean",
+        dest="verbosity",
+        required=False,
+        help="Lean logging. Defaults to false",
+        action="store_const",
+        const=1,
+        default=0,
+    )
+    verbosity.add_argument(
         "--verbose",
-        dest="verbose",
+        dest="verbosity",
         required=False,
         help="Verbose logging. Defaults to false",
-        action="store_true",
+        action="store_const",
+        const=2,
+        default=0,
+    )
+    verbosity.add_argument(
+        "--debug",
+        dest="verbosity",
+        required=False,
+        help="Lean logging. Defaults to false",
+        action="store_const",
+        const=3,
+        default=0,
     )
 
     # parser.print_help()

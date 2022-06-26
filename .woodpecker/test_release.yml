@@ -1,6 +1,6 @@
-########################
-# test publish release #
-########################
+################
+# test release #
+################
 # branch: master
 # event: pull_request
 
@@ -16,18 +16,17 @@ clone:
 
 pipeline:
 
-  # create release tar
-  test-create-release-tar:
+  # build wheel and dist
+  test-build-pypi:
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/baseimages/debian-base
+    image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - tar -czf manga-dlp-2.1.8.tar.gz --files-from=release-files.txt
-      - tar -tzf manga-dlp-2.1.8.tar.gz
+      - hatch build
 
-      # create release-notes
+  # create release-notes
   test-create-release-notes:
     when:
       branch: master
@@ -35,5 +34,5 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash get_release_notes.sh 2.1.8
+      - bash get_release_notes.sh 2.1.9
       - cat RELEASENOTES.md

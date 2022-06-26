@@ -14,7 +14,7 @@ def download_chapter(
     image_urls: list,
     chapter_path: Union[str, Path],
     download_wait: float,
-    verbose: bool,
+    verbosity: int,
 ) -> None:
     total_img = len(image_urls)
     for image_num, image in enumerate(image_urls, 1):
@@ -22,11 +22,11 @@ def download_chapter(
         image_suffix = str(Path(image).suffix) or ".png"
         # set image path
         image_path = Path(f"{chapter_path}/{image_num:03d}{image_suffix}")
-        # show progress bar if verbose logging is not active
-        if verbose:
-            print(f"INFO: Downloading image {image_num}/{total_img}")
-        else:
+        # show progress bar or progress by image for verbose
+        if verbosity == 0:
             utils.progress_bar(image_num, total_img)
+        elif verbosity >= 2:
+            print(f"INFO: Downloading image {image_num}/{total_img}")
 
         counter = 1
         while counter <= 3:
