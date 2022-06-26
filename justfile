@@ -111,6 +111,7 @@ tests:
     just test_isort
     just test_mypy
     just test_pytest
+    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
 tests_full:
     just show_system_info
@@ -123,3 +124,4 @@ tests_full:
     just test_tox
     just test_tox_coverage
     just test_docker_build
+    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
