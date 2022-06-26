@@ -11,6 +11,6 @@ python3 -m pip install -r contrib/requirements_dev.txt
 > you may need to install just first: [link](https://github.com/casey/just)
 
 ```sh
-just contrib/ prepare_workspace
+just prepare_workspace
 ```
 
