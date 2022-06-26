@@ -87,6 +87,15 @@ test_tox:
 test_tox_coverage:
     @python3 -m tox -e coverage
 
+test_build:
+    @python3 -m hatch build
+
+test_ci_conf:
+    @woodpecker-cli lint .woodpecker/
+
+test_docker_build:
+    @docker build . -f docker/Dockerfile.amd64 -t manga-dlp:test
+
 # install dependecies and set everything up
 prepare_workspace:
      just show_system_info
@@ -96,17 +105,21 @@ prepare_workspace:
 
 tests:
     just show_system_info
+    -just test_ci_conf
     just test_shfmt
     just test_black
     just test_isort
     just test_mypy
     just test_pytest
 
-tets_full:
+tests_full:
     just show_system_info
+    -just test_ci_conf
     just test_shfmt
     just test_black
     just test_isort
     just test_mypy
+    just test_build
     just test_tox
     just test_tox_coverage
+    just test_docker_build
