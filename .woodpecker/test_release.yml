@@ -34,7 +34,7 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash get_release_notes.sh 2.1.8
+      - bash get_release_notes.sh 2.1.9
       - cat RELEASENOTES.md
 
   # test code with different python versions - amd64
