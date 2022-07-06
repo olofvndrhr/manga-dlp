@@ -9,6 +9,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.10] - 2022-07-
+
+### Changed
+
+- Logging of output. The script now uses the `logging` library
+
 ## [2.1.9] - 2022-06-26
 
 ### Fixed

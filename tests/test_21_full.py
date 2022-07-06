@@ -33,7 +33,7 @@ def test_full_api_mangadex(wait_20s):
         forcevol=False,
         download_path="tests",
         download_wait=2,
-        verbosity=3,
+        verbosity="debug",
     )
     mdlp.get_manga()
 

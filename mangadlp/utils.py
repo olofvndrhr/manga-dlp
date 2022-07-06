@@ -1,4 +1,6 @@
+import logging
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zipfile import ZipFile
@@ -22,7 +24,7 @@ def make_pdf(chapter_path: Path) -> None:
     try:
         import img2pdf
     except:
-        print("Cant import img2pdf. Please install it first")
+        logging.error("Cant import img2pdf. Please install it first")
         raise ImportError
 
     pdf_path = Path(f"{chapter_path}.pdf")
@@ -32,7 +34,7 @@ def make_pdf(chapter_path: Path) -> None:
     try:
         pdf_path.write_bytes(img2pdf.convert(images))
     except:
-        print("ERR: Can't create '.pdf' archive")
+        logging.error("Can't create '.pdf' archive")
         raise IOError
 
 
@@ -115,6 +117,7 @@ def get_filename(
 
 
 def progress_bar(progress: float, total: float) -> None:
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
@@ -122,6 +125,6 @@ def progress_bar(progress: float, total: float) -> None:
     whitespace_texture = " " * (bar_length - bar_progress)
     if progress == total:
         full_bar = "■" * bar_length
-        print(f"\r❙{full_bar}❙ 100%", end="\n")
+        print(f"\r{time} | ❙{full_bar}❙ 100%", end="\n")
     else:
-        print(f"\r❙{bar_texture}{whitespace_texture}❙ {percent}%", end="\r")
+        print(f"\r{time} | ❙{bar_texture}{whitespace_texture}❙ {percent}%", end="\r")

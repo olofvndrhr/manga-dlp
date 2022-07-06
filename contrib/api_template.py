@@ -7,12 +7,11 @@ class YourAPI:
     img_base_url = "https://uploads.mangadex.org"
 
     # get infos to initiate class
-    def __init__(self, url_uuid, language, forcevol, verbose):
+    def __init__(self, url_uuid, language, forcevol):
         # static info
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol
-        self.verbose = verbose
 
         # attributes needed by app.py
         self.manga_uuid = "abc"
