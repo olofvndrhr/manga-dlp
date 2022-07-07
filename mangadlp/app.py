@@ -24,7 +24,7 @@ class MangaDLP:
     :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
     :param download_path: Download path. Defaults to '<script_dir>/downloads'
     :param download_wait: Time to wait for each picture to download in seconds
-    :param verbosity: Verbosity of the output
+    :param verbosity: Verbosity of the output. Uses the logging library values
 
     :return: Nothing. Just the files
     """
@@ -39,7 +39,7 @@ class MangaDLP:
         forcevol: bool = False,
         download_path: str = "downloads",
         download_wait: float = 0.5,
-        verbosity: str = "normal",
+        verbosity: int = 20,
     ) -> None:
         # init parameters
         self.url_uuid = url_uuid
@@ -56,12 +56,7 @@ class MangaDLP:
 
     def _prepare(self) -> None:
         # prepare logger
-        if self.verbosity == "lean":
-            logging.getLogger().setLevel(25)
-        elif self.verbosity == "verbose":
-            logging.getLogger().setLevel(15)
-        elif self.verbosity == "debug":
-            logging.getLogger().setLevel(10)
+        logging.getLogger().setLevel(self.verbosity)
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
             self.file_format = f".{self.file_format}"

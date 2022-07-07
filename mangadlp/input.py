@@ -183,8 +183,8 @@ def get_args():
         required=False,
         help="Lean logging. Minimal log output. Defaults to false",
         action="store_const",
-        const="lean",
-        default="normal",
+        const=25,
+        default=20,
     )
     verbosity.add_argument(
         "--verbose",
@@ -192,8 +192,8 @@ def get_args():
         required=False,
         help="Verbose logging. More log output. Defaults to false",
         action="store_const",
-        const="verbose",
-        default="normal",
+        const=15,
+        default=20,
     )
     verbosity.add_argument(
         "--debug",
@@ -201,8 +201,8 @@ def get_args():
         required=False,
         help="Debug logging. Most log output. Defaults to false",
         action="store_const",
-        const="debug",
-        default="normal",
+        const=10,
+        default=20,
     )
 
     # parser.print_help()
