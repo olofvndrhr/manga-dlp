@@ -5,7 +5,7 @@ from pathlib import Path
 import mangadlp.app as app
 import mangadlp.logger as logger
 
-MDLP_VERSION = "2.1.9"
+MDLP_VERSION = "2.1.10"
 
 
 def check_args(args):

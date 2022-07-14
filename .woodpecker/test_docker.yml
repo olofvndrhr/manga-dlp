@@ -30,7 +30,7 @@ pipeline:
       dockerfile: docker/Dockerfile.amd64
       auto_tag: true
       auto_tag_suffix: linux-amd64-test
-      build_args: BUILD_VERSION=2.1.9
+      build_args: BUILD_VERSION=2.1.10
 
   # build docker image for arm64
   test-build-arm64:
@@ -46,4 +46,4 @@ pipeline:
       dockerfile: docker/Dockerfile.arm64
       auto_tag: true
       auto_tag_suffix: linux-arm64-test
-      build_args: BUILD_VERSION=2.1.9
+      build_args: BUILD_VERSION=2.1.10
