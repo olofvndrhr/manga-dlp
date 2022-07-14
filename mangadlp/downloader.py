@@ -1,3 +1,4 @@
+import logging
 import shutil
 import sys
 from pathlib import Path
@@ -14,7 +15,6 @@ def download_chapter(
     image_urls: list,
     chapter_path: Union[str, Path],
     download_wait: float,
-    verbosity: int,
 ) -> None:
     total_img = len(image_urls)
     for image_num, image in enumerate(image_urls, 1):
@@ -22,25 +22,24 @@ def download_chapter(
         image_suffix = str(Path(image).suffix) or ".png"
         # set image path
         image_path = Path(f"{chapter_path}/{image_num:03d}{image_suffix}")
-        # show progress bar or progress by image for verbose
-        if verbosity == 0:
+        # show progress bar for default log level
+        if logging.root.level == logging.INFO:
             utils.progress_bar(image_num, total_img)
-        elif verbosity >= 2:
-            print(f"INFO: Downloading image {image_num}/{total_img}")
+        logging.verbose(f"Downloading image {image_num}/{total_img}")  # type: ignore
 
         counter = 1
         while counter <= 3:
             try:
                 r = requests.get(image, stream=True)
                 if r.status_code != 200:
-                    print(f"ERR: Request for image {image} failed, retrying")
+                    logging.error(f"Request for image {image} failed, retrying")
                     raise ConnectionError
             except KeyboardInterrupt:
-                print("ERR: Stopping")
+                logging.critical("Stopping")
                 sys.exit(1)
             except:
                 if counter >= 3:
-                    print("ERR: Maybe the MangaDex Servers are down?")
+                    logging.error("Maybe the MangaDex Servers are down?")
                     raise ConnectionError
                 sleep(download_wait)
                 counter += 1
@@ -53,7 +52,7 @@ def download_chapter(
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, file)
         except:
-            print("ERR: Can't write file")
+            logging.error("Can't write file")
             raise IOError
 
         image_num += 1

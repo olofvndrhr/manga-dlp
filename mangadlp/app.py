@@ -1,3 +1,4 @@
+import logging
 import re
 import shutil
 import sys
@@ -23,7 +24,7 @@ class MangaDLP:
     :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
     :param download_path: Download path. Defaults to '<script_dir>/downloads'
     :param download_wait: Time to wait for each picture to download in seconds
-    :param verbosity: Verbosity of the output
+    :param verbosity: Verbosity of the output. Uses the logging library values
 
     :return: Nothing. Just the files
     """
@@ -38,7 +39,7 @@ class MangaDLP:
         forcevol: bool = False,
         download_path: str = "downloads",
         download_wait: float = 0.5,
-        verbosity: int = 0,
+        verbosity: int = 20,
     ) -> None:
         # init parameters
         self.url_uuid = url_uuid
@@ -54,7 +55,6 @@ class MangaDLP:
         self._prepare()
 
     def _prepare(self) -> None:
-        # additional stuff
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
             self.file_format = f".{self.file_format}"
@@ -62,9 +62,7 @@ class MangaDLP:
         self.pre_checks()
         # init api
         self.api_used = self.check_api(self.url_uuid)
-        self.api = self.api_used(
-            self.url_uuid, self.language, self.forcevol, self.verbosity
-        )
+        self.api = self.api_used(self.url_uuid, self.language, self.forcevol)
         # get manga title and uuid
         self.manga_uuid = self.api.manga_uuid
         self.manga_title = self.api.manga_title
@@ -76,25 +74,25 @@ class MangaDLP:
         # prechecks userinput/options
         # no url and no readin list given
         if not self.url_uuid:
-            print(
-                f'ERR: You need to specify a manga url/uuid with "-u" or a list with "--read"'
+            logging.error(
+                'You need to specify a manga url/uuid with "-u" or a list with "--read"'
             )
             sys.exit(1)
         # checks if --list is not used
         if not self.list_chapters:
             if self.chapters is None:
                 # no chapters to download were given
-                print(
-                    f'ERR: You need to specify one or more chapters to download. To see all chapters use "--list"'
+                logging.error(
+                    'You need to specify one or more chapters to download. To see all chapters use "--list"'
                 )
                 sys.exit(1)
             # if forcevol is used, but didn't specify a volume in the chapters selected
             if self.forcevol and ":" not in self.chapters:
-                print(f"ERR: You need to specify the volume if you use --forcevol")
+                logging.error("You need to specify the volume if you use --forcevol")
                 sys.exit(1)
             # if forcevol is not used, but a volume is specified
             if not self.forcevol and ":" in self.chapters:
-                print(f"ERR: Don't specify the volume without --forcevol")
+                logging.error("Don't specify the volume without --forcevol")
                 sys.exit(1)
 
     # check the api which needs to be used
@@ -112,11 +110,11 @@ class MangaDLP:
 
         # this is only for testing multiple apis
         if api_test.search(url_uuid):
-            print("Not supported yet")
+            logging.critical("Not supported yet")
             sys.exit(1)
 
         # no supported api found
-        print(f"ERR: No supported api in link/uuid found: {url_uuid}")
+        logging.error(f"No supported api in link/uuid found: {url_uuid}")
         raise ValueError
 
     # once called per manga
@@ -127,18 +125,15 @@ class MangaDLP:
 
         print_divider = "========================================="
         # show infos
-        if self.verbosity == 1:
-            print(f"INFO: Manga Name: {self.manga_title}")
-        else:
-            print(f"{print_divider}")
-            print(f"INFO: Manga Name: {self.manga_title}")
-            print(f"INFO: Manga UUID: {self.manga_uuid}")
-            print(f"INFO: Total chapters: {len(self.manga_chapter_list)}")
+        logging.info(f"{print_divider}")
+        logging.lean(f"Manga Name: {self.manga_title}")  # type: ignore
+        logging.info(f"Manga UUID: {self.manga_uuid}")
+        logging.info(f"Total chapters: {len(self.manga_chapter_list)}")
 
         # list chapters if list_chapters is true
         if self.list_chapters:
-            print(f"INFO: Available Chapters:\n{', '.join(self.manga_chapter_list)}")
-            print(f"{print_divider}\n")
+            logging.info(f"Available Chapters: {', '.join(self.manga_chapter_list)}")
+            logging.info(f"{print_divider}\n")
             return None
 
         # check chapters to download if not all
@@ -150,11 +145,8 @@ class MangaDLP:
             )
 
         # show chapters to download
-        if self.verbosity == 1:
-            print(f"INFO: Chapters selected: {', '.join(chapters_to_download)}")
-        else:
-            print(f"INFO: Chapters selected:\n{', '.join(chapters_to_download)}")
-            print(f"{print_divider}")
+        logging.lean(f"Chapters selected: {', '.join(chapters_to_download)}")  # type: ignore
+        logging.info(f"{print_divider}")
 
         # create manga folder
         self.manga_path.mkdir(parents=True, exist_ok=True)
@@ -174,28 +166,21 @@ class MangaDLP:
             # chapter was not skipped
             except KeyError:
                 # done with chapter
-                print("INFO: Done with chapter\n")
+                logging.info("Done with chapter\n")
 
         # done with manga
-        if self.verbosity != 1:
-            print(f"{print_divider}")
-        print(f"INFO: Done with manga: {self.manga_title}")
+        logging.info(f"{print_divider}")
+        logging.lean(f"Done with manga: {self.manga_title}")  # type: ignore
         # filter skipped list
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
-            if self.verbosity == 1:
-                print(f"INFO: Skipped chapters: {', '.join(skipped_chapters)}")
-            else:
-                print(f"INFO: Skipped chapters:\n{', '.join(skipped_chapters)}")
+            logging.lean(f"Skipped chapters: {', '.join(skipped_chapters)}")  # type: ignore
         # filter error list
         error_chapters = list(filter(None, error_chapters))
         if len(error_chapters) >= 1:
-            if self.verbosity == 1:
-                print(f"INFO: Chapters with errors: {', '.join(error_chapters)}")
-            else:
-                print(f"INFO: Chapters with errors:\n{', '.join(error_chapters)}")
-        if self.verbosity != 1:
-            print(f"{print_divider}\n")
+            logging.lean(f"Chapters with errors: {', '.join(error_chapters)}")  # type: ignore
+
+        logging.info(f"{print_divider}\n")
 
     # once called per chapter
     def get_chapter(self, chapter: str) -> dict:
@@ -208,13 +193,13 @@ class MangaDLP:
                 chapter, self.download_wait
             )
         except KeyboardInterrupt:
-            print("ERR: Stopping")
+            logging.critical("Stopping")
             sys.exit(1)
 
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
-            print(
-                f"ERR: No images: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
+            logging.error(
+                f"No images: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
             )
             # add to skipped chapters list
             return (
@@ -239,8 +224,8 @@ class MangaDLP:
         # check if chapter already exists
         # check for folder, if file format is an empty string
         if chapter_archive_path.exists():
-            if self.verbosity != 1:
-                print(f"INFO: '{chapter_archive_path}' already exists. Skipping")
+            if self.verbosity != "lean":
+                logging.warning(f"'{chapter_archive_path}' already exists. Skipping")
             # add to skipped chapters list
             return (
                 {
@@ -255,25 +240,24 @@ class MangaDLP:
         chapter_path.mkdir(parents=True, exist_ok=True)
 
         # verbose log
-        if self.verbosity >= 2:
-            print(f"INFO: Chapter UUID: {chapter_infos['uuid']}")
-            print(f"INFO: Filename: '{chapter_archive_path.name}'\n")
-            print(f"INFO: File path: '{chapter_archive_path}'\n")
-            print(f"INFO: Image URLS:\n{chapter_image_urls}\n")
+        logging.verbose(f"Chapter UUID: {chapter_infos['uuid']}")  # type: ignore
+        logging.verbose(f"Filename: '{chapter_archive_path.name}'")  # type: ignore
+        logging.verbose(f"File path: '{chapter_archive_path}'")  # type: ignore
+        logging.verbose(f"Image URLS:\n{chapter_image_urls}")  # type: ignore
 
         # log
-        print(f"INFO: Downloading: '{chapter_filename}'")
+        logging.lean(f"Downloading: '{chapter_filename}'")  # type: ignore
 
         # download images
         try:
             downloader.download_chapter(
-                chapter_image_urls, chapter_path, self.download_wait, self.verbosity
+                chapter_image_urls, chapter_path, self.download_wait
             )
         except KeyboardInterrupt:
-            print("ERR: Stopping")
+            logging.critical("Stopping")
             sys.exit(1)
         except:
-            print(f"ERR: Cant download: '{chapter_filename}'. Skipping")
+            logging.error(f"Cant download: '{chapter_filename}'. Skipping")
             # add to skipped chapters list
             return (
                 {
@@ -286,23 +270,23 @@ class MangaDLP:
 
         else:
             # Done with chapter
-            print(f"INFO: Successfully downloaded: '{chapter_filename}'")
+            logging.lean(f"INFO: Successfully downloaded: '{chapter_filename}'")  # type: ignore
             return {"chapter_path": chapter_path}
 
     # create an archive of the chapter if needed
     def archive_chapter(self, chapter_path: Path) -> dict:
-        print(f"INFO: Creating '{self.file_format}' archive")
+        logging.lean(f"INFO: Creating '{self.file_format}' archive")  # type: ignore
         try:
             # check if image folder is existing
             if not chapter_path.exists():
-                print(f"ERR: Image folder: {chapter_path} does not exist")
+                logging.error(f"Image folder: {chapter_path} does not exist")
                 raise IOError
             if self.file_format == ".pdf":
                 utils.make_pdf(chapter_path)
             else:
                 utils.make_archive(chapter_path, self.file_format)
         except:
-            print(f"ERR: Archive error. Skipping chapter")
+            logging.error(f"Archive error. Skipping chapter")
             # add to skipped chapters list
             return {
                 "error": chapter_path,

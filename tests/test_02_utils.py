@@ -57,7 +57,7 @@ def test_chapter_list_full():
         forcevol=True,
         download_path="tests",
         download_wait=2,
-        verbosity=3,
+        verbosity=10,
     )
     chap_list = utils.get_chapter_list("1:1,1:2,1:4-1:7,2:", mdlp.manga_chapter_list)
     assert chap_list == [

@@ -103,7 +103,9 @@ options:
 --format FORMAT                     Archive format to create. An empty string means dont archive the folder. Defaults to 'cbz'
 --forcevol                          Force naming of volumes. For mangas where chapters reset each volume
 --wait WAIT                         Time to wait for each picture to download in seconds(float). Defaults 0.5
---verbose                           Verbose logging. Defaults to false
+--lean                              Lean logging. Minimal log output. Defaults to false
+--verbose                           Verbose logging. More log output. Defaults to false
+--debug                             Debug logging. Most log output. Defaults to false
 ```
 
 ### Downloads file-structure

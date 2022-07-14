@@ -1,8 +1,0 @@
-mangadlp/
-manga-dlp.py
-pyproject.toml
-requirements.txt
-MANIFEST.in
-README.md
-CHANGELOG.md
-LICENSE

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-version = "2.1.9"
+version = "2.1.10"
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
@@ -107,3 +107,10 @@ exclude_lines = [
     "@(abc.)?abstractmethod",
 ]
 ignore_errors = true
+
+[tool.pylint.main]
+py-version = "3.9"
+
+[tool.pylint.logging]
+logging-modules = ["logging"]
+logging-format-style = "fstr"

@@ -1,11 +1,11 @@
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
 import mangadlp.app as app
+import mangadlp.logger as logger
 
-MDLP_VERSION = "2.1.9"
+MDLP_VERSION = "2.1.10"
 
 
 def check_args(args):
@@ -38,6 +38,8 @@ def readin_list(readlist: str) -> list:
 
 
 def call_app(args):
+    # set logger formatting
+    logger.format_logger(args.verbosity)
     # call main function with all input arguments
     mdlp = app.MangaDLP(
         args.url_uuid,
@@ -182,28 +184,28 @@ def get_args():
         "--lean",
         dest="verbosity",
         required=False,
-        help="Lean logging. Defaults to false",
+        help="Lean logging. Minimal log output. Defaults to false",
         action="store_const",
-        const=1,
-        default=0,
+        const=25,
+        default=20,
     )
     verbosity.add_argument(
         "--verbose",
         dest="verbosity",
         required=False,
-        help="Verbose logging. Defaults to false",
+        help="Verbose logging. More log output. Defaults to false",
         action="store_const",
-        const=2,
-        default=0,
+        const=15,
+        default=20,
     )
     verbosity.add_argument(
         "--debug",
         dest="verbosity",
         required=False,
-        help="Lean logging. Defaults to false",
+        help="Debug logging. Most log output. Defaults to false",
         action="store_const",
-        const=3,
-        default=0,
+        const=10,
+        default=20,
     )
 
     # parser.print_help()
