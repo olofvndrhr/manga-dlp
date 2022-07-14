@@ -9,7 +9,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
-## [2.1.10] - 2022-07-
+## [2.1.10] - 2022-07-14
+
+### Fixed
+
+- Removed some unused files
+
+### Added
+
+- `logger.py` for all log related settings and functions
 
 ### Changed
 
