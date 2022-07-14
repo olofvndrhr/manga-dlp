@@ -55,8 +55,6 @@ class MangaDLP:
         self._prepare()
 
     def _prepare(self) -> None:
-        # prepare logger
-        logging.getLogger().setLevel(self.verbosity)
         # set manga format suffix
         if self.file_format and "." not in self.file_format:
             self.file_format = f".{self.file_format}"

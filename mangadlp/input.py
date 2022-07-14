@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import mangadlp.app as app
+import mangadlp.logger as logger
 
 MDLP_VERSION = "2.1.9"
 
@@ -37,6 +38,8 @@ def readin_list(readlist: str) -> list:
 
 
 def call_app(args):
+    # set logger formatting
+    logger.format_logger(args.verbosity)
     # call main function with all input arguments
     mdlp = app.MangaDLP(
         args.url_uuid,
