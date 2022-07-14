@@ -61,6 +61,24 @@ def test_full_with_input_cbz(wait_20s):
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
+def test_full_with_input_cbz_info(wait_20s):
+    url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
+    language = "en"
+    chapters = "1"
+    file_format = "cbz"
+    download_path = "tests"
+    manga_path = Path("tests/Shikimori's Not Just a Cutie")
+    chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1.cbz")
+    command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format {file_format} --wait 2"
+    script_path = "manga-dlp.py"
+    os.system(f"python3 {script_path} {command_args}")
+
+    assert manga_path.exists() and manga_path.is_dir()
+    assert chapter_path.exists() and chapter_path.is_file()
+    # cleanup
+    shutil.rmtree(manga_path, ignore_errors=True)
+
+
 def test_full_with_input_pdf(wait_20s):
     # check if its arm64, if yes skip this step
     if platform.machine() != "x86_64":
