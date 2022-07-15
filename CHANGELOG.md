@@ -9,6 +9,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.11] - 2022-07-
+
+### Fixed
+
+- The `--read` option now filters empty lines, so it will not generate an error anymore
+- An error which was caused by the interactive input method when you did not specify a chapter or to list them
+
+### Added
+
+- `autoflake` test in `justfile`
+- Some more things which get logged
+
+### Changed
+
+- Adjusted the new logging implementation. It shows now more info about the module the log is from, and some other
+  improvements
+
 ## [2.1.10] - 2022-07-14
 
 ### Fixed

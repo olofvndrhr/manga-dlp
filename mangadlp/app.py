@@ -1,4 +1,3 @@
-import logging
 import re
 import shutil
 import sys
@@ -7,12 +6,11 @@ from typing import Any
 
 import mangadlp.downloader as downloader
 import mangadlp.utils as utils
-
-# supported api's
 from mangadlp.api.mangadex import Mangadex
+from mangadlp.logger import Logger
 
 # prepare logger
-log = logging.getLogger(__name__)
+log = Logger(__name__)
 
 
 class MangaDLP:
@@ -27,7 +25,6 @@ class MangaDLP:
     :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
     :param download_path: Download path. Defaults to '<script_dir>/downloads'
     :param download_wait: Time to wait for each picture to download in seconds
-    :param verbosity: Verbosity of the output. Uses the logging library values
 
     :return: Nothing. Just the files
     """
@@ -42,7 +39,6 @@ class MangaDLP:
         forcevol: bool = False,
         download_path: str = "downloads",
         download_wait: float = 0.5,
-        verbosity: int = 20,
     ) -> None:
         # init parameters
         self.url_uuid = url_uuid
@@ -53,7 +49,6 @@ class MangaDLP:
         self.forcevol = forcevol
         self.download_path = download_path
         self.download_wait = download_wait
-        self.verbosity = verbosity
         # prepare everything
         self._prepare()
 
@@ -110,15 +105,14 @@ class MangaDLP:
         # check url for match
         if api_mangadex.search(url_uuid) or api_mangadex2.search(url_uuid):
             return Mangadex
-
         # this is only for testing multiple apis
-        if api_test.search(url_uuid):
+        elif api_test.search(url_uuid):
             log.critical("Not supported yet")
             sys.exit(1)
 
         # no supported api found
         log.error(f"No supported api in link/uuid found: {url_uuid}")
-        raise ValueError
+        sys.exit(1)
 
     # once called per manga
     def get_manga(self) -> None:
@@ -129,7 +123,7 @@ class MangaDLP:
         print_divider = "========================================="
         # show infos
         log.info(f"{print_divider}")
-        log.warning(f"Manga Name: {self.manga_title}")
+        log.lean(f"Manga Name: {self.manga_title}")
         log.info(f"Manga UUID: {self.manga_uuid}")
         log.info(f"Total chapters: {len(self.manga_chapter_list)}")
 
@@ -148,7 +142,7 @@ class MangaDLP:
             )
 
         # show chapters to download
-        log.warning(f"Chapters selected: {', '.join(chapters_to_download)}")
+        log.lean(f"Chapters selected: {', '.join(chapters_to_download)}")
         log.info(f"{print_divider}")
 
         # create manga folder
@@ -173,15 +167,15 @@ class MangaDLP:
 
         # done with manga
         log.info(f"{print_divider}")
-        log.warning(f"Done with manga: {self.manga_title}")
+        log.lean(f"Done with manga: {self.manga_title}")
         # filter skipped list
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
-            log.warning(f"Skipped chapters: {', '.join(skipped_chapters)}")
+            log.lean(f"Skipped chapters: {', '.join(skipped_chapters)}")
         # filter error list
         error_chapters = list(filter(None, error_chapters))
         if len(error_chapters) >= 1:
-            log.warning(f"Chapters with errors: {', '.join(error_chapters)}")
+            log.lean(f"Chapters with errors: {', '.join(error_chapters)}")
 
         log.info(f"{print_divider}\n")
 
@@ -227,8 +221,7 @@ class MangaDLP:
         # check if chapter already exists
         # check for folder, if file format is an empty string
         if chapter_archive_path.exists():
-            if self.verbosity != "lean":
-                log.warning(f"'{chapter_archive_path}' already exists. Skipping")
+            log.warning(f"'{chapter_archive_path}' already exists. Skipping")
             # add to skipped chapters list
             return (
                 {
@@ -243,13 +236,13 @@ class MangaDLP:
         chapter_path.mkdir(parents=True, exist_ok=True)
 
         # verbose log
-        log.debug(f"Chapter UUID: {chapter_infos['uuid']}")
-        log.debug(f"Filename: '{chapter_archive_path.name}'")
-        log.debug(f"File path: '{chapter_archive_path}'")
-        log.debug(f"Image URLS:\n{chapter_image_urls}")
+        log.verbose(f"Chapter UUID: {chapter_infos['uuid']}")
+        log.verbose(f"Filename: '{chapter_archive_path.name}'")
+        log.verbose(f"File path: '{chapter_archive_path}'")
+        log.verbose(f"Image URLS:\n{chapter_image_urls}")
 
         # log
-        log.warning(f"Downloading: '{chapter_filename}'")
+        log.lean(f"Downloading: '{chapter_filename}'")
 
         # download images
         try:
@@ -273,12 +266,12 @@ class MangaDLP:
 
         else:
             # Done with chapter
-            log.warning(f"Successfully downloaded: '{chapter_filename}'")
+            log.lean(f"Successfully downloaded: '{chapter_filename}'")
             return {"chapter_path": chapter_path}
 
     # create an archive of the chapter if needed
     def archive_chapter(self, chapter_path: Path) -> dict:
-        log.warning(f"Creating archive '{chapter_path}{self.file_format}'")
+        log.lean(f"Creating archive '{chapter_path}{self.file_format}'")
         try:
             # check if image folder is existing
             if not chapter_path.exists():

@@ -82,6 +82,10 @@ test_mypy:
 test_pytest:
     @python3 -m tox -e basic
 
+test_autoflake:
+    @python3 -m autoflake --remove-all-unused-imports -r -v mangadlp/
+    @python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
+
 test_tox:
     @python3 -m tox
 
@@ -111,6 +115,7 @@ lint:
     just test_black
     just test_isort
     just test_mypy
+    just test_autoflake
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
 tests:
@@ -120,6 +125,7 @@ tests:
     just test_black
     just test_isort
     just test_mypy
+    just test_autoflake
     just test_pytest
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 

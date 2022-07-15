@@ -1,13 +1,13 @@
 import argparse
-import logging
 import sys
 from pathlib import Path
 
 import mangadlp.app as app
 import mangadlp.logger as logger
+from mangadlp.logger import Logger
 
 # prepare logger
-log = logging.getLogger(__name__)
+log = Logger(__name__)
 
 MDLP_VERSION = "2.1.10"
 
@@ -34,7 +34,7 @@ def check_args(args):
 # read in the list of links from a file
 def readin_list(readlist: str) -> list:
     list_file = Path(readlist)
-    log.debug(f"Reading in list '{str(list_file)}'")
+    log.verbose(f"Reading in list '{str(list_file)}'")
     try:
         url_str = list_file.read_text()
         url_list = url_str.splitlines()
@@ -43,7 +43,7 @@ def readin_list(readlist: str) -> list:
 
     # filter empty lines and remove them
     filtered_list = list(filter(len, url_list))
-    log.debug(f"Mangas from list: {filtered_list}")
+    log.verbose(f"Mangas from list: {filtered_list}")
 
     return filtered_list
 
@@ -59,7 +59,6 @@ def call_app(args):
         args.forcevol,
         args.path,
         args.wait,
-        args.verbosity,
     )
     mdlp.get_manga()
 
@@ -196,7 +195,16 @@ def get_args():
         required=False,
         help="Lean logging. Minimal log output. Defaults to false",
         action="store_const",
-        const=30,
+        const=25,
+        default=20,
+    )
+    verbosity.add_argument(
+        "--verbose",
+        dest="verbosity",
+        required=False,
+        help="Verbose logging. More log output. Defaults to false",
+        action="store_const",
+        const=15,
         default=20,
     )
     verbosity.add_argument(

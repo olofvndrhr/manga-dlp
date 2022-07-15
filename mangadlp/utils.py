@@ -1,12 +1,13 @@
-import logging
 import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zipfile import ZipFile
 
+from mangadlp.logger import Logger
+
 # prepare logger
-log = logging.getLogger(__name__)
+log = Logger(__name__)
 
 # create an archive of the chapter images
 def make_archive(chapter_path: Path, file_format: str) -> None:
