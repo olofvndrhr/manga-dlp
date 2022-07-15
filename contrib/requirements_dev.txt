@@ -11,3 +11,4 @@ pylint>=2.13.0
 mypy>=0.940
 tox>=3.24.5
 hatch>=1.0.0
+autoflake>=1.4
