@@ -4,7 +4,7 @@ import logging
 # prepare custom levels and default config of logger
 def prepare_logger():
     logging.basicConfig(
-        format="%(asctime)s | %(levelname)s: %(message)s",
+        format="%(asctime)s | [%(levelname)s][%(name)s]: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         level=20,
         handlers=[logging.StreamHandler()],
@@ -26,7 +26,7 @@ def format_logger(verbosity: int):
         )
     else:
         logging.basicConfig(
-            format="%(asctime)s | [%(name)s] %(levelname)s: %(message)s",
+            format="%(asctime)s | [%(levelname)s][%(name)s]: %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             force=True,
         )
