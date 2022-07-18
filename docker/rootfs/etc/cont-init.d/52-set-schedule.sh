@@ -31,9 +31,7 @@ function prepare_vars() {
 
 # set schedule with env variables
 function set_vars() {
-    echo -n "
-#!/bin/bash
-
+    echo -ne "#!/bin/bash\n
 python3 /app/manga-dlp.py \\
     --path ${MDLP_PATH} \\
     --read ${MDLP_READ} \\
