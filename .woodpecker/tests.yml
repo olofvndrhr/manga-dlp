@@ -31,6 +31,14 @@ pipeline:
     commands:
       - isort --check-only --diff .
 
+  # check unused and missing imports
+  test-autoflake:
+    image: cr.44net.ch/ci-plugins/tests
+    pull: true
+    commands:
+      - autoflake --remove-all-unused-imports -r -v mangadlp/
+      - autoflake --check --remove-all-unused-imports -r -v mangadlp/
+
   # check static typing - python
   test-mypy:
     image: cr.44net.ch/ci-plugins/tests

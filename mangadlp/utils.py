@@ -1,10 +1,13 @@
-import logging
 import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zipfile import ZipFile
 
+from mangadlp.logger import Logger
+
+# prepare logger
+log = Logger(__name__)
 
 # create an archive of the chapter images
 def make_archive(chapter_path: Path, file_format: str) -> None:
@@ -24,7 +27,7 @@ def make_pdf(chapter_path: Path) -> None:
     try:
         import img2pdf
     except:
-        logging.error("Cant import img2pdf. Please install it first")
+        log.error("Cant import img2pdf. Please install it first")
         raise ImportError
 
     pdf_path = Path(f"{chapter_path}.pdf")
@@ -34,7 +37,7 @@ def make_pdf(chapter_path: Path) -> None:
     try:
         pdf_path.write_bytes(img2pdf.convert(images))
     except:
-        logging.error("Can't create '.pdf' archive")
+        log.error("Can't create '.pdf' archive")
         raise IOError
 
 

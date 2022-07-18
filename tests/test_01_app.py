@@ -13,6 +13,7 @@ def test_check_api_mangadex():
 
 def test_check_api_none():
     url = "https://abc.defghjk/title/abc/def"
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(SystemExit) as e:
         app.MangaDLP(url_uuid=url, list_chapters=True, download_wait=2)
-    assert e.type == ValueError
+    assert e.type == SystemExit
+    assert e.value.code == 1

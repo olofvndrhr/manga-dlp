@@ -19,7 +19,9 @@ RUN \
 # prepare app
 RUN \
     echo "**** creating folders ****" \
-    && mkdir -p /app
+    && mkdir -p /app \
+    && echo "**** updating pip ****" \
+    && python3 -m pip install --upgrade pip
 
 # cleanup installation
 RUN \

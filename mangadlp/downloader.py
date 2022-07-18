@@ -8,7 +8,10 @@ from typing import Union
 import requests
 
 import mangadlp.utils as utils
+from mangadlp.logger import Logger
 
+# prepare logger
+log = Logger(__name__)
 
 # download images
 def download_chapter(
@@ -25,21 +28,21 @@ def download_chapter(
         # show progress bar for default log level
         if logging.root.level == logging.INFO:
             utils.progress_bar(image_num, total_img)
-        logging.verbose(f"Downloading image {image_num}/{total_img}")  # type: ignore
+        log.verbose(f"Downloading image {image_num}/{total_img}")
 
         counter = 1
         while counter <= 3:
             try:
                 r = requests.get(image, stream=True)
                 if r.status_code != 200:
-                    logging.error(f"Request for image {image} failed, retrying")
+                    log.error(f"Request for image {image} failed, retrying")
                     raise ConnectionError
             except KeyboardInterrupt:
-                logging.critical("Stopping")
+                log.critical("Stopping")
                 sys.exit(1)
             except:
                 if counter >= 3:
-                    logging.error("Maybe the MangaDex Servers are down?")
+                    log.error("Maybe the MangaDex Servers are down?")
                     raise ConnectionError
                 sleep(download_wait)
                 counter += 1
@@ -52,7 +55,7 @@ def download_chapter(
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, file)
         except:
-            logging.error("Can't write file")
+            log.error("Can't write file")
             raise IOError
 
         image_num += 1

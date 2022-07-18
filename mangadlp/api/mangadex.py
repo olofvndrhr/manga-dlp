@@ -1,4 +1,3 @@
-import logging
 import re
 import sys
 from time import sleep
@@ -7,6 +6,10 @@ from typing import Any
 import requests
 
 import mangadlp.utils as utils
+from mangadlp.logger import Logger
+
+# prepare logger
+log = Logger(__name__)
 
 
 class Mangadex:
@@ -36,7 +39,7 @@ class Mangadex:
 
     # make initial request
     def get_manga_data(self) -> requests.Response:
-        logging.verbose(f"Getting manga data for: {self.manga_uuid}")  # type: ignore
+        log.verbose(f"Getting manga data for: {self.manga_uuid}")
         counter = 1
         while counter <= 3:
             try:
@@ -45,17 +48,17 @@ class Mangadex:
                 )
             except:
                 if counter >= 3:
-                    logging.error("Maybe the MangaDex API is down?")
+                    log.error("Maybe the MangaDex API is down?")
                     sys.exit(1)
                 else:
-                    logging.error("Mangadex API not reachable. Retrying")
+                    log.error("Mangadex API not reachable. Retrying")
                     sleep(2)
                     counter += 1
             else:
                 break
         # check if manga exists
         if manga_data.json()["result"] != "ok":
-            logging.error("Manga not found")
+            log.error("Manga not found")
             sys.exit(1)
 
         return manga_data
@@ -68,14 +71,14 @@ class Mangadex:
         )
         # check for new mangadex id
         if not uuid_regex.search(self.url_uuid):
-            logging.error("No valid UUID found")
+            log.error("No valid UUID found")
             sys.exit(1)
         manga_uuid = uuid_regex.search(self.url_uuid)[0]
         return manga_uuid
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
-        logging.verbose(f"Getting manga title for: {self.manga_uuid}")  # type: ignore
+        log.verbose(f"Getting manga title for: {self.manga_uuid}")
         manga_data = self.manga_data.json()
         try:
             title = manga_data["data"]["attributes"]["title"][self.language]
@@ -87,13 +90,13 @@ class Mangadex:
                     alt_titles.update(title)
                 title = alt_titles[self.language]
             except:  # no title on requested language found
-                logging.error("Chapter in requested language not found.")
+                log.error("Chapter in requested language not found.")
                 sys.exit(1)
         return utils.fix_name(title)
 
     # check if chapters are available in requested language
     def check_chapter_lang(self) -> int:
-        logging.verbose(  # type: ignore
+        log.verbose(
             f"Checking for chapters in specified language for: {self.manga_uuid}"
         )
         r = requests.get(
@@ -102,20 +105,20 @@ class Mangadex:
         try:
             total_chapters = r.json()["total"]
         except:
-            logging.error(
+            log.error(
                 "Error retrieving the chapters list. Did you specify a valid language code?"
             )
             return 0
         else:
             if total_chapters == 0:
-                logging.error("No chapters available to download!")
+                log.error("No chapters available to download!")
                 return 0
 
         return total_chapters
 
     # get chapter data like name, uuid etc
     def get_chapter_data(self) -> dict:
-        logging.verbose(f"Getting chapter data for: {self.manga_uuid}")  # type: ignore
+        log.verbose(f"Getting chapter data for: {self.manga_uuid}")
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
@@ -173,7 +176,7 @@ class Mangadex:
 
     # get images for the chapter (mangadex@home)
     def get_chapter_images(self, chapter: str, wait_time: float) -> list:
-        logging.verbose(f"Getting chapter images for: {self.manga_uuid}")  # type: ignore
+        log.verbose(f"Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
         chapter_uuid = self.manga_chapter_data[chapter][0]
 
@@ -185,11 +188,11 @@ class Mangadex:
                 r = requests.get(f"{athome_url}/{chapter_uuid}")
                 api_data = r.json()
                 if api_data["result"] != "ok":
-                    logging.error(f"No chapter with the id {chapter_uuid} found")
+                    log.error(f"No chapter with the id {chapter_uuid} found")
                     api_error = True
                     raise IndexError
                 elif api_data["chapter"]["data"] is None:
-                    logging.error(f"No chapter data found for chapter {chapter_uuid}")
+                    log.error(f"No chapter data found for chapter {chapter_uuid}")
                     api_error = True
                     raise IndexError
                 else:
@@ -198,7 +201,7 @@ class Mangadex:
             except:
                 if counter >= 3:
                     api_error = True
-                logging.error(f"Retrying in a few seconds")
+                log.error(f"Retrying in a few seconds")
                 counter += 1
                 sleep(wait_time + 2)
         # check if result is ok
@@ -219,7 +222,7 @@ class Mangadex:
 
     # create list of chapters
     def create_chapter_list(self) -> list:
-        logging.verbose(f"Creating chapter list for: {self.manga_uuid}")  # type: ignore
+        log.verbose(f"Creating chapter list for: {self.manga_uuid}")
         chapter_list = []
         for chapter in self.manga_chapter_data.items():
             chapter_info = self.get_chapter_infos(chapter[0])
@@ -234,9 +237,7 @@ class Mangadex:
 
     # create easy to access chapter infos
     def get_chapter_infos(self, chapter: str) -> dict:
-        logging.debug(
-            f"Getting chapter infos for: {self.manga_chapter_data[chapter][0]}"
-        )
+        log.debug(f"Getting chapter infos for: {self.manga_chapter_data[chapter][0]}")
         chapter_uuid = self.manga_chapter_data[chapter][0]
         chapter_vol = self.manga_chapter_data[chapter][1]
         chapter_num = self.manga_chapter_data[chapter][2]

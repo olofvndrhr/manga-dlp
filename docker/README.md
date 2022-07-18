@@ -31,6 +31,26 @@ environment:
 docker run -e PUID=<userid> -e PGID=<groupid>
 ```
 
+## Environment variables
+
+You can configure the default schedule via environment variables. Don't forget to set `MDLP_GENERATE_SCHEDULE` to "true"
+, else
+it will not generate it (it will just use the default one).
+
+For more info's about the options, you can look in the main scripts [README.md](../README.md)
+
+| ENV Variable           | Default         | manga-dlp option         | Info                                                                     |
+|:-----------------------|:----------------|:-------------------------|--------------------------------------------------------------------------|
+| MDLP_GENERATE_SCHEDULE | false           | none                     | Has to be set to "true" to generate the config via environment variables |
+| MDLP_PATH              | /app/downloads  | --path                   |                                                                          |
+| MDLP_READ              | /app/mangas.txt | --read                   |                                                                          |
+| MDLP_LANGUAGE          | en              | --language               |                                                                          |
+| MDLP_CHAPTERS          | all             | --chapter                |                                                                          |
+| MDLP_FILE_FORMAT       | cbz             | --format                 |                                                                          |
+| MDLP_WAIT              | 0.5             | --wait                   |                                                                          |
+| MDLP_FORCEVOL          | false           | --forcevol               |                                                                          |
+| MDLP_LOG_LEVEL         | lean            | --lean/--verbose/--debug | Can either be set to: "lean", "verbose" or "debug"                       |
+
 ## Run commands in container
 
 > You don't need to use the full path of manga-dlp.py because `/app` already is the working directory
@@ -68,15 +88,15 @@ To use your own schedule you need to mount (override) the default schedule or ad
 volumes:
   - ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
   - ./crontab2:/etc/cron.d/something # adds a new one crontab file
-  - ./schedule1:/app/schedules/daily # overwrites the default schedule
-  - ./schedule2:/app/schedules/weekly # adds a new schedule
+  - ./schedule1.sh:/app/schedules/daily.sh # overwrites the default schedule
+  - ./schedule2.sh:/app/schedules/weekly.sh # adds a new schedule
 ```
 
 ```sh
 docker run -v ./crontab:/etc/cron.d/mangadlp # overwrites the default crontab
 docker run -v ./crontab2:/etc/cron.d/something # adds a new one crontab file
-docker run -v ./schedule1:/app/schedules/daily # overwrites the default schedule
-docker run -v ./schedule2:/app/schedules/weekly # adds a new schedule
+docker run -v ./schedule1.sh:/app/schedules/daily.sh # overwrites the default schedule
+docker run -v ./schedule2.sh:/app/schedules/weekly.sh # adds a new schedule
 ```
 
 #### The default crontab file:
@@ -91,7 +111,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # "/proc/1/fd/1 2>&1" is to show the logs in the container
 # "s6-setuidgid abc" is used to set the permissions
 
-0 12 * * * root s6-setuidgid abc /app/schedules/daily > /proc/1/fd/1 2>&1
+0 12 * * * root s6-setuidgid abc /app/schedules/daily.sh > /proc/1/fd/1 2>&1
 ```
 
 ## Add mangas to mangas.txt

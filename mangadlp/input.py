@@ -4,11 +4,17 @@ from pathlib import Path
 
 import mangadlp.app as app
 import mangadlp.logger as logger
+from mangadlp.logger import Logger
 
-MDLP_VERSION = "2.1.10"
+# prepare logger
+log = Logger(__name__)
+
+MDLP_VERSION = "2.1.11"
 
 
 def check_args(args):
+    # set logger formatting
+    logger.format_logger(args.verbosity)
     # check if --version was used
     if args.version:
         print(f"manga-dlp version: {MDLP_VERSION}")
@@ -28,18 +34,21 @@ def check_args(args):
 # read in the list of links from a file
 def readin_list(readlist: str) -> list:
     list_file = Path(readlist)
+    log.verbose(f"Reading in list '{str(list_file)}'")
     try:
         url_str = list_file.read_text()
         url_list = url_str.splitlines()
     except:
         raise IOError
 
-    return url_list
+    # filter empty lines and remove them
+    filtered_list = list(filter(len, url_list))
+    log.verbose(f"Mangas from list: {filtered_list}")
+
+    return filtered_list
 
 
 def call_app(args):
-    # set logger formatting
-    logger.format_logger(args.verbosity)
     # call main function with all input arguments
     mdlp = app.MangaDLP(
         args.url_uuid,
@@ -50,7 +59,6 @@ def call_app(args):
         args.forcevol,
         args.path,
         args.wait,
-        args.verbosity,
     )
     mdlp.get_manga()
 
@@ -90,6 +98,7 @@ def get_input():
 
     # start script again with the arguments
     sys.argv.extend(args)
+    log.info(f"Args: {sys.argv}")
     get_args()
 
 
