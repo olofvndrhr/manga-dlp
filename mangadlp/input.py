@@ -9,7 +9,7 @@ from mangadlp.logger import Logger
 # prepare logger
 log = Logger(__name__)
 
-MDLP_VERSION = "2.1.10"
+MDLP_VERSION = "2.1.11"
 
 
 def check_args(args):
