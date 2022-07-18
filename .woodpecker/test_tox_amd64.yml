@@ -24,4 +24,4 @@ pipeline:
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
-      - tox
+      - python3 -m tox

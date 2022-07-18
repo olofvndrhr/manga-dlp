@@ -27,4 +27,4 @@ pipeline:
       - grep -v img2pdf contrib/requirements_dev.txt > contrib/requirements_dev_arm64.txt
       - rm -f contrib/requirements_dev.txt
       - mv contrib/requirements_dev_arm64.txt contrib/requirements_dev.txt
-      - tox
+      - python3 -m tox

@@ -22,29 +22,29 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - black --check --diff .
+      - python3 -m black --check --diff .
 
   # check imports - python
   test-isort:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - isort --check-only --diff .
+      - python3 -m isort --check-only --diff .
 
   # check unused and missing imports
   test-autoflake:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - autoflake --remove-all-unused-imports -r -v mangadlp/
-      - autoflake --check --remove-all-unused-imports -r -v mangadlp/
+      - python3 -m autoflake --remove-all-unused-imports -r -v mangadlp/
+      - python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
 
   # check static typing - python
   test-mypy:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - mypy --install-types --non-interactive mangadlp/
+      - python3 -m mypy --install-types --non-interactive mangadlp/
 
   # test code with different python versions
   test-tox-pytest:
@@ -53,7 +53,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
-      - tox -e basic
+      - python3 -m tox -e basic
 
   # generate coverage report
   test-tox-coverage:
@@ -63,7 +63,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
     pull: true
     commands:
-      - tox -e coverage
+      - python3 -m tox -e coverage
 
   # analyse code with sonarqube and upload it
   sonarqube-analysis:
