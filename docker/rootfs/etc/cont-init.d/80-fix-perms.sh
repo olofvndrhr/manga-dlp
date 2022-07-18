@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 
 # source env variables
-source /etc/cont-init.d/20-setenv
+source /etc/cont-init.d/20-setenv.sh
 
 # fix permissions
 find '/app' -type 'd' \( -not -perm 775 -and -not -path '/app/downloads*' \) -exec chmod 775 '{}' \+
