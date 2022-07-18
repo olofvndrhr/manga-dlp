@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
-## [2.1.11] - 2022-07-
+## [2.1.11] - 2022-07-18
 
 ### Fixed
 
