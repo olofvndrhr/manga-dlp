@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.4.1"]
 build-backend = "hatchling.build"
 
 [project]
@@ -43,20 +43,10 @@ manga-dlp = "mangadlp.input:main"
 ignore-vcs = true
 
 [tool.hatch.build.targets.sdist]
-include = ["mangadlp"]
-exclude = [
-    "docker",
-    ".tox",
-    ".mypy_cache"
-]
+packages = ["mangadlp"]
 
 [tool.hatch.build.targets.wheel]
-include = ["mangadlp"]
-exclude = [
-    "docker",
-    ".tox",
-    ".mypy_cache"
-]
+packages = ["mangadlp"]
 
 [tool.isort]
 py_version = 39
