@@ -23,7 +23,7 @@ pipeline:
     when:
       branch: master
       event: pull_request
-    image: woodpeckerci/plugin-docker-buildx
+    image: plugins/docker
     pull: true
     settings:
       dry_run: true

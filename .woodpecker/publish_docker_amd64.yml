@@ -23,7 +23,7 @@ pipeline:
     when:
       #branch: master
       event: tag
-    image: woodpeckerci/plugin-docker-buildx
+    image: plugins/docker
     pull: true
     settings:
       repo: olofvndrhr/manga-dlp
