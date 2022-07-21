@@ -38,7 +38,7 @@ def readin_list(readlist: str) -> list:
     try:
         url_str = list_file.read_text()
         url_list = url_str.splitlines()
-    except:
+    except Exception:
         raise IOError
 
     # filter empty lines and remove them
@@ -72,11 +72,11 @@ def get_input():
             readlist = str(input("List with links (optional): "))
             language = str(input("Language: ")) or "en"
             list_chapters = str(input("List chapters? y/N: "))
-            if list_chapters.lower() != "y" or list_chapters.lower() != "yes":
+            if list_chapters.lower() in {"y", "yes"}:
                 chapters = str(input("Chapters: "))
         except KeyboardInterrupt:
             sys.exit(1)
-        except:
+        except Exception:
             continue
         else:
             break
@@ -88,12 +88,10 @@ def get_input():
         chapters,
     ]
     if url_uuid:
-        args.append("-u")
-        args.append(url_uuid)
+        args.extend(("-u", url_uuid))
     if readlist:
-        args.append("--read")
-        args.append(readlist)
-    if list_chapters.lower() == "y" or list_chapters.lower() == "yes":
+        args.extend(("--read", readlist))
+    if list_chapters.lower() in {"y", "yes"}:
         args.append("--list")
 
     # start script again with the arguments

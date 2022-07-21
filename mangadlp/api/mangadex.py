@@ -46,7 +46,7 @@ class Mangadex:
                 manga_data = requests.get(
                     f"{self.api_base_url}/manga/{self.manga_uuid}"
                 )
-            except:
+            except Exception:
                 if counter >= 3:
                     log.error("Maybe the MangaDex API is down?")
                     sys.exit(1)
@@ -73,8 +73,8 @@ class Mangadex:
         if not uuid_regex.search(self.url_uuid):
             log.error("No valid UUID found")
             sys.exit(1)
-        manga_uuid = uuid_regex.search(self.url_uuid)[0]
-        return manga_uuid
+
+        return uuid_regex.search(self.url_uuid)[0]
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
@@ -82,16 +82,17 @@ class Mangadex:
         manga_data = self.manga_data.json()
         try:
             title = manga_data["data"]["attributes"]["title"][self.language]
-        except:
+        except Exception:
             # search in alt titles
             try:
                 alt_titles = {}
                 for title in manga_data["data"]["attributes"]["altTitles"]:
                     alt_titles.update(title)
                 title = alt_titles[self.language]
-            except:  # no title on requested language found
+            except Exception:  # no title on requested language found
                 log.error("Chapter in requested language not found.")
                 sys.exit(1)
+
         return utils.fix_name(title)
 
     # check if chapters are available in requested language
@@ -104,7 +105,7 @@ class Mangadex:
         )
         try:
             total_chapters = r.json()["total"]
-        except:
+        except Exception:
             log.error(
                 "Error retrieving the chapters list. Did you specify a valid language code?"
             )
@@ -198,10 +199,10 @@ class Mangadex:
                 else:
                     api_error = False
                     break
-            except:
+            except Exception:
                 if counter >= 3:
                     api_error = True
-                log.error(f"Retrying in a few seconds")
+                log.error("Retrying in a few seconds")
                 counter += 1
                 sleep(wait_time + 2)
         # check if result is ok
@@ -218,6 +219,7 @@ class Mangadex:
             image_urls.append(f"{self.img_base_url}/data/{chapter_hash}/{image}")
 
         sleep(wait_time)
+
         return image_urls
 
     # create list of chapters

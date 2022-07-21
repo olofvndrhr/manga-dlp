@@ -46,6 +46,13 @@ pipeline:
     commands:
       - python3 -m mypy --install-types --non-interactive mangadlp/
 
+  # multiple linters with pylama
+  test-pylama:
+    image: cr.44net.ch/ci-plugins/tests
+    pull: true
+    commands:
+      - python3 -m pylama mangadlp/
+
   # test code with different python versions
   test-tox-pytest:
     when:

@@ -13,6 +13,7 @@ from mangadlp.logger import Logger
 # prepare logger
 log = Logger(__name__)
 
+
 # download images
 def download_chapter(
     image_urls: list,
@@ -40,7 +41,7 @@ def download_chapter(
             except KeyboardInterrupt:
                 log.critical("Stopping")
                 sys.exit(1)
-            except:
+            except Exception:
                 if counter >= 3:
                     log.error("Maybe the MangaDex Servers are down?")
                     raise ConnectionError
@@ -54,7 +55,7 @@ def download_chapter(
             with image_path.open("wb") as file:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, file)
-        except:
+        except Exception:
             log.error("Can't write file")
             raise IOError
 

@@ -106,7 +106,7 @@ class MangaDLP:
         if api_mangadex.search(url_uuid) or api_mangadex2.search(url_uuid):
             return Mangadex
         # this is only for testing multiple apis
-        elif api_test.search(url_uuid):
+        if api_test.search(url_uuid):
             log.critical("Not supported yet")
             sys.exit(1)
 
@@ -252,7 +252,7 @@ class MangaDLP:
         except KeyboardInterrupt:
             log.critical("Stopping")
             sys.exit(1)
-        except:
+        except Exception:
             log.error(f"Cant download: '{chapter_filename}'. Skipping")
             # add to skipped chapters list
             return (
@@ -281,8 +281,8 @@ class MangaDLP:
                 utils.make_pdf(chapter_path)
             else:
                 utils.make_archive(chapter_path, self.file_format)
-        except:
-            log.error(f"Archive error. Skipping chapter")
+        except Exception:
+            log.error("Archive error. Skipping chapter")
             # add to skipped chapters list
             return {
                 "error": chapter_path,
