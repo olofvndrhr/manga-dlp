@@ -103,4 +103,5 @@ py-version = "3.9"
 
 [tool.pylint.logging]
 logging-modules = ["logging"]
+disable = "C0301, C0114, C0116, W0703, R0902, R0913"
 #logging-format-style = "fstr"

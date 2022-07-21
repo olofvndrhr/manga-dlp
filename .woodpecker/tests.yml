@@ -31,7 +31,7 @@ pipeline:
     commands:
       - python3 -m isort --check-only --diff .
 
-  # check unused and missing imports
+  # check unused and missing imports - python
   test-autoflake:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
@@ -46,14 +46,21 @@ pipeline:
     commands:
       - python3 -m mypy --install-types --non-interactive mangadlp/
 
-  # multiple linters with pylama
+  # mccabe, pycodestyle, pyflakes tests - python
   test-pylama:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
       - python3 -m pylama mangadlp/
 
-  # test code with different python versions
+  # pylint test - python
+  test-pylint:
+    image: cr.44net.ch/ci-plugins/tests
+    pull: true
+    commands:
+      - python3 -m pylint --fail-under 9 mangadlp/
+
+  # test code with different python versions - python
   test-tox-pytest:
     when:
       event: [ push ]
@@ -62,7 +69,7 @@ pipeline:
     commands:
       - python3 -m tox -e basic
 
-  # generate coverage report
+  # generate coverage report - python
   test-tox-coverage:
     when:
       branch: master
