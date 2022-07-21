@@ -60,6 +60,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
+      - python3 -m pip install -r requirements.txt
       - python3 -m pylint --fail-under 9 mangadlp/
 
   # test code with different python versions - python
