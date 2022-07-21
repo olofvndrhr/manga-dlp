@@ -4,6 +4,8 @@
 # branch: master
 # event: pull_request
 
+platform: linux/arm64
+
 depends_on:
   - tests
 

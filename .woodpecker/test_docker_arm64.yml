@@ -1,0 +1,35 @@
+##################################
+# test build docker images arm64 #
+##################################
+# branch: master
+# event: pull_request
+
+platform: linux/arm64
+
+depends_on:
+  - tests
+
+clone:
+  git:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-git
+
+pipeline:
+
+  # build docker image for arm64
+  test-build-arm64:
+    when:
+      branch: master
+      event: pull_request
+    image: woodpeckerci/plugin-docker-buildx
+    pull: true
+    settings:
+      dry_run: true
+      repo: olofvndrhr/manga-dlp
+      platforms: linux/arm64
+      dockerfile: docker/Dockerfile.arm64
+      auto_tag: true
+      auto_tag_suffix: linux-arm64-test
+      build_args: BUILD_VERSION=2.1.11

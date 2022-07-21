@@ -4,6 +4,8 @@
 # branch: all
 # event: all
 
+platform: linux/amd64
+
 clone:
   git:
     image: woodpeckerci/plugin-git
