@@ -2,8 +2,7 @@ import argparse
 import sys
 from pathlib import Path
 
-import mangadlp.app as app
-import mangadlp.logger as logger
+from mangadlp import app, logger
 from mangadlp.logger import Logger
 
 # prepare logger
@@ -36,10 +35,10 @@ def readin_list(readlist: str) -> list:
     list_file = Path(readlist)
     log.verbose(f"Reading in list '{str(list_file)}'")
     try:
-        url_str = list_file.read_text()
+        url_str = list_file.read_text(encoding="utf-8")
         url_list = url_str.splitlines()
-    except Exception:
-        raise IOError
+    except Exception as exc:
+        raise IOError from exc
 
     # filter empty lines and remove them
     filtered_list = list(filter(len, url_list))

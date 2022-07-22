@@ -1,11 +1,10 @@
 import re
 import sys
 from time import sleep
-from typing import Any
 
 import requests
 
-import mangadlp.utils as utils
+from mangadlp import utils
 from mangadlp.logger import Logger
 
 # prepare logger
@@ -13,6 +12,22 @@ log = Logger(__name__)
 
 
 class Mangadex:
+    """Mangadex API Class.
+    Get infos for a manga from mangadex.org
+
+    Args:
+        url_uuid (str): URL or UUID of the manga
+        language (str): Manga language with country codes. "en" --> english
+        forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
+
+    Attributes:
+        manga_uuid (str): UUID of the manga, without the url part
+        manga_data (dict): Infos of the manga. Name, title etc
+        manga_title (str): The title of the manga, sanitized for all filesystems
+        manga_chapter_data (dict): All chapter data of the manga. Volumes, chapters, chapter uuids and chapter names
+        chapter_list (list): A list of all available chapters for the language
+
+    """
 
     # api information
     api_base_url = "https://api.mangadex.org"
@@ -38,7 +53,7 @@ class Mangadex:
         self.chapter_list = self.create_chapter_list()
 
     # make initial request
-    def get_manga_data(self) -> requests.Response:
+    def get_manga_data(self) -> dict:
         log.verbose(f"Getting manga data for: {self.manga_uuid}")
         counter = 1
         while counter <= 3:
@@ -61,25 +76,27 @@ class Mangadex:
             log.error("Manga not found")
             sys.exit(1)
 
-        return manga_data
+        return manga_data.json()
 
     # get the uuid for the manga
     def get_manga_uuid(self) -> str:
         # isolate id from url
-        uuid_regex: Any = re.compile(
+        uuid_regex = re.compile(
             "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
         )
-        # check for new mangadex id
-        if not uuid_regex.search(self.url_uuid):
+        # try to get uuid in string
+        try:
+            uuid = uuid_regex.search(self.url_uuid)[0]  # type: ignore
+        except Exception:
             log.error("No valid UUID found")
             sys.exit(1)
 
-        return uuid_regex.search(self.url_uuid)[0]
+        return uuid
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
         log.verbose(f"Getting manga title for: {self.manga_uuid}")
-        manga_data = self.manga_data.json()
+        manga_data = self.manga_data
         try:
             title = manga_data["data"]["attributes"]["title"][self.language]
         except Exception:
@@ -192,13 +209,13 @@ class Mangadex:
                     log.error(f"No chapter with the id {chapter_uuid} found")
                     api_error = True
                     raise IndexError
-                elif api_data["chapter"]["data"] is None:
+                if api_data["chapter"]["data"] is None:
                     log.error(f"No chapter data found for chapter {chapter_uuid}")
                     api_error = True
                     raise IndexError
-                else:
-                    api_error = False
-                    break
+                # no error
+                api_error = False
+                break
             except Exception:
                 if counter >= 3:
                     api_error = True

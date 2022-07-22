@@ -4,8 +4,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import mangadlp.downloader as downloader
-import mangadlp.utils as utils
+from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
 from mangadlp.logger import Logger
 
@@ -17,16 +16,16 @@ class MangaDLP:
     """Download Mangas from supported sites.
     After initialization, start the script with the function get_manga().
 
-    :param url_uuid: URL or UUID of the manga
-    :param language: Manga language with country codes. "en" --> english
-    :param chapters: Chapters to download, "all" for every chapter available
-    :param list_chapters: List all available chapters and exit
-    :param file_format: Archive format to create. An empty string means don't archive the folder
-    :param forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
-    :param download_path: Download path. Defaults to '<script_dir>/downloads'
-    :param download_wait: Time to wait for each picture to download in seconds
+    Args:
+        url_uuid (str): URL or UUID of the manga
+        language (str): Manga language with country codes. "en" --> english
+        chapters (str): Chapters to download, "all" for every chapter available
+        list_chapters (bool): List all available chapters and exit
+        file_format (str): Archive format to create. An empty string means don't archive the folder
+        forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
+        download_path (str): Download path. Defaults to '<script_dir>/downloads'
+        download_wait (float): Time to wait for each picture to download in seconds
 
-    :return: Nothing. Just the files
     """
 
     def __init__(
@@ -131,7 +130,7 @@ class MangaDLP:
         if self.list_chapters:
             log.info(f"Available Chapters: {', '.join(self.manga_chapter_list)}")
             log.info(f"{print_divider}\n")
-            return None
+            sys.exit(0)
 
         # check chapters to download if not all
         if self.chapters.lower() == "all":
