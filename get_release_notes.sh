@@ -29,6 +29,9 @@ function get_release_notes() {
         printf 'You need to specify a version with $1\n'
         exit 1
     fi
+    if [[ ${l_version,,} == "latest" ]]; then
+        l_version="$(grep -o -E "^##\s\[[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}\]" CHANGELOG.md | head -n 1 | grep -o -E "[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}")"
+    fi
     awk -v ver="[${l_version}]" \
         '/^## / { if (p) { exit }; if ($2 == ver) { p=1 } } p && NF' \
         'CHANGELOG.md' > 'RELEASENOTES.md'

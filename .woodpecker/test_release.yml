@@ -36,5 +36,5 @@ pipeline:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     commands:
-      - bash get_release_notes.sh 2.1.11
+      - bash get_release_notes.sh latest
       - cat RELEASENOTES.md

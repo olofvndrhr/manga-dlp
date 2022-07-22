@@ -3,12 +3,11 @@ import sys
 from pathlib import Path
 
 from mangadlp import app, logger
+from mangadlp.__about__ import __version__
 from mangadlp.logger import Logger
 
 # prepare logger
 log = Logger(__name__)
-
-MDLP_VERSION = "2.1.11"
 
 
 def check_args(args):
@@ -16,7 +15,7 @@ def check_args(args):
     logger.format_logger(args.verbosity)
     # check if --version was used
     if args.version:
-        print(f"manga-dlp version: {MDLP_VERSION}")
+        print(f"manga-dlp version: {__version__}")
         sys.exit(0)
     # check if a readin list was provided
     if not args.read:
@@ -63,7 +62,7 @@ def call_app(args):
 
 
 def get_input():
-    print(f"manga-dlp version: {MDLP_VERSION}")
+    print(f"manga-dlp version: {__version__}")
     print("Enter details of the manga you want to download:")
     while True:
         try:
