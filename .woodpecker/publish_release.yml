@@ -4,6 +4,8 @@
 # branch: master
 # event: tag
 
+platform: linux/amd64
+
 depends_on:
   - tests
 
