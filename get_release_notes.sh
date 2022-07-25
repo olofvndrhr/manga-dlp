@@ -8,12 +8,15 @@ function show_help() {
     cat << EOF
 
     Script to generate release-notes from a changelog (CHANGELOG.md)
+
     Usage:
       ./get_release_notes.sh <new_version>
 
 
     Example:
       ./get_release_notes.sh "2.0.5"
+      or
+      ./get_release_notes.sh "latest"
 
 EOF
     exit 0
