@@ -23,7 +23,7 @@ pipeline:
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
+    image: cr.44net.ch/ci-plugins/multipy
     pull: true
     commands:
       - python3 -m tox

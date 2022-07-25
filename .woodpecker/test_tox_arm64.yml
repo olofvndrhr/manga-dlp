@@ -23,7 +23,7 @@ pipeline:
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/ci-plugins/multipy:1-linux-arm64
+    image: cr.44net.ch/ci-plugins/multipy
     pull: true
     commands:
       - grep -v img2pdf contrib/requirements_dev.txt > contrib/requirements_dev_arm64.txt
