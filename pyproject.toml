@@ -3,7 +3,7 @@ requires = ["hatchling>=1.4.1"]
 build-backend = "hatchling.build"
 
 [project]
-version = "2.1.11"
+dynamic = ["version"]
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
@@ -38,6 +38,9 @@ Source = "https://github.com/olofvndrhr/manga-dlp"
 [project.scripts]
 mangadlp = "mangadlp.input:main"
 manga-dlp = "mangadlp.input:main"
+
+[tool.hatch.version]
+path = "mangadlp/__about__.py"
 
 [tool.hatch.build]
 ignore-vcs = true
@@ -103,4 +106,6 @@ py-version = "3.9"
 
 [tool.pylint.logging]
 logging-modules = ["logging"]
-logging-format-style = "fstr"
+disable = "C0301, C0114, C0116, W0703, R0902, R0913"
+good-names = "r"
+#logging-format-style = "fstr"

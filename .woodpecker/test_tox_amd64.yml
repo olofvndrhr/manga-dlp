@@ -4,6 +4,8 @@
 # branch: master
 # event: pull_request
 
+platform: linux/amd64
+
 depends_on:
   - tests
 
@@ -21,7 +23,7 @@ pipeline:
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/ci-plugins/multipy:1-linux-amd64
+    image: cr.44net.ch/ci-plugins/multipy
     pull: true
     commands:
-      - tox
+      - python3 -m tox

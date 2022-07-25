@@ -4,6 +4,8 @@
 # branch: master
 # event: tag
 
+platform: linux/amd64
+
 depends_on:
   - tests
 
@@ -24,7 +26,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - hatch build
+      - python3 -m hatch build
 
   # create release-notes
   create-release-notes:
@@ -78,4 +80,4 @@ pipeline:
       - source: pypi_token
         target: HATCH_PYPI_AUTH
     commands:
-      - hatch publish
+      - python3 -m hatch publish

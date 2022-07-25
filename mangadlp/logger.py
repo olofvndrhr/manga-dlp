@@ -33,6 +33,13 @@ def format_logger(verbosity: int):
 
 
 class Logger:
+    """Default logger for manga-dlp.
+
+    Args:
+        name (str): Name of the logger
+
+    """
+
     def __init__(self, name: str):
         self.name = name
         # create logger

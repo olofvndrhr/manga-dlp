@@ -86,6 +86,12 @@ test_autoflake:
     @python3 -m autoflake --remove-all-unused-imports -r -v mangadlp/
     @python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
 
+test_pylama:
+    @python3 -m pylama mangadlp/
+
+test_pylint:
+    @python3 -m pylint --fail-under 9 mangadlp/
+
 test_tox:
     @python3 -m tox
 
@@ -116,6 +122,8 @@ lint:
     just test_isort
     just test_mypy
     just test_autoflake
+    just test_pylama
+    just test_pylint
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
 tests:
@@ -126,6 +134,8 @@ tests:
     just test_isort
     just test_mypy
     just test_autoflake
+    just test_pylama
+    just test_pylint
     just test_pytest
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
@@ -136,6 +146,9 @@ tests_full:
     just test_black
     just test_isort
     just test_mypy
+    just test_autoflake
+    just test_pylama
+    just test_pylint
     just test_build
     just test_tox
     just test_tox_coverage

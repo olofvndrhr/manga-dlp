@@ -6,7 +6,8 @@
 
 [![status-badge](https://img.shields.io/drone/build/olofvndrhr/manga-dlp?label=tests&server=https%3A%2F%2Fci.44net.ch)](https://ci.44net.ch/olofvndrhr/manga-dlp)
 [![Last Release](https://img.shields.io/github/release-date/olofvndrhr/manga-DLP?label=last%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
-[![Version](https://img.shields.io/github/v/release/olofvndrhr/manga-dlp?label=version&sort=semver)](https://github.com/olofvndrhr/manga-dlp/releases)
+[![Version](https://img.shields.io/github/v/release/olofvndrhr/manga-dlp?label=git%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
+[![Version PyPi](https://img.shields.io/pypi/v/manga-dlp?label=pypi%20release)](https://pypi.org/project/manga-dlp/)
 
 #### Code Analysis:
 
@@ -17,12 +18,13 @@
 
 #### Meta:
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
-[![Types - Mypy](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
-[![Imports - isort](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://github.com/pycqa/isort)
-[![Tests](https://img.shields.io/badge/tests-pytest-yellow)](https://github.com/pytest-dev/pytest/)
-[![Coverage generation](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
-[![License - MIT](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
+[![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![Linter](https://img.shields.io/badge/linter-pylint-yellowgreen)](https://pylint.pycqa.org/en/latest/)
+[![Types](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
+[![Imports](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://github.com/pycqa/isort)
+[![Tests](https://img.shields.io/badge/tests-pytest%20%7C%20tox-yellow)](https://github.com/pytest-dev/pytest/)
+[![Coverage](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
+[![License](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
 [![Compatibility](https://img.shields.io/pypi/pyversions/manga-dlp)](https://pypi.org/project/manga-dlp/)
 ---
 

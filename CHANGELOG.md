@@ -9,6 +9,25 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.1.12] - 2022-07-25
+
+### Fixed
+
+- Image publishing with `hatch` on pypi should now work again
+- The schedule fixer for the new `.sh` schedule should now work correctly
+
+### Added
+
+- More CI tests: `pylint`, `pylama` and `autoflake`
+- New function in `get_release_notes.sh` to get the latest version
+- Docstrings for `MangaDLP` and the api module `Mangadex`
+
+### Changed
+
+- CI workflow is now faster and runs natively on arm64 (before it was buildx/emulation)
+- `Pylint`/`pylama` code improvements
+- Version management is now done with `hatch` (in `__about__.py`)
+
 ## [2.1.11] - 2022-07-18
 
 ### Fixed

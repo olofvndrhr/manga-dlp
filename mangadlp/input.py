@@ -2,14 +2,12 @@ import argparse
 import sys
 from pathlib import Path
 
-import mangadlp.app as app
-import mangadlp.logger as logger
+from mangadlp import app, logger
+from mangadlp.__about__ import __version__
 from mangadlp.logger import Logger
 
 # prepare logger
 log = Logger(__name__)
-
-MDLP_VERSION = "2.1.11"
 
 
 def check_args(args):
@@ -17,7 +15,7 @@ def check_args(args):
     logger.format_logger(args.verbosity)
     # check if --version was used
     if args.version:
-        print(f"manga-dlp version: {MDLP_VERSION}")
+        print(f"manga-dlp version: {__version__}")
         sys.exit(0)
     # check if a readin list was provided
     if not args.read:
@@ -36,10 +34,10 @@ def readin_list(readlist: str) -> list:
     list_file = Path(readlist)
     log.verbose(f"Reading in list '{str(list_file)}'")
     try:
-        url_str = list_file.read_text()
+        url_str = list_file.read_text(encoding="utf-8")
         url_list = url_str.splitlines()
-    except:
-        raise IOError
+    except Exception as exc:
+        raise IOError from exc
 
     # filter empty lines and remove them
     filtered_list = list(filter(len, url_list))
@@ -64,7 +62,7 @@ def call_app(args):
 
 
 def get_input():
-    print(f"manga-dlp version: {MDLP_VERSION}")
+    print(f"manga-dlp version: {__version__}")
     print("Enter details of the manga you want to download:")
     while True:
         try:
@@ -72,11 +70,11 @@ def get_input():
             readlist = str(input("List with links (optional): "))
             language = str(input("Language: ")) or "en"
             list_chapters = str(input("List chapters? y/N: "))
-            if list_chapters.lower() != "y" or list_chapters.lower() != "yes":
+            if list_chapters.lower() in {"y", "yes"}:
                 chapters = str(input("Chapters: "))
         except KeyboardInterrupt:
             sys.exit(1)
-        except:
+        except Exception:
             continue
         else:
             break
@@ -88,12 +86,10 @@ def get_input():
         chapters,
     ]
     if url_uuid:
-        args.append("-u")
-        args.append(url_uuid)
+        args.extend(("-u", url_uuid))
     if readlist:
-        args.append("--read")
-        args.append(readlist)
-    if list_chapters.lower() == "y" or list_chapters.lower() == "yes":
+        args.extend(("--read", readlist))
+    if list_chapters.lower() in {"y", "yes"}:
         args.append("--list")
 
     # start script again with the arguments

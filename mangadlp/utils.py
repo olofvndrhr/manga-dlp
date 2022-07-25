@@ -9,6 +9,7 @@ from mangadlp.logger import Logger
 # prepare logger
 log = Logger(__name__)
 
+
 # create an archive of the chapter images
 def make_archive(chapter_path: Path, file_format: str) -> None:
     zip_path = Path(f"{chapter_path}.zip")
@@ -19,16 +20,16 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
                 zipfile.write(file, file.name)
         # rename zip to file format requested
         zip_path.rename(zip_path.with_suffix(file_format))
-    except:
-        raise IOError
+    except Exception as exc:
+        raise IOError from exc
 
 
 def make_pdf(chapter_path: Path) -> None:
     try:
         import img2pdf
-    except:
+    except Exception as exc:
         log.error("Cant import img2pdf. Please install it first")
-        raise ImportError
+        raise ImportError from exc
 
     pdf_path = Path(f"{chapter_path}.pdf")
     images = []
@@ -36,9 +37,9 @@ def make_pdf(chapter_path: Path) -> None:
         images.append(str(file))
     try:
         pdf_path.write_bytes(img2pdf.convert(images))
-    except:
+    except Exception as exc:
         log.error("Can't create '.pdf' archive")
-        raise IOError
+        raise IOError from exc
 
 
 # create a list of chapters

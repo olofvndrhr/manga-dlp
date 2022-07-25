@@ -7,11 +7,12 @@ from typing import Union
 
 import requests
 
-import mangadlp.utils as utils
+from mangadlp import utils
 from mangadlp.logger import Logger
 
 # prepare logger
 log = Logger(__name__)
+
 
 # download images
 def download_chapter(
@@ -40,10 +41,10 @@ def download_chapter(
             except KeyboardInterrupt:
                 log.critical("Stopping")
                 sys.exit(1)
-            except:
+            except Exception as exc:
                 if counter >= 3:
                     log.error("Maybe the MangaDex Servers are down?")
-                    raise ConnectionError
+                    raise ConnectionError from exc
                 sleep(download_wait)
                 counter += 1
             else:
@@ -54,9 +55,9 @@ def download_chapter(
             with image_path.open("wb") as file:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, file)
-        except:
+        except Exception as exc:
             log.error("Can't write file")
-            raise IOError
+            raise IOError from exc
 
         image_num += 1
         sleep(download_wait)
