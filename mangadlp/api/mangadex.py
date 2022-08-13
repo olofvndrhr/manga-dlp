@@ -36,6 +36,8 @@ class Mangadex:
     # get infos to initiate class
     def __init__(self, url_uuid: str, language: str, forcevol: bool):
         # static info
+        self.api_name = "Mangadex"
+
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol

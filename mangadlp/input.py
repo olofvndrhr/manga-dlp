@@ -49,14 +49,18 @@ def readin_list(readlist: str) -> list:
 def call_app(args):
     # call main function with all input arguments
     mdlp = app.MangaDLP(
-        args.url_uuid,
-        args.lang,
-        args.chapters,
-        args.list,
-        args.format,
-        args.forcevol,
-        args.path,
-        args.wait,
+        url_uuid=args.url_uuid,
+        language=args.lang,
+        chapters=args.chapters,
+        list_chapters=args.list,
+        file_format=args.format,
+        forcevol=args.forcevol,
+        download_path=args.path,
+        download_wait=args.wait,
+        manga_pre_hook_cmd=args.hook_manga_pre,
+        manga_post_hook_cmd=args.hook_manga_post,
+        chapter_pre_hook_cmd=args.hook_chapter_pre,
+        chapter_post_hook_cmd=args.hook_chapter_post,
     )
     mdlp.get_manga()
 
@@ -105,6 +109,7 @@ def get_args():
     action = parser.add_mutually_exclusive_group(required=True)
     verbosity = parser.add_mutually_exclusive_group(required=False)
 
+    # selection options
     action.add_argument(
         "-u",
         "--url",
@@ -129,6 +134,8 @@ def get_args():
         help="Show version of manga-dlp and exit",
         action="store_true",
     )
+
+    # base options
     parser.add_argument(
         "-c",
         "--chapters",
@@ -185,6 +192,8 @@ def get_args():
         default=0.5,
         help="Time to wait for each picture to download in seconds(float). Defaults 0.5",
     )
+
+    # logging options
     verbosity.add_argument(
         "--lean",
         dest="verbosity",
@@ -211,6 +220,35 @@ def get_args():
         action="store_const",
         const=10,
         default=20,
+    )
+    # hook options
+    parser.add_argument(
+        "--hook-manga-pre",
+        dest="hook_manga_pre",
+        required=False,
+        help="Commands to execute before the manga download starts",
+        action="store",
+    )
+    parser.add_argument(
+        "--hook-manga-post",
+        dest="hook_manga_post",
+        required=False,
+        help="Commands to execute after the manga download finished",
+        action="store",
+    )
+    parser.add_argument(
+        "--hook-chapter-pre",
+        dest="hook_chapter_pre",
+        required=False,
+        help="Commands to execute before the chapter download starts",
+        action="store",
+    )
+    parser.add_argument(
+        "--hook-chapter-post",
+        dest="hook_chapter_post",
+        required=False,
+        help="Commands to execute after the chapter download finished",
+        action="store",
     )
 
     # parser.print_help()

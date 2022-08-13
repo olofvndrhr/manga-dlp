@@ -9,6 +9,8 @@ class YourAPI:
     # get infos to initiate class
     def __init__(self, url_uuid, language, forcevol):
         # static info
+        self.api_name = "Your API Name"
+
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol
