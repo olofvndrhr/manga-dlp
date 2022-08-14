@@ -249,9 +249,16 @@ Each of these hooks can be set with a specific flag:
 
 #### Example:
 
-`manga-dlp -u <some url> -c 1 --hook-post-manga <some command>`
+```sh
+manga-dlp -u <some url> -c 1 --hook-post-manga <some command>
 
-`manga-dlp -u <some url> -c 1 --hook-post-manga "echo abc"`
+# echo "abc" to stdout
+manga-dlp -u <some url> -c 1 --hook-post-manga "echo abc"
+
+# echo the manga name to stdout
+
+manga-dlp -u <some url> -c 1 --hook-post-manga "echo ${MDLP_MANGA_TITLE}"
+```
 
 #### Env Variables
 
@@ -260,33 +267,33 @@ All available env variables are:
 
 **General:**
 
-- `HOOK_TYPE`
-- `STATUS`
-- `REASON`
+- `MDLP_HOOK_TYPE`
+- `MDLP_STATUS`
+- `MDLP_REASON`
 
 **Manga hooks:**
 
-- `API`
-- `MANGA_URL_UUID`
-- `MANGA_UUID`
-- `MANGA_TITLE`
-- `LANGUAGE`
-- `TOTAL_CHAPTERS`
-- `CHAPTERS_TO_DOWNLOAD`
-- `FILE_FORMAT`
-- `FORCEVOL`
-- `DOWNLOAD_PATH`
-- `MANGA_PATH`
+- `MDLP_API`
+- `MDLP_MANGA_URL_UUID`
+- `MDLP_MANGA_UUID`
+- `MDLP_MANGA_TITLE`
+- `MDLP_LANGUAGE`
+- `MDLP_TOTAL_CHAPTERS`
+- `MDLP_CHAPTERS_TO_DOWNLOAD`
+- `MDLP_FILE_FORMAT`
+- `MDLP_FORCEVOL`
+- `MDLP_DOWNLOAD_PATH`
+- `MDLP_MANGA_PATH`
 
 **Chapter hooks (extends Manga hooks env variables):**
 
-- `CHAPTER_FILENAME`
-- `CHAPTER_PATH`
-- `CHAPTER_ARCHIVE_PATH`
-- `CHAPTER_UUID`
-- `CHAPTER_VOLUME`
-- `CHAPTER_NUMBER`
-- `CHAPTER_NAME`
+- `MDLP_CHAPTER_FILENAME`
+- `MDLP_CHAPTER_PATH`
+- `MDLP_CHAPTER_ARCHIVE_PATH`
+- `MDLP_CHAPTER_UUID`
+- `MDLP_CHAPTER_VOLUME`
+- `MDLP_CHAPTER_NUMBER`
+- `MDLP_CHAPTER_NAME`
 
 ## Contribution / Bugs
 

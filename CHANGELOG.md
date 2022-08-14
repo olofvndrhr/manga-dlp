@@ -20,6 +20,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Verbose and Debug logging now have a space as a seperator between log level-name and log-level
+- APIs now have an attribute with their name (for the hooks) - `api.api_name`
 
 ## [2.1.12] - 2022-07-25
 
