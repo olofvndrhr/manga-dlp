@@ -89,25 +89,30 @@ See the docker [README](./docker/README.md)
 ## Options
 
 ```txt
-usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--verbose]
+usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--lean | --verbose | --debug] [--hook-manga-pre HOOK_MANGA_PRE]
+[--hook-manga-post HOOK_MANGA_POST] [--hook-chapter-pre HOOK_CHAPTER_PRE] [--hook-chapter-post HOOK_CHAPTER_POST]
 
 Script to download mangas from various sites
 
-options:
--h, --help                          show this help message and exit
--u URL_UUID, --url URL_UUID         URL or UUID of the manga
---read READ                         Path of file with manga links to download. One per line
--v, --version                       Show version of manga-dlp and exit
--c CHAPTERS, --chapters CHAPTERS    Chapters to download
--p PATH, --path PATH                Download path. Defaults to "<script_dir>/downloads"
--l LANG, --language LANG            Manga language. Defaults to "en" --> english
---list                              List all available chapters. Defaults to false
---format FORMAT                     Archive format to create. An empty string means dont archive the folder. Defaults to 'cbz'
---forcevol                          Force naming of volumes. For mangas where chapters reset each volume
---wait WAIT                         Time to wait for each picture to download in seconds(float). Defaults 0.5
---lean                              Lean logging. Minimal log output. Defaults to false
---verbose                           Verbose logging. More log output. Defaults to false
---debug                             Debug logging. Most log output. Defaults to false
+optional arguments:
+-h, --help                                      show this help message and exit
+-u URL_UUID, --url URL_UUID, --uuid URL_UUID    URL or UUID of the manga
+--read READ                                     Path of file with manga links to download. One per line
+-v, --version                                   Show version of manga-dlp and exit
+-c CHAPTERS, --chapters CHAPTERS                Chapters to download
+-p PATH, --path PATH                            Download path. Defaults to "<script_dir>/downloads"
+-l LANG, --language LANG                        Manga language. Defaults to "en" --> english
+--list                                          List all available chapters. Defaults to false
+--format FORMAT                                 Archive format to create. An empty string means dont archive the folder. Defaults to 'cbz'
+--forcevol                                      Force naming of volumes. For mangas where chapters reset each volume
+--wait WAIT                                     Time to wait for each picture to download in seconds(float). Defaults 0.5
+--lean                                          Lean logging. Minimal log output. Defaults to false
+--verbose                                       Verbose logging. More log output. Defaults to false
+--debug                                         Debug logging. Most log output. Defaults to false
+--hook-manga-pre HOOK_MANGA_PRE                 Commands to execute before the manga download starts
+--hook-manga-post HOOK_MANGA_POST               Commands to execute after the manga download finished
+--hook-chapter-pre HOOK_CHAPTER_PRE             Commands to execute before the chapter download starts
+--hook-chapter-post HOOK_CHAPTER_POST           Commands to execute after the chapter download finished
 ```
 
 ### Downloads file-structure
@@ -222,6 +227,66 @@ see more in the Docker [README.md](docker/README.md).
 `python3 manga-dlp.py <other options> --format "zip"`
 
 This will download the chapter and save it as a zip archive.
+
+### Hooks
+
+You can run custom hooks with manga-dlp for specific events.
+They are run with the `subproccess.call` function, so they get run directly by your operating system.
+
+The available hook events are:
+
+- **Pre Manga** -> Before anything gets downloaded
+- **Pre Chapter** -> Before the chapter gets downloaded
+- **Post Manga** -> After the manga is done. (All specified chapters were downloaded)
+- **Post Chapter** -> After each chapter was downloaded (and formatted if specified)
+
+Each of these hooks can be set with a specific flag:
+
+- `--hook-pre-manga` -> Pre Manga hook
+- `--hook-pre-chapter` -> Pre Chapter hook
+- `--hook-post-manga` -> Post Manga hook
+- `--hook-post-chapter` -> Post Chapter hook
+
+#### Example:
+
+`manga-dlp -u <some url> -c 1 --hook-post-manga <some command>`
+
+`manga-dlp -u <some url> -c 1 --hook-post-manga "echo abc"`
+
+#### Env Variables
+
+All hooks are exposed to a variety of environment variables with infos about the manga/chapter currently downloading.
+All available env variables are:
+
+**General:**
+
+- `HOOK_TYPE`
+- `STATUS`
+- `REASON`
+
+**Manga hooks:**
+
+- `API`
+- `MANGA_URL_UUID`
+- `MANGA_UUID`
+- `MANGA_TITLE`
+- `LANGUAGE`
+- `TOTAL_CHAPTERS`
+- `CHAPTERS_TO_DOWNLOAD`
+- `FILE_FORMAT`
+- `FORCEVOL`
+- `DOWNLOAD_PATH`
+- `MANGA_PATH`
+
+**Chapter hooks (extends Manga hooks env variables):**
+
+- `CHAPTER_FILENAME`
+- `CHAPTER_PATH`
+- `CHAPTER_ARCHIVE_PATH`
+- `CHAPTER_UUID`
+- `CHAPTER_VOLUME`
+- `CHAPTER_NUMBER`
+- `CHAPTER_NAME`
 
 ## Contribution / Bugs
 

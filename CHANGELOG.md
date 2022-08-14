@@ -9,6 +9,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.13] - 2022-08-
+
+### Added
+
+- Option to run custom hooks before and after each chapter/manga download
+- _Tests for the new hooks_
+- _Docs for the new hooks_
+
+### Changed
+
+- Verbose and Debug logging now have a space as a seperator between log level-name and log-level
+
 ## [2.1.12] - 2022-07-25
 
 ### Fixed
