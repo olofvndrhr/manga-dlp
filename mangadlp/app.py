@@ -78,6 +78,7 @@ class MangaDLP:
         self.manga_title = self.api.manga_title
         # get chapter list
         self.manga_chapter_list = self.api.chapter_list
+        self.manga_total_chapters = len(self.manga_chapter_list)
         self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
 
     def pre_checks(self) -> None:
@@ -137,7 +138,7 @@ class MangaDLP:
         log.info(f"{print_divider}")
         log.lean(f"Manga Name: {self.manga_title}")
         log.info(f"Manga UUID: {self.manga_uuid}")
-        log.info(f"Total chapters: {len(self.manga_chapter_list)}")
+        log.info(f"Total chapters: {self.manga_total_chapters}")
 
         # list chapters if list_chapters is true
         if self.list_chapters:
@@ -168,7 +169,7 @@ class MangaDLP:
                 "manga_uuid": self.manga_uuid,
                 "manga_title": self.manga_title,
                 "language": self.language,
-                "total_chapters": len(self.manga_chapter_list),
+                "total_chapters": self.manga_total_chapters,
                 "chapters_to_download": chapters_to_download,
                 "file_format": self.file_format,
                 "forcevol": self.forcevol,
