@@ -51,6 +51,22 @@ packages = ["mangadlp"]
 [tool.hatch.build.targets.wheel]
 packages = ["mangadlp"]
 
+[tool.hatch.envs.default]
+dependencies = [
+    "img2pdf>=0.4.4",
+    "hatch>=1.2.1",
+    "hatchling>=1.4.1",
+    "pytest>=7.0.0",
+    "coverage>=6.3.1",
+    "black>=22.1.0",
+    "isort>=5.10.0",
+    "pylint>=2.13.0",
+    "mypy>=0.940",
+    "tox>=3.24.5",
+    "autoflake>=1.4",
+    "pylama>=8.3.8",
+]
+
 [tool.isort]
 py_version = 39
 skip_gitignore = true

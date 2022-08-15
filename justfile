@@ -67,6 +67,10 @@ create_venv:
     @python3 -m pip install --upgrade pip setuptools wheel
     @python3 -m venv venv
 
+install_deps:
+    @echo "installing dependencies"
+    @pip3 install -r contrib/requirements_dev.txt
+
 test_shfmt:
     @find . -type f \( -name "**.sh" -and -not -path "./venv/*" -and -not -path "./.tox/*" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
 
