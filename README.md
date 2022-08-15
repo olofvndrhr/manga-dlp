@@ -1,5 +1,7 @@
 # manga-dlp - python script to download mangas
 
+> Full docs: https://manga-dlp.ivn.sh
+
 CI/CD
 
 [![status-badge](https://img.shields.io/drone/build/olofvndrhr/manga-dlp?label=tests&server=https%3A%2F%2Fci.44net.ch)](https://ci.44net.ch/olofvndrhr/manga-dlp)
