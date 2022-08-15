@@ -82,7 +82,7 @@ mangadlp <args> # call script directly
 
 ### With docker
 
-See the docker [README](https://manga-dlp.ivn.sh/docker/)
+See the docker [README](docker/)
 
 ## Options
 
