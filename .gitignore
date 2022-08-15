@@ -12,6 +12,7 @@ chaps.txt
 mangas.txt
 .idea/
 venv
+test.sh
 
 ### Python template
 # Byte-compiled / optimized / DLL files

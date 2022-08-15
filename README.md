@@ -263,37 +263,42 @@ manga-dlp -u <some url> -c 1 --hook-post-manga "echo ${MDLP_MANGA_TITLE}"
 #### Env Variables
 
 All hooks are exposed to a variety of environment variables with infos about the manga/chapter currently downloading.
-All available env variables are:
+
+All available env variables are listed below with the example
+for [this](https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie) manga:
+
+> Command
+> used: `python3 manga-dlp.py -u https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie -c 1`
 
 **General:**
 
-- `MDLP_HOOK_TYPE`
-- `MDLP_STATUS`
-- `MDLP_REASON`
+- `MDLP_HOOK_TYPE` -> manga_pre / manga_post / chapter_pre / chapter_post
+- `MDLP_STATUS` -> starting / success / error / none
+- `MDLP_REASON` -> none or the reason of the status
 
 **Manga hooks:**
 
-- `MDLP_API`
-- `MDLP_MANGA_URL_UUID`
-- `MDLP_MANGA_UUID`
-- `MDLP_MANGA_TITLE`
-- `MDLP_LANGUAGE`
-- `MDLP_TOTAL_CHAPTERS`
-- `MDLP_CHAPTERS_TO_DOWNLOAD`
-- `MDLP_FILE_FORMAT`
-- `MDLP_FORCEVOL`
-- `MDLP_DOWNLOAD_PATH`
-- `MDLP_MANGA_PATH`
+- `MDLP_API` -> Mangadex
+- `MDLP_MANGA_URL_UUID` -> https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie
+- `MDLP_MANGA_UUID` -> 0aea9f43-d4a9-4bf7-bebc-550a512f9b95
+- `MDLP_MANGA_TITLE` -> Shikimori's Not Just a Cutie
+- `MDLP_LANGUAGE` -> en
+- `MDLP_TOTAL_CHAPTERS` -> 158
+- `MDLP_CHAPTERS_TO_DOWNLOAD` -> ['1']
+- `MDLP_FILE_FORMAT` -> .cbz
+- `MDLP_FORCEVOL` -> False
+- `MDLP_DOWNLOAD_PATH` -> downloads
+- `MDLP_MANGA_PATH` -> downloads/Shikimori's Not Just a Cutie
 
 **Chapter hooks (extends Manga hooks env variables):**
 
-- `MDLP_CHAPTER_FILENAME`
-- `MDLP_CHAPTER_PATH`
-- `MDLP_CHAPTER_ARCHIVE_PATH`
-- `MDLP_CHAPTER_UUID`
-- `MDLP_CHAPTER_VOLUME`
-- `MDLP_CHAPTER_NUMBER`
-- `MDLP_CHAPTER_NAME`
+- `MDLP_CHAPTER_FILENAME` -> Ch. 1
+- `MDLP_CHAPTER_PATH` -> downloads/Shikimori's Not Just a Cutie/Ch. 1
+- `MDLP_CHAPTER_ARCHIVE_PATH` -> downloads/Shikimori's Not Just a Cutie/Ch. 1.cbz
+- `MDLP_CHAPTER_UUID` -> b7cba066-0b45-4d88-be08-89240841b4f7
+- `MDLP_CHAPTER_VOLUME` -> 1
+- `MDLP_CHAPTER_NUMBER` -> 1
+- `MDLP_CHAPTER_NAME` -> `empty string`
 
 ## Contribution / Bugs
 
