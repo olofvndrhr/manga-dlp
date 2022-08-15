@@ -76,8 +76,8 @@ pipeline:
     pull: true
     secrets:
       - source: pypi_username
-        target: HATCH_PYPI_USER
+        target: HATCH_INDEX_USER
       - source: pypi_token
-        target: HATCH_PYPI_AUTH
+        target: HATCH_INDEX_AUTH
     commands:
       - python3 -m hatch publish

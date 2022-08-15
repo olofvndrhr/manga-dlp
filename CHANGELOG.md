@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
-## [2.2.13] - 2022-08-
+## [2.2.13] - 2022-08-15
 
 ### Added
 
@@ -21,6 +21,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Verbose and Debug logging now have a space as a seperator between log level-name and log-level
 - APIs now have an attribute with their name (for the hooks) - `api.api_name`
+- Docs moved to Cloudflare pages (generated with mkdocs)
 
 ## [2.1.12] - 2022-07-25
 
