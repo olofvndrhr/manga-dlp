@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Option to run custom hooks before and after each chapter/manga download
 - _Tests for the new hooks_
 - _Docs for the new hooks_
+- _Tests for mkdocs generation_
 
 ### Changed
 
