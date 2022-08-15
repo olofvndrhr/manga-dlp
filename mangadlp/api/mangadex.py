@@ -21,6 +21,7 @@ class Mangadex:
         forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
 
     Attributes:
+        api_name (str): Name of the API
         manga_uuid (str): UUID of the manga, without the url part
         manga_data (dict): Infos of the manga. Name, title etc
         manga_title (str): The title of the manga, sanitized for all filesystems
@@ -36,6 +37,8 @@ class Mangadex:
     # get infos to initiate class
     def __init__(self, url_uuid: str, language: str, forcevol: bool):
         # static info
+        self.api_name = "Mangadex"
+
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol

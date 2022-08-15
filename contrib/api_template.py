@@ -2,6 +2,22 @@
 
 
 class YourAPI:
+    """Your API Class.
+    Get infos for a manga from example.org
+
+    Args:
+        url_uuid (str): URL or UUID of the manga
+        language (str): Manga language with country codes. "en" --> english
+        forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
+
+    Attributes:
+        api_name (str): Name of the API
+        manga_uuid (str): UUID of the manga, without the url part
+        manga_title (str): The title of the manga, sanitized for all filesystems
+        chapter_list (list): A list of all available chapters for the language
+
+    """
+
     # api information - example
     api_base_url = "https://api.mangadex.org"
     img_base_url = "https://uploads.mangadex.org"
@@ -9,6 +25,8 @@ class YourAPI:
     # get infos to initiate class
     def __init__(self, url_uuid, language, forcevol):
         # static info
+        self.api_name = "Your API Name"
+
         self.url_uuid = url_uuid
         self.language = language
         self.forcevol = forcevol

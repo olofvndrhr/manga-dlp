@@ -1,7 +1,5 @@
 # manga-dlp - python script to download mangas
 
-> Full docs: https://manga-dlp.ivn.sh
-
 CI/CD
 
 [![status-badge](https://img.shields.io/drone/build/olofvndrhr/manga-dlp?label=tests&server=https%3A%2F%2Fci.44net.ch)](https://ci.44net.ch/olofvndrhr/manga-dlp)
@@ -84,7 +82,7 @@ mangadlp <args> # call script directly
 
 ### With docker
 
-See the docker [README](https://manga-dlp.ivn.sh/docker/)
+See the docker [README](docker/)
 
 ## Options
 
@@ -119,8 +117,10 @@ optional arguments:
 
 For suggestions for improvement, just open a pull request.
 
-If you want to add support for a new site, there is an api [template file](./contrib/api_template.py) which you can use.
-And more infos and tools in the contrib [README.md](contrib/README.md)
+If you want to add support for a new site, there is an
+api [template file](https://github.com/olofvndrhr/manga-dlp/blob/master/contrib/api_template.py) which you can use.
+And more infos and tools in the
+contrib [README.md](https://github.com/olofvndrhr/manga-dlp/blob/master/contrib/README.md)
 
 Otherwise, you can open am issue with the name of the site which you want support for. (not guaranteed to be
 implemented)
