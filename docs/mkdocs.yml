@@ -1,0 +1,20 @@
+site_name: manga-dlp
+site_url: https://manga-dlp.ivn.sh/
+site_description: docs for manga-dlp
+site_author: Ivan Schaller
+copyright: MIT
+
+repo_url: https://github.com/olofvndrhr/manga-dlp/
+repo_name: manga-dlp
+
+docs_dir: pages
+
+theme:
+  name: readthedocs
+  locale: en
+
+nav:
+  - Home: index.md
+  - Download: download.md
+  - Hooks: hooks.md
+  - Docker: docker.md
