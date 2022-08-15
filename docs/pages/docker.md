@@ -37,7 +37,7 @@ You can configure the default schedule via environment variables. Don't forget t
 , else
 it will not generate it (it will just use the default one).
 
-For more info's about the options, you can look in the main scripts [README.md](../README.md)
+For more info's about the options, you can look in the main scripts [README.md](../)
 
 | ENV Variable           | Default         | manga-dlp option         | Info                                                                     |
 |:-----------------------|:----------------|:-------------------------|--------------------------------------------------------------------------|

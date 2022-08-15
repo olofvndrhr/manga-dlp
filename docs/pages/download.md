@@ -78,7 +78,7 @@ The default is set to `.cbz`, so if no format is given it falls back to `<manga-
 
 For pdf creation you have to install [img2pdf](https://pypi.org/project/img2pdf/).
 With the amd64 docker image it is already installed
-see more in the Docker [README.md](docker/README.md).
+see more in the Docker [README.md](../docker/).
 
 **Supported format options:**
 
