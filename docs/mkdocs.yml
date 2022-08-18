@@ -1,17 +1,29 @@
 site_name: manga-dlp
 site_url: https://manga-dlp.ivn.sh/
-site_description: docs for manga-dlp
+site_description: Documentation for manga-dlp
 site_author: Ivan Schaller
 copyright: MIT
 
 repo_url: https://github.com/olofvndrhr/manga-dlp/
 repo_name: manga-dlp
+edit_uri: edit/master/docs/pages/
 
 docs_dir: pages
 
 theme:
   name: readthedocs
   locale: en
+  include_homepage_in_sidebar: true
+  prev_next_buttons_location: bottom
+  collapse_navigation: false
+  sticky_navigation: true
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - sh
+    - python
+    - txt
+    - md
 
 nav:
   - Home: index.md
