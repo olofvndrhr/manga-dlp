@@ -269,7 +269,7 @@ class MangaDLP:
         # check if chapter already exists
         # check for folder, if file format is an empty string
         if chapter_archive_path.exists():
-            log.warning(f"'{chapter_archive_path}' already exists. Skipping")
+            log.info(f"'{chapter_archive_path}' already exists. Skipping")
 
             self.hook.run(
                 "chapter_pre", {"status": "skipped", "reason": "Existing"}, {}
