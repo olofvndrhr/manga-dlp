@@ -91,7 +91,7 @@ test_autoflake:
     @python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
 
 test_pylama:
-    @python3 -m pylama mangadlp/
+    @python3 -m pylama --options tox.ini mangadlp/
 
 test_pylint:
     @python3 -m pylint --fail-under 9 mangadlp/

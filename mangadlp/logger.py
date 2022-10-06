@@ -1,11 +1,13 @@
 import logging
 
+DATE_FMT = "%Y-%m-%dT%H:%M:%S%z"
+
 
 # prepare custom levels and default config of logger
 def prepare_logger():
     logging.basicConfig(
         format="%(asctime)s | [%(levelname)s] [%(name)s]: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        datefmt=DATE_FMT,
         level=20,
         handlers=[logging.StreamHandler()],
     )
@@ -21,13 +23,13 @@ def format_logger(verbosity: int):
     if verbosity >= 20:
         logging.basicConfig(
             format="%(asctime)s | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
+            datefmt=DATE_FMT,
             force=True,
         )
     else:
         logging.basicConfig(
             format="%(asctime)s | [%(levelname)s] [%(name)s]: %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
+            datefmt=DATE_FMT,
             force=True,
         )
 

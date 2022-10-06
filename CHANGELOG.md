@@ -9,6 +9,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.14] - 2022-10-06
+
+### Changed
+
+- Changed logging format to ISO 8601
+- Small logging corrections
+
 ## [2.2.13] - 2022-08-15
 
 ### Added
