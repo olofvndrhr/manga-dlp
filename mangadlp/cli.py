@@ -36,6 +36,7 @@ def readin_list(_, __, value) -> list:
 @click.command(context_settings={"max_content_width": 150})
 @click.help_option()
 @click.version_option(version=__version__, package_name="manga-dlp")
+# manga selection
 @optgroup.group("source", cls=RequiredMutuallyExclusiveOptionGroup)
 @optgroup.option(
     "-u",
@@ -57,31 +58,33 @@ def readin_list(_, __, value) -> list:
     show_default=True,
     help="Path of file with manga links to download. One per line",
 )
+# logging options
 @optgroup.group("verbosity", cls=MutuallyExclusiveOptionGroup)
 @optgroup.option(
-    "--verbose",
+    "--loglevel",
     "verbosity",
-    flag_value=20,
+    type=int,
     default=20,
     show_default=True,
-    help="Verbose logging. More log output",
+    help="Custom log level",
 )
 @optgroup.option(
-    "--lean",
+    "--warn",
     "verbosity",
     flag_value=25,
     default=20,
-    show_default=True,
-    help="Lean logging. Minimal log output",
+    show_default=False,
+    help="Only log warnings and higher",
 )
 @optgroup.option(
     "--debug",
     "verbosity",
     flag_value=10,
     default=20,
-    show_default=True,
-    help="Debug logging. Most log output",
+    show_default=False,
+    help="Debug logging. Log EVERYTHING",
 )
+# other options
 @click.option(
     "-c",
     "--chapters",

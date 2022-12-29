@@ -7,14 +7,14 @@ source /etc/cont-init.d/20-setenv.sh
 function prepare_vars() {
     # set log level
     case "${MDLP_LOG_LEVEL}" in
-        "lean")
-            MDLP_LOG_LEVEL_FLAG="    --lean"
-            ;;
-        "verbose")
-            MDLP_LOG_LEVEL_FLAG="    --verbose"
+        "warn")
+            MDLP_LOG_LEVEL_FLAG="    --warn"
             ;;
         "debug")
             MDLP_LOG_LEVEL_FLAG="    --debug"
+            ;;
+        *)
+            MDLP_LOG_LEVEL_FLAG="    --loglevel ${MDLP_LOG_LEVEL}"
             ;;
     esac
 

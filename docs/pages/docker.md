@@ -39,17 +39,17 @@ it will not generate it (it will just use the default one).
 
 For more info's about the options, you can look in the main scripts [README.md](../)
 
-| ENV Variable           | Default         | manga-dlp option         | Info                                                                     |
-|:-----------------------|:----------------|:-------------------------|--------------------------------------------------------------------------|
-| MDLP_GENERATE_SCHEDULE | false           | none                     | Has to be set to "true" to generate the config via environment variables |
-| MDLP_PATH              | /app/downloads  | --path                   |                                                                          |
-| MDLP_READ              | /app/mangas.txt | --read                   |                                                                          |
-| MDLP_LANGUAGE          | en              | --language               |                                                                          |
-| MDLP_CHAPTERS          | all             | --chapter                |                                                                          |
-| MDLP_FILE_FORMAT       | cbz             | --format                 |                                                                          |
-| MDLP_WAIT              | 0.5             | --wait                   |                                                                          |
-| MDLP_FORCEVOL          | false           | --forcevol               |                                                                          |
-| MDLP_LOG_LEVEL         | lean            | --lean/--verbose/--debug | Can either be set to: "lean", "verbose" or "debug"                       |
+| ENV Variable           | Default         | manga-dlp option              | Info                                                                     |
+|:-----------------------|:----------------|:------------------------------|--------------------------------------------------------------------------|
+| MDLP_GENERATE_SCHEDULE | false           | none                          | Has to be set to "true" to generate the config via environment variables |
+| MDLP_PATH              | /app/downloads  | --path                        |                                                                          |
+| MDLP_READ              | /app/mangas.txt | --read                        |                                                                          |
+| MDLP_LANGUAGE          | en              | --language                    |                                                                          |
+| MDLP_CHAPTERS          | all             | --chapter                     |                                                                          |
+| MDLP_FILE_FORMAT       | cbz             | --format                      |                                                                          |
+| MDLP_WAIT              | 0.5             | --wait                        |                                                                          |
+| MDLP_FORCEVOL          | false           | --forcevol                    |                                                                          |
+| MDLP_LOG_LEVEL         | lean            | --warn / --debug / --loglevel | Can either be set to: warn, debug or a custom loglevel integer           |
 
 ## Run commands in container
 
@@ -76,7 +76,7 @@ python3 /app/manga-dlp.py \
     --read /app/mangas.txt \
     --chapters all \
     --wait 2 \
-    --lean
+    --warn
 ```
 
 To use your own schedule you need to mount (override) the default schedule or add new ones to the crontab.
@@ -144,4 +144,3 @@ volumes:
 ```sh
 docker run -v ./downloads/:/app/downloads
 ```
-

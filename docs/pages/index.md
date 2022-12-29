@@ -100,9 +100,9 @@ source: [mutually_exclusive, required]
 --read FILE                     Path of file with manga links to download. One per line
 
 verbosity: [mutually_exclusive]
---verbose                       Verbose logging. More log output  [default: 20]
---lean                          Lean logging. Minimal log output  [default: 20]
---debug                         Debug logging. Most log output  [default: 20]
+--loglevel INTEGER              Custom log level  [default: 20]
+--warn                          Only log warnings and higher
+--debug                         Debug logging. Log EVERYTHING
 
 -c, --chapters TEXT             Chapters to download
 -p, --path PATH                 Download path  [default: downloads]

@@ -9,6 +9,21 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.15] - 2022-12-029
+
+### Added
+
+- `--warn` and `--loglevel` flags
+
+### Removed
+
+- Remove `--lean` and `--verbose` flags and remove custom log levels
+
+### Changed
+
+- Move from standard library logging to [loguru](https://loguru.readthedocs.io/en/stable/index.html)
+- Move from standard library argparse to [click](https://click.palletsprojects.com/en/8.1.x/)
+
 ## [2.2.14] - 2022-10-06
 
 ### Changed
