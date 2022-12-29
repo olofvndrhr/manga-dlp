@@ -3,7 +3,7 @@
 ## Available hooks
 
 You can run custom hooks with manga-dlp for specific events.
-They are run with the `subproccess.call` function, so they get run directly by your operating system.
+They are run with the `subproccess.run` function, so they get run directly by your operating system.
 
 The available hook events are:
 

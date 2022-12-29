@@ -26,7 +26,10 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 dependencies = [
-    "requests>=2.24.0",
+    "requests>=2.28.0",
+    "loguru>=0.6.0",
+    "click>=8.1.3",
+    "click-option-group>=0.5.5",
 ]
 
 [project.urls]
@@ -36,8 +39,8 @@ Tracker = "https://github.com/olofvndrhr/manga-dlp/issues"
 Source = "https://github.com/olofvndrhr/manga-dlp"
 
 [project.scripts]
-mangadlp = "mangadlp.input:main"
-manga-dlp = "mangadlp.input:main"
+mangadlp = "mangadlp.cli:main"
+manga-dlp = "mangadlp.cli:main"
 
 [tool.hatch.version]
 path = "mangadlp/__about__.py"
@@ -53,6 +56,10 @@ packages = ["mangadlp"]
 
 [tool.hatch.envs.default]
 dependencies = [
+    "requests>=2.28.0",
+    "loguru>=0.6.0",
+    "click>=8.1.3",
+    "click-option-group>=0.5.5",
     "img2pdf>=0.4.4",
     "hatch>=1.2.1",
     "hatchling>=1.4.1",
@@ -121,7 +128,7 @@ ignore_errors = true
 py-version = "3.9"
 
 [tool.pylint.logging]
-logging-modules = ["logging"]
-disable = "C0301, C0114, C0116, W0703, R0902, R0913"
+logging-modules = ["logging", "loguru"]
+disable = "C0301, C0114, C0116, W0703, R0902, R0913, E0401, W1203"
 good-names = "r"
-#logging-format-style = "fstr"
+logging-format-style = "new"

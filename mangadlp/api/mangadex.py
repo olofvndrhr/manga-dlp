@@ -3,12 +3,9 @@ import sys
 from time import sleep
 
 import requests
+from loguru import logger as log
 
 from mangadlp import utils
-from mangadlp.logger import Logger
-
-# prepare logger
-log = Logger(__name__)
 
 
 class Mangadex:
@@ -24,7 +21,7 @@ class Mangadex:
         api_name (str): Name of the API
         manga_uuid (str): UUID of the manga, without the url part
         manga_data (dict): Infos of the manga. Name, title etc
-        manga_title (str): The title of the manga, sanitized for all filesystems
+        manga_title (str): The title of the manga, sanitized for all file systems
         manga_chapter_data (dict): All chapter data of the manga. Volumes, chapters, chapter uuids and chapter names
         chapter_list (list): A list of all available chapters for the language
 
@@ -57,7 +54,7 @@ class Mangadex:
 
     # make initial request
     def get_manga_data(self) -> dict:
-        log.verbose(f"Getting manga data for: {self.manga_uuid}")
+        log.debug(f"Getting manga data for: {self.manga_uuid}")
         counter = 1
         while counter <= 3:
             try:
@@ -98,7 +95,7 @@ class Mangadex:
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
-        log.verbose(f"Getting manga title for: {self.manga_uuid}")
+        log.debug(f"Getting manga title for: {self.manga_uuid}")
         manga_data = self.manga_data
         try:
             title = manga_data["data"]["attributes"]["title"][self.language]
@@ -117,9 +114,7 @@ class Mangadex:
 
     # check if chapters are available in requested language
     def check_chapter_lang(self) -> int:
-        log.verbose(
-            f"Checking for chapters in specified language for: {self.manga_uuid}"
-        )
+        log.debug(f"Checking for chapters in specified language for: {self.manga_uuid}")
         r = requests.get(
             f"{self.api_base_url}/manga/{self.manga_uuid}/feed?limit=0&{self.api_additions}"
         )
@@ -139,7 +134,7 @@ class Mangadex:
 
     # get chapter data like name, uuid etc
     def get_chapter_data(self) -> dict:
-        log.verbose(f"Getting chapter data for: {self.manga_uuid}")
+        log.debug(f"Getting chapter data for: {self.manga_uuid}")
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
@@ -197,11 +192,11 @@ class Mangadex:
 
     # get images for the chapter (mangadex@home)
     def get_chapter_images(self, chapter: str, wait_time: float) -> list:
-        log.verbose(f"Getting chapter images for: {self.manga_uuid}")
+        log.debug(f"Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
         chapter_uuid = self.manga_chapter_data[chapter][0]
 
-        # retry up to two times if the api applied ratelimits
+        # retry up to two times if the api applied rate limits
         api_error = False
         counter = 1
         while counter <= 3:
@@ -244,7 +239,7 @@ class Mangadex:
 
     # create list of chapters
     def create_chapter_list(self) -> list:
-        log.verbose(f"Creating chapter list for: {self.manga_uuid}")
+        log.debug(f"Creating chapter list for: {self.manga_uuid}")
         chapter_list = []
         for chapter in self.manga_chapter_data.items():
             chapter_info = self.get_chapter_infos(chapter[0])

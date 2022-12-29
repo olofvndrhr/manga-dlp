@@ -4,13 +4,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from loguru import logger as log
+
 from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
-from mangadlp.hooks import Hooks
-from mangadlp.logger import Logger
-
-# prepare logger
-log = Logger(__name__)
+from mangadlp.hooks import run_hook
 
 
 class MangaDLP:
@@ -53,14 +51,12 @@ class MangaDLP:
         self.forcevol: bool = forcevol
         self.download_path: str = download_path
         self.download_wait: float = download_wait
-        # hooks
-        self.hook: Hooks = Hooks(
-            manga_pre_hook_cmd,
-            manga_post_hook_cmd,
-            chapter_pre_hook_cmd,
-            chapter_post_hook_cmd,
-        )
+        self.manga_pre_hook_cmd: str = manga_pre_hook_cmd
+        self.manga_post_hook_cmd: str = manga_post_hook_cmd
+        self.chapter_pre_hook_cmd: str = chapter_pre_hook_cmd
+        self.chapter_post_hook_cmd: str = chapter_post_hook_cmd
         self.hook_infos: dict = {}
+
         # prepare everything
         self._prepare()
 
@@ -136,7 +132,7 @@ class MangaDLP:
         print_divider = "========================================="
         # show infos
         log.info(f"{print_divider}")
-        log.lean(f"Manga Name: {self.manga_title}")
+        log.info(f"Manga Name: {self.manga_title}")
         log.info(f"Manga UUID: {self.manga_uuid}")
         log.info(f"Total chapters: {self.manga_total_chapters}")
 
@@ -144,7 +140,7 @@ class MangaDLP:
         if self.list_chapters:
             log.info(f"Available Chapters: {', '.join(self.manga_chapter_list)}")
             log.info(f"{print_divider}\n")
-            sys.exit(0)
+            return
 
         # check chapters to download if not all
         if self.chapters.lower() == "all":
@@ -155,7 +151,7 @@ class MangaDLP:
             )
 
         # show chapters to download
-        log.lean(f"Chapters selected: {', '.join(chapters_to_download)}")
+        log.info(f"Chapters selected: {', '.join(chapters_to_download)}")
         log.info(f"{print_divider}")
 
         # create manga folder
@@ -179,7 +175,12 @@ class MangaDLP:
         )
 
         # start manga pre hook
-        self.hook.run("manga_pre", {"status": "starting"}, self.hook_infos)
+        run_hook(
+            command=self.manga_pre_hook_cmd,
+            hook_type="manga_pre",
+            status="starting",
+            **self.hook_infos,
+        )
 
         # get chapters
         for chapter in chapters_to_download:
@@ -201,24 +202,34 @@ class MangaDLP:
                 log.info(f"Done with chapter '{chapter}'\n")
 
                 # start chapter post hook
-                self.hook.run("chapter_post", {"status": "successful"}, self.hook_infos)
+                run_hook(
+                    command=self.chapter_post_hook_cmd,
+                    hook_type="chapter_post",
+                    status="successful",
+                    **self.hook_infos,
+                )
 
         # done with manga
         log.info(f"{print_divider}")
-        log.lean(f"Done with manga: {self.manga_title}")
+        log.info(f"Done with manga: {self.manga_title}")
 
         # filter skipped list
         skipped_chapters = list(filter(None, skipped_chapters))
         if len(skipped_chapters) >= 1:
-            log.lean(f"Skipped chapters: {', '.join(skipped_chapters)}")
+            log.info(f"Skipped chapters: {', '.join(skipped_chapters)}")
 
         # filter error list
         error_chapters = list(filter(None, error_chapters))
         if len(error_chapters) >= 1:
-            log.lean(f"Chapters with errors: {', '.join(error_chapters)}")
+            log.info(f"Chapters with errors: {', '.join(error_chapters)}")
 
         # start manga post hook
-        self.hook.run("manga_post", {"status": "successful"}, self.hook_infos)
+        run_hook(
+            command=self.manga_post_hook_cmd,
+            hook_type="manga_post",
+            status="successful",
+            **self.hook_infos,
+        )
 
         log.info(f"{print_divider}\n")
 
@@ -242,8 +253,12 @@ class MangaDLP:
                 f"No images: Skipping Vol. {chapter_infos['volume']} Ch.{chapter_infos['chapter']}"
             )
 
-            self.hook.run(
-                "chapter_pre", {"status": "skipped", "reason": "No images"}, {}
+            run_hook(
+                command=self.chapter_pre_hook_cmd,
+                hook_type="chapter_pre",
+                status="skipped",
+                reason="No images",
+                **self.hook_infos,
             )
 
             # add to skipped chapters list
@@ -271,8 +286,12 @@ class MangaDLP:
         if chapter_archive_path.exists():
             log.info(f"'{chapter_archive_path}' already exists. Skipping")
 
-            self.hook.run(
-                "chapter_pre", {"status": "skipped", "reason": "Existing"}, {}
+            run_hook(
+                command=self.chapter_pre_hook_cmd,
+                hook_type="chapter_pre",
+                status="skipped",
+                reason="Existing",
+                **self.hook_infos,
             )
 
             # add to skipped chapters list
@@ -289,10 +308,10 @@ class MangaDLP:
         chapter_path.mkdir(parents=True, exist_ok=True)
 
         # verbose log
-        log.verbose(f"Chapter UUID: {chapter_infos['uuid']}")
-        log.verbose(f"Filename: '{chapter_archive_path.name}'")
-        log.verbose(f"File path: '{chapter_archive_path}'")
-        log.verbose(f"Image URLS:\n{chapter_image_urls}")
+        log.debug(f"Chapter UUID: {chapter_infos['uuid']}")
+        log.debug(f"Filename: '{chapter_archive_path.name}'")
+        log.debug(f"File path: '{chapter_archive_path}'")
+        log.debug(f"Image URLS:\n{chapter_image_urls}")
 
         # create dict with all variables for the hooks
         self.hook_infos.update(
@@ -308,10 +327,15 @@ class MangaDLP:
         )
 
         # start chapter pre hook
-        self.hook.run("chapter_pre", {"status": "starting"}, self.hook_infos)
+        run_hook(
+            command=self.chapter_pre_hook_cmd,
+            hook_type="chapter_pre",
+            status="starting",
+            **self.hook_infos,
+        )
 
         # log
-        log.lean(f"Downloading: '{chapter_filename}'")
+        log.info(f"Downloading: '{chapter_filename}'")
 
         # download images
         try:
@@ -324,8 +348,13 @@ class MangaDLP:
         except Exception:
             log.error(f"Cant download: '{chapter_filename}'. Skipping")
 
-            self.hook.run(
-                "chapter_post", {"status": "error", "reason": "Download error"}, {}
+            # run chapter post hook
+            run_hook(
+                command=self.chapter_post_hook_cmd,
+                hook_type="chapter_post",
+                status="starting",
+                reason="Download error",
+                **self.hook_infos,
             )
 
             # add to skipped chapters list
@@ -340,13 +369,13 @@ class MangaDLP:
 
         else:
             # Done with chapter
-            log.lean(f"Successfully downloaded: '{chapter_filename}'")
+            log.info(f"Successfully downloaded: '{chapter_filename}'")
 
             return {"chapter_path": chapter_path}
 
     # create an archive of the chapter if needed
     def archive_chapter(self, chapter_path: Path) -> dict:
-        log.lean(f"Creating archive '{chapter_path}{self.file_format}'")
+        log.info(f"Creating archive '{chapter_path}{self.file_format}'")
         try:
             # check if image folder is existing
             if not chapter_path.exists():
