@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.4.1"]
+requires = ["hatchling>=1.11.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -61,8 +61,8 @@ dependencies = [
     "click>=8.1.3",
     "click-option-group>=0.5.5",
     "img2pdf>=0.4.4",
-    "hatch>=1.2.1",
-    "hatchling>=1.4.1",
+    "hatch>=1.6.0",
+    "hatchling>=1.11.0",
     "pytest>=7.0.0",
     "coverage>=6.3.1",
     "black>=22.1.0",
