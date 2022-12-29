@@ -87,30 +87,34 @@ See the docker [README](docker/)
 ## Options
 
 ```txt
-usage: manga-dlp.py [-h] (-u URL_UUID | --read READ | -v) [-c CHAPTERS] [-p PATH] [-l LANG] [--list] [--format FORMAT] [--forcevol] [--wait WAIT] [--lean | --verbose | --debug] [--hook-manga-pre HOOK_MANGA_PRE]
-[--hook-manga-post HOOK_MANGA_POST] [--hook-chapter-pre HOOK_CHAPTER_PRE] [--hook-chapter-post HOOK_CHAPTER_POST]
+Usage: manga-dlp.py [OPTIONS]
 
 Script to download mangas from various sites
 
-optional arguments:
--h, --help                                      show this help message and exit
--u URL_UUID, --url URL_UUID, --uuid URL_UUID    URL or UUID of the manga
---read READ                                     Path of file with manga links to download. One per line
--v, --version                                   Show version of manga-dlp and exit
--c CHAPTERS, --chapters CHAPTERS                Chapters to download
--p PATH, --path PATH                            Download path. Defaults to "<script_dir>/downloads"
--l LANG, --language LANG                        Manga language. Defaults to "en" --> english
---list                                          List all available chapters. Defaults to false
---format FORMAT                                 Archive format to create. An empty string means dont archive the folder. Defaults to 'cbz'
---forcevol                                      Force naming of volumes. For mangas where chapters reset each volume
---wait WAIT                                     Time to wait for each picture to download in seconds(float). Defaults 0.5
---lean                                          Lean logging. Minimal log output. Defaults to false
---verbose                                       Verbose logging. More log output. Defaults to false
---debug                                         Debug logging. Most log output. Defaults to false
---hook-manga-pre HOOK_MANGA_PRE                 Commands to execute before the manga download starts
---hook-manga-post HOOK_MANGA_POST               Commands to execute after the manga download finished
---hook-chapter-pre HOOK_CHAPTER_PRE             Commands to execute before the chapter download starts
---hook-chapter-post HOOK_CHAPTER_POST           Commands to execute after the chapter download finished
+Options:
+--help                          Show this message and exit.
+--version                       Show the version and exit.
+
+source: [mutually_exclusive, required]
+-u, --url, --uuid TEXT          URL or UUID of the manga
+--read FILE                     Path of file with manga links to download. One per line
+
+verbosity: [mutually_exclusive]
+--loglevel INTEGER              Custom log level  [default: 20]
+--warn                          Only log warnings and higher
+--debug                         Debug logging. Log EVERYTHING
+
+-c, --chapters TEXT             Chapters to download
+-p, --path PATH                 Download path  [default: downloads]
+-l, --language TEXT             Manga language  [default: en]
+--list                          List all available chapters
+--format TEXT                   Archive format to create. An empty string means dont archive the folder  [default: cbz]
+--forcevol                      Force naming of volumes. For mangas where chapters reset each volume
+--wait FLOAT                    Time to wait for each picture to download in seconds(float)  [default: 0.5]
+--hook-manga-pre TEXT           Commands to execute before the manga download starts
+--hook-manga-post TEXT          Commands to execute after the manga download finished
+--hook-chapter-pre TEXT         Commands to execute before the chapter download starts
+--hook-chapter-post TEXT        Commands to execute after the chapter download finished
 ```
 
 ## Contribution / Bugs

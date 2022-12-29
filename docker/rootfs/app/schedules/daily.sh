@@ -5,4 +5,4 @@ python3 /app/manga-dlp.py \
     --read /app/mangas.txt \
     --chapters all \
     --wait 2 \
-    --lean
+    --warn

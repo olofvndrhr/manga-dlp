@@ -14,17 +14,17 @@ elif grep -q -e "/app/schedules/daily\s" /etc/cron.d/mangadlp; then
     CRON_FOUND=true
 fi
 
-# fix new .sh schedule if its not synced with the crontab
+# fix new .sh schedule if it's not synced with the crontab
 if [[ "${CRON_SH_FOUND}" == "true" ]] && [[ "${DAILY_SH_FOUND}" != "true" ]]; then
     echo "Fixing new .sh schedule"
     echo "Adding symlink to daily.sh"
     if ! ln -s /app/schedule/daily /app/schedule/daily.sh; then
-        echo "Cant fix schedule. Maybe the file is missing."
+        echo "Can't fix schedule. Maybe the file is missing."
     fi
 elif [[ "${CRON_FOUND}" == "true" ]] && [[ "${DAILY_FOUND}" != "true" ]]; then
     echo "Fixing new .sh schedule"
     echo "Adding symlink to daily"
     if ! ln -s /app/schedule/daily.sh /app/schedule/daily; then
-        echo "Cant fix schedule. Maybe the file is missing."
+        echo "Can't fix schedule. Maybe the file is missing."
     fi
 fi

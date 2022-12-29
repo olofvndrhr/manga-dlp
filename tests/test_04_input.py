@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import mangadlp.input as mdlpinput
+import mangadlp.cli as mdlpinput
 
 
 def test_read_and_url():
@@ -54,7 +54,7 @@ def test_no_volume():
 
 def test_readin_list():
     list_file = "tests/test_list.txt"
-    test_list = mdlpinput.readin_list(list_file)
+    test_list = mdlpinput.readin_list(None, None, list_file)
 
     assert test_list == [
         "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu",

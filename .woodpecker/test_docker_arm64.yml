@@ -14,7 +14,7 @@ clone:
     when:
       branch: master
       event: pull_request
-    image: woodpeckerci/plugin-git
+    image: woodpeckerci/plugin-git:v1.6.0
 
 pipeline:
 

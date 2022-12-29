@@ -4,15 +4,12 @@ from pathlib import Path
 from typing import Any
 from zipfile import ZipFile
 
-from mangadlp.logger import Logger
-
-# prepare logger
-log = Logger(__name__)
+from loguru import logger as log
 
 
 # create an archive of the chapter images
 def make_archive(chapter_path: Path, file_format: str) -> None:
-    zip_path = Path(f"{chapter_path}.zip")
+    zip_path: Path = Path(f"{chapter_path}.zip")
     try:
         # create zip
         with ZipFile(zip_path, "w") as zipfile:
@@ -26,13 +23,13 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
 
 def make_pdf(chapter_path: Path) -> None:
     try:
-        import img2pdf
+        import img2pdf  # pylint: disable=import-outside-toplevel
     except Exception as exc:
         log.error("Cant import img2pdf. Please install it first")
         raise ImportError from exc
 
-    pdf_path = Path(f"{chapter_path}.pdf")
-    images = []
+    pdf_path: Path = Path(f"{chapter_path}.pdf")
+    images: list[str] = []
     for file in chapter_path.iterdir():
         images.append(str(file))
     try:
@@ -85,6 +82,9 @@ def get_chapter_list(chapters: str, available_chapters: list) -> list:
 
 # remove illegal characters etc
 def fix_name(filename: str) -> str:
+    filename = filename.encode(encoding="ascii", errors="ignore").decode(
+        encoding="utf8"
+    )
     # remove illegal characters
     filename = re.sub(r'[/\\<>:;|?*!@"]', "", filename)
     # remove multiple dots

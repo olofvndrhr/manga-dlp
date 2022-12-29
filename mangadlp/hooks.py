@@ -1,71 +1,40 @@
 import os
 import subprocess
 
-from mangadlp.logger import Logger
-
-# prepare logger
-log = Logger(__name__)
+from loguru import logger as log
 
 
-class Hooks:
-    """Pre- and post-hooks for each download.
-
+def run_hook(command: str, hook_type: str, **kwargs) -> int:
+    """
     Args:
-        cmd_manga_pre (str): Commands to execute before the manga download starts
-        cmd_manga_post (str): Commands to execute after the manga download finished
-        cmd_chapter_pre (str): Commands to execute before the chapter download starts
-        cmd_chapter_post (str): Commands to execute after the chapter download finished
+        command (str): command to run
+        hook_type (str): type of the hook
+        kwargs: key value pairs of env vars to set
 
+    Returns:
+        exit_code (int): exit code of command
     """
 
-    def __init__(
-        self,
-        cmd_manga_pre: str,
-        cmd_manga_post: str,
-        cmd_chapter_pre: str,
-        cmd_chapter_post: str,
-    ) -> None:
-        self.cmd_manga_pre = cmd_manga_pre
-        self.cmd_manga_post = cmd_manga_post
-        self.cmd_chapter_pre = cmd_chapter_pre
-        self.cmd_chapter_post = cmd_chapter_post
+    # check if hook commands are empty
+    if not command or command == "None":
+        log.debug(f"Hook '{hook_type}' empty. Not running")
+        return 2
 
-    def run(self, hook_type: str, hook_status: dict, hook_info: dict) -> int:
-        if hook_type == "manga_pre":
-            hook_cmd_str = self.cmd_manga_pre
-        elif hook_type == "manga_post":
-            hook_cmd_str = self.cmd_manga_post
-        elif hook_type == "chapter_pre":
-            hook_cmd_str = self.cmd_chapter_pre
-        elif hook_type == "chapter_post":
-            hook_cmd_str = self.cmd_chapter_post
-        else:
-            log.error(f"Hook type '{hook_type}' is not valid. Not running")
-            return 1
+    command_list = command.split(" ")
 
-        # check if hook commands are empty
-        if not hook_cmd_str or hook_cmd_str == "None":
-            log.verbose(f"Hook '{hook_type}' empty. Not running")
-            return 2
+    # setting env vars
+    for key, value in kwargs.items():
+        os.environ[f"MDLP_{key.upper()}"] = str(value)
 
-        hook_cmd_list = hook_cmd_str.split(" ")
+    # running command
+    log.info(f"Hook '{hook_type}' - running command: '{command}'")
+    proc = subprocess.run(command_list, check=False, timeout=15, encoding="utf8")
+    exit_code = proc.returncode
 
-        # setting env vars
-        hook_info["hook_type"] = hook_type
-        hook_info["status"] = hook_status.get("status")
-        hook_info["reason"] = hook_status.get("reason")
+    if exit_code == 0:
+        log.debug("Hook returned status code 0. All good")
+    else:
+        log.warning(f"Hook returned status code {exit_code}. Possible error")
 
-        for key, value in hook_info.items():
-            os.environ[f"MDLP_{key.upper()}"] = str(value)
-
-        # running command
-        log.info(f"Hook '{hook_type}' - running command: '{hook_cmd_str}'")
-        ecode = subprocess.call(hook_cmd_list)
-
-        if ecode == 0:
-            log.verbose("Hook returned status code 0. All good")
-        else:
-            log.warning(f"Hook returned status code {ecode}. Possible error")
-
-        # return exit code of command
-        return ecode
+    # return exit code of command
+    return exit_code

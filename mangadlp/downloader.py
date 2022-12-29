@@ -6,12 +6,9 @@ from time import sleep
 from typing import Union
 
 import requests
+from loguru import logger as log
 
 from mangadlp import utils
-from mangadlp.logger import Logger
-
-# prepare logger
-log = Logger(__name__)
 
 
 # download images
@@ -29,7 +26,7 @@ def download_chapter(
         # show progress bar for default log level
         if logging.root.level == logging.INFO:
             utils.progress_bar(image_num, total_img)
-        log.verbose(f"Downloading image {image_num}/{total_img}")
+        log.debug(f"Downloading image {image_num}/{total_img}")
 
         counter = 1
         while counter <= 3:

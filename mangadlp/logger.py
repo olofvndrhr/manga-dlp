@@ -1,71 +1,35 @@
 import logging
+import sys
 
-DATE_FMT = "%Y-%m-%dT%H:%M:%S%z"
+from loguru import logger
+
+LOGGING_FMT: str = (
+    "%(asctime)s | (D) [%(levelname)-7s] [%(name)-10s] [%(funcName)-20s]: %(message)s"
+)
+LOGURU_FMT: str = "{time:%Y-%m-%dT%H:%M:%S%z} | (C) <level>[{level: <7}]</level> [{name: <10}] [{function: <20}]: {message}"
 
 
-# prepare custom levels and default config of logger
-def prepare_logger():
+def enable_default_logger(loglevel: int) -> None:
+    logging.root.handlers = []
+
     logging.basicConfig(
-        format="%(asctime)s | [%(levelname)s] [%(name)s]: %(message)s",
-        datefmt=DATE_FMT,
-        level=20,
+        format=LOGGING_FMT,
+        datefmt="%Y-%m-%dT%H:%M:%S%z",
+        level=loglevel,
         handlers=[logging.StreamHandler()],
     )
-    logging.addLevelName(level=15, levelName="VERBOSE")
-    logging.addLevelName(level=25, levelName="LEAN")
 
 
-# set log message format
-def format_logger(verbosity: int):
-    logging.getLogger().setLevel(verbosity)
-
-    # dont show log level name on default/lean logging
-    if verbosity >= 20:
-        logging.basicConfig(
-            format="%(asctime)s | %(message)s",
-            datefmt=DATE_FMT,
-            force=True,
-        )
-    else:
-        logging.basicConfig(
-            format="%(asctime)s | [%(levelname)s] [%(name)s]: %(message)s",
-            datefmt=DATE_FMT,
-            force=True,
-        )
-
-
-class Logger:
-    """Default logger for manga-dlp.
-
-    Args:
-        name (str): Name of the logger
-
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-        # create logger
-        self.log = logging.getLogger(self.name)
-
-    # custom log levels
-    def verbose(self, message: str):
-        self.log.log(level=15, msg=message)
-
-    def lean(self, message: str):
-        self.log.log(level=25, msg=message)
-
-    # default log levels
-    def critical(self, message: str):
-        self.log.critical(msg=message)
-
-    def error(self, message: str):
-        self.log.error(msg=message)
-
-    def warning(self, message: str):
-        self.log.warning(msg=message)
-
-    def info(self, message: str):
-        self.log.info(msg=message)
-
-    def debug(self, message: str):
-        self.log.debug(msg=message)
+# create config for a normal stderr logger
+def prepare_logger(loglevel: int) -> None:
+    config: dict = {
+        "handlers": [
+            {
+                "sink": sys.stdout,
+                "level": loglevel,
+                "format": LOGURU_FMT,
+            },
+        ],
+    }
+    logger.configure(**config)
+    enable_default_logger(loglevel)

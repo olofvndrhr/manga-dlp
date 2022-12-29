@@ -8,7 +8,7 @@ platform: linux/amd64
 
 clone:
   git:
-    image: woodpeckerci/plugin-git
+    image: woodpeckerci/plugin-git:v1.6.0
 
 pipeline:
 
