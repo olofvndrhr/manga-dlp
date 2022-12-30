@@ -12,4 +12,4 @@
 : "${MDLP_FILE_FORMAT:=cbz}"
 : "${MDLP_WAIT:=0.5}"
 : "${MDLP_FORCEVOL:=false}"
-: "${MDLP_LOG_LEVEL:=warn}"
+: "${MDLP_LOG_LEVEL:=}"

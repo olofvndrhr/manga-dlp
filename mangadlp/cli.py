@@ -28,7 +28,7 @@ def readin_list(_, __, value) -> list:
 
     # filter empty lines and remove them
     filtered_list = list(filter(len, url_list))
-    log.info(f"Mangas from list: {filtered_list}")
+    click.echo(f"Mangas from list: {filtered_list}")
 
     return filtered_list
 
@@ -64,24 +64,24 @@ def readin_list(_, __, value) -> list:
     "--loglevel",
     "verbosity",
     type=int,
-    default=20,
+    default=None,
     show_default=True,
     help="Custom log level",
 )
 @optgroup.option(
     "--warn",
     "verbosity",
-    flag_value=25,
-    default=20,
-    show_default=False,
+    flag_value=30,
+    default=None,
+    show_default=True,
     help="Only log warnings and higher",
 )
 @optgroup.option(
     "--debug",
     "verbosity",
     flag_value=10,
-    default=20,
-    show_default=False,
+    default=None,
+    show_default=True,
     help="Debug logging. Log EVERYTHING",
 )
 # other options
@@ -211,6 +211,10 @@ def main(
     Script to download mangas from various sites
 
     """
+
+    # set log level to INFO if not set
+    if not verbosity:
+        verbosity = 20
 
     # set loglevel and log format
     prepare_logger(verbosity)
