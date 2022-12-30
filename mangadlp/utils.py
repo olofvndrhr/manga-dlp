@@ -121,7 +121,7 @@ def get_filename(
 
 
 def progress_bar(progress: float, total: float) -> None:
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
@@ -129,6 +129,9 @@ def progress_bar(progress: float, total: float) -> None:
     whitespace_texture = " " * (bar_length - bar_progress)
     if progress == total:
         full_bar = "■" * bar_length
-        print(f"\r{time} | ❙{full_bar}❙ 100%", end="\n")
+        print(f"\r{time}{' '*6}| [BAR    ] ❙{full_bar}❙ 100%", end="\n")
     else:
-        print(f"\r{time} | ❙{bar_texture}{whitespace_texture}❙ {percent}%", end="\r")
+        print(
+            f"\r{time}{' '*6}| [BAR    ] ❙{bar_texture}{whitespace_texture}❙ {percent}%",
+            end="\r",
+        )

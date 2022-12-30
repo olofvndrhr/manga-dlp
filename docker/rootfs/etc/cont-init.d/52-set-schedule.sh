@@ -4,52 +4,45 @@
 # source env variables
 source /etc/cont-init.d/20-setenv.sh
 
+custom_args=(
+    --path "${MDLP_PATH}"
+    --read "${MDLP_READ}"
+    --language "${MDLP_LANGUAGE}"
+    --chapters "${MDLP_CHAPTERS}"
+    --format "${MDLP_FILE_FORMAT}"
+    --wait "${MDLP_WAIT}"
+)
+
 function prepare_vars() {
     # set log level
     case "${MDLP_LOG_LEVEL}" in
         "warn")
-            MDLP_LOG_LEVEL_FLAG="    --warn"
+            custom_args+=("--warn")
             ;;
         "debug")
-            MDLP_LOG_LEVEL_FLAG="    --debug"
+            custom_args+=("--debug")
             ;;
         *)
-            MDLP_LOG_LEVEL_FLAG="    --loglevel ${MDLP_LOG_LEVEL}"
+            if [[ -n "${MDLP_LOG_LEVEL}" ]]; then
+                custom_args+=("--loglevel" "${MDLP_LOG_LEVEL}")
+            fi
             ;;
     esac
 
     # check if forcevol should be used
     if [[ "${MDLP_FORCEVOL,,}" == "true" ]]; then
-        # add backslash if log level is also specified
-        if [[ -n "${MDLP_LOG_LEVEL_FLAG}" ]]; then
-            MDLP_FORCEVOL_FLAG="\n    --forcevol \\"
-        else
-            MDLP_FORCEVOL_FLAG="\n    --forcevol"
-        fi
+        custom_args+=("--forcevol")
     fi
 }
 
 # set schedule with env variables
 function set_vars() {
-    echo -ne "#!/bin/bash\n
-python3 /app/manga-dlp.py \\
-    --path ${MDLP_PATH} \\
-    --read ${MDLP_READ} \\
-    --language ${MDLP_LANGUAGE} \\
-    --chapters ${MDLP_CHAPTERS} \\
-    --format ${MDLP_FILE_FORMAT} \\
-    --wait ${MDLP_WAIT}" \
-        > /app/schedules/daily.sh
+    cat << EOF > "/app/schedules/daily.sh"
+#!/bin/bash
 
-    # set forcevol or log level if specified
-    if [[ -n "${MDLP_FORCEVOL_FLAG}" ]] || [[ -n "${MDLP_LOG_LEVEL_FLAG}" ]]; then
-        sed -i 's/--wait '"${MDLP_WAIT}"'/--wait '"${MDLP_WAIT}"' \\/g' /app/schedules/daily.sh
-        echo -e "${MDLP_FORCEVOL_FLAG:-}" >> /app/schedules/daily.sh
-        echo -e "${MDLP_LOG_LEVEL_FLAG:-}" >> /app/schedules/daily.sh
-    else
-        # add final newline of not added before
-        echo -ne "\n" >> /app/schedules/daily.sh
-    fi
+python3 /app/manga-dlp.py ${custom_args[@]}
+
+EOF
 }
 
 # check if schedule should be generated

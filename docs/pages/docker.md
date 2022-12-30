@@ -39,17 +39,17 @@ it will not generate it (it will just use the default one).
 
 For more info's about the options, you can look in the main scripts [README.md](../)
 
-| ENV Variable           | Default         | manga-dlp option              | Info                                                                     |
-|:-----------------------|:----------------|:------------------------------|--------------------------------------------------------------------------|
-| MDLP_GENERATE_SCHEDULE | false           | none                          | Has to be set to "true" to generate the config via environment variables |
-| MDLP_PATH              | /app/downloads  | --path                        |                                                                          |
-| MDLP_READ              | /app/mangas.txt | --read                        |                                                                          |
-| MDLP_LANGUAGE          | en              | --language                    |                                                                          |
-| MDLP_CHAPTERS          | all             | --chapter                     |                                                                          |
-| MDLP_FILE_FORMAT       | cbz             | --format                      |                                                                          |
-| MDLP_WAIT              | 0.5             | --wait                        |                                                                          |
-| MDLP_FORCEVOL          | false           | --forcevol                    |                                                                          |
-| MDLP_LOG_LEVEL         | lean            | --warn / --debug / --loglevel | Can either be set to: warn, debug or a custom loglevel integer           |
+| ENV Variable           | Default         | manga-dlp option                    | Info                                                                     |
+|:-----------------------|:----------------|:------------------------------------|--------------------------------------------------------------------------|
+| MDLP_GENERATE_SCHEDULE | false           | none                                | Has to be set to "true" to generate the config via environment variables |
+| MDLP_PATH              | /app/downloads  | --path                              |                                                                          |
+| MDLP_READ              | /app/mangas.txt | --read                              |                                                                          |
+| MDLP_LANGUAGE          | en              | --language                          |                                                                          |
+| MDLP_CHAPTERS          | all             | --chapter                           |                                                                          |
+| MDLP_FILE_FORMAT       | cbz             | --format                            |                                                                          |
+| MDLP_WAIT              | 0.5             | --wait                              |                                                                          |
+| MDLP_FORCEVOL          | false           | --forcevol                          |                                                                          |
+| MDLP_LOG_LEVEL         | <none>          | --warn / --debug / --loglevel <INT> | Can either be set to: warn, debug or a custom loglevel integer           |
 
 ## Run commands in container
 

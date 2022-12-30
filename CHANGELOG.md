@@ -9,6 +9,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.16] - 2022-12-30
+
+### Fixed
+
+- Log level is now fixed and should not default to 0
+- Docker schedule should now work again
+
+### Changed
+
+- Integrate logging logs to loguru via custom sink
+- Simplify docker shell scripts
+
 ## [2.2.15] - 2022-12-29
 
 ### Added

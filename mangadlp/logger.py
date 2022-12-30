@@ -3,33 +3,45 @@ import sys
 
 from loguru import logger
 
-LOGGING_FMT: str = (
-    "%(asctime)s | (D) [%(levelname)-7s] [%(name)-10s] [%(funcName)-20s]: %(message)s"
-)
-LOGURU_FMT: str = "{time:%Y-%m-%dT%H:%M:%S%z} | (C) <level>[{level: <7}]</level> [{name: <10}] [{function: <20}]: {message}"
+LOGURU_FMT = "{time:%Y-%m-%dT%H:%M:%S%z} | <level>[{level: <7}]</level> [{name: <10}] [{function: <20}]: {message}"
 
 
-def enable_default_logger(loglevel: int) -> None:
-    logging.root.handlers = []
+# from loguru docs
+class InterceptHandler(logging.Handler):
+    """
+    Intercept python logging messages and log them via loguru.logger
+    """
 
-    logging.basicConfig(
-        format=LOGGING_FMT,
-        datefmt="%Y-%m-%dT%H:%M:%S%z",
-        level=loglevel,
-        handlers=[logging.StreamHandler()],
-    )
+    def emit(self, record):
+        # Get corresponding Loguru level if it exists
+        try:
+            level = logger.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+
+        # Find caller from where originated the logged message
+        frame, depth = logging.currentframe(), 2
+        while frame.f_code.co_filename == logging.__file__:
+            frame = frame.f_back
+            depth += 1
+
+        logger.opt(depth=depth, exception=record.exc_info).log(
+            level, record.getMessage()
+        )
 
 
-# create config for a normal stderr logger
-def prepare_logger(loglevel: int) -> None:
+# init logger with format and log level
+def prepare_logger(loglevel: int = 20) -> None:
+
     config: dict = {
         "handlers": [
             {
                 "sink": sys.stdout,
                 "level": loglevel,
                 "format": LOGURU_FMT,
-            },
+            }
         ],
     }
+
+    logging.basicConfig(handlers=[InterceptHandler()], level=loglevel)
     logger.configure(**config)
-    enable_default_logger(loglevel)
