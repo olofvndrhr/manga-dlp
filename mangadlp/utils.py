@@ -99,10 +99,33 @@ def fix_name(filename: str) -> str:
 
 # create name for chapter
 def get_filename(
-    chapter_name: str, chapter_vol: str, chapter_num: str, forcevol: bool
+    chapter_name: str,
+    chapter_vol: str,
+    chapter_num: str,
+    forcevol: bool,
+    name_format: str,
+    name_format_none: str,
 ) -> str:
+    # try to apply the custom format
+    if name_format != "{default}":
+        log.debug(f"Using custom name format: '{name_format}'")
+        try:
+            filename = name_format.format(
+                chapter_name=chapter_name or name_format_none,
+                chapter_vol=chapter_vol or name_format_none,
+                chapter_num=chapter_num or name_format_none,
+            )
+        except Exception:
+            log.warning("File format is not valid. Falling back to default")
+        else:
+            return filename
+
+    # use default format
+    log.debug("Using default name format")
     # if chapter is a oneshot
-    if chapter_name == "Oneshot" or chapter_num == "Oneshot":
+    if not chapter_num:
+        return "Oneshot"
+    if "oneshot" in [chapter_name.lower(), chapter_num.lower()]:
         return "Oneshot"
     # if the chapter has no name
     if not chapter_name:

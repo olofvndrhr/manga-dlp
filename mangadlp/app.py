@@ -34,6 +34,8 @@ class MangaDLP:
         chapters: str = "",
         list_chapters: bool = False,
         file_format: str = "cbz",
+        name_format: str = "{default}",
+        name_format_none: str = "",
         forcevol: bool = False,
         download_path: str = "downloads",
         download_wait: float = 0.5,
@@ -48,6 +50,8 @@ class MangaDLP:
         self.chapters: str = chapters
         self.list_chapters: bool = list_chapters
         self.file_format: str = file_format
+        self.name_format: str = name_format
+        self.name_format_none: str = name_format_none
         self.forcevol: bool = forcevol
         self.download_path: str = download_path
         self.download_wait: float = download_wait
@@ -62,7 +66,7 @@ class MangaDLP:
 
     def _prepare(self) -> None:
         # set manga format suffix
-        if self.file_format and "." not in self.file_format:
+        if self.file_format and self.file_format[0] != ".":
             self.file_format = f".{self.file_format}"
         # start prechecks
         self.pre_checks()
@@ -105,14 +109,14 @@ class MangaDLP:
     # check the api which needs to be used
     def check_api(self, url_uuid: str) -> type:
         # apis to check
-        api_mangadex = re.compile("mangadex.org")
-        api_mangadex2 = re.compile(
-            "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
+        api_mangadex = re.compile(
+            r"(mangadex.org)|([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"
         )
         api_test = re.compile("test.test")
 
         # check url for match
-        if api_mangadex.search(url_uuid) or api_mangadex2.search(url_uuid):
+        if api_mangadex.search(url_uuid):
+            log.debug("Matched api: mangadex.org")
             return Mangadex
         # this is only for testing multiple apis
         if api_test.search(url_uuid):
@@ -237,6 +241,7 @@ class MangaDLP:
     def get_chapter(self, chapter: str) -> dict:
         # get chapter infos
         chapter_infos = self.api.get_chapter_infos(chapter)
+        log.debug(f"Chapter infos: {chapter_infos}")
 
         # get image urls for chapter
         try:
@@ -273,8 +278,14 @@ class MangaDLP:
 
         # get filename for chapter (without suffix)
         chapter_filename = utils.get_filename(
-            chapter_infos["name"], chapter_infos["volume"], chapter, self.forcevol
+            chapter_infos["name"],
+            chapter_infos["volume"],
+            chapter,
+            self.forcevol,
+            self.name_format,
+            self.name_format_none,
         )
+        log.debug(f"Filename: '{chapter_filename}'")
 
         # set download path for chapter (image folder)
         chapter_path = self.manga_path / chapter_filename
@@ -309,7 +320,6 @@ class MangaDLP:
 
         # verbose log
         log.debug(f"Chapter UUID: {chapter_infos['uuid']}")
-        log.debug(f"Filename: '{chapter_archive_path.name}'")
         log.debug(f"File path: '{chapter_archive_path}'")
         log.debug(f"Image URLS:\n{chapter_image_urls}")
 

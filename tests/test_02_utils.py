@@ -99,9 +99,19 @@ def test_get_filename_forcevol():
     chapter_vol = "2"
     chapter_num = "44"
     forcevol = True
+    name_format = "{default}"
+    name_format_none = ""
     filename = "Vol. 2 Ch. 44 - The holy test Chapter"
     assert (
-        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
     )
 
 
@@ -110,9 +120,19 @@ def test_get_filename_forcevol_noname():
     chapter_vol = "2"
     chapter_num = "44"
     forcevol = True
+    name_format = "{default}"
+    name_format_none = ""
     filename = "Vol. 2 Ch. 44"
     assert (
-        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
     )
 
 
@@ -121,9 +141,19 @@ def test_get_filename():
     chapter_vol = "2"
     chapter_num = "44"
     forcevol = False
+    name_format = "{default}"
+    name_format_none = ""
     filename = "Ch. 44 - The holy test Chapter"
     assert (
-        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
     )
 
 
@@ -132,9 +162,19 @@ def test_get_filename_oneshot():
     chapter_vol = ""
     chapter_num = ""
     forcevol = False
+    name_format = "{default}"
+    name_format_none = ""
     filename = "Oneshot"
     assert (
-        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
     )
 
 
@@ -143,7 +183,80 @@ def test_get_filename_noname():
     chapter_vol = "1"
     chapter_num = "1"
     forcevol = False
+    name_format = "{default}"
+    name_format_none = ""
     filename = "Ch. 1"
     assert (
-        utils.get_filename(chapter_name, chapter_vol, chapter_num, forcevol) == filename
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
+    )
+
+
+def test_get_filename_custom_format():
+    chapter_name = "Test"
+    chapter_vol = "1"
+    chapter_num = "1"
+    forcevol = False
+    name_format = "{chapter_name}-{chapter_num}-{chapter_vol}"
+    name_format_none = ""
+    filename = "Test-1-1"
+    assert (
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
+    )
+
+
+def test_get_filename_custom_format_err():
+    chapter_name = "Test"
+    chapter_vol = "1"
+    chapter_num = "1"
+    forcevol = False
+    name_format = "{chapter_test}-{chapter_num}-{chapter_vol}"
+    name_format_none = ""
+    filename = "Ch. 1 - Test"
+    assert (
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
+    )
+
+
+def test_get_filename_custom_format_none():
+    chapter_name = ""
+    chapter_vol = "1"
+    chapter_num = ""
+    forcevol = False
+    name_format = "{chapter_name}-{chapter_num}-{chapter_vol}"
+    name_format_none = "ABC"
+    filename = "ABC-ABC-1"
+    assert (
+        utils.get_filename(
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
     )

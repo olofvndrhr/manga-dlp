@@ -14,7 +14,7 @@ from mangadlp.logger import prepare_logger
 
 
 # read in the list of links from a file
-def readin_list(_, __, value) -> list:
+def readin_list(_ctx, _param, value) -> list:
     if not value:
         return []
 
@@ -127,11 +127,30 @@ def readin_list(_, __, value) -> list:
 @click.option(
     "--format",
     "chapter_format",
-    type=str,
+    multiple=False,
+    type=click.Choice(["cbz", "cbr", "zip", "pdf", ""], case_sensitive=False),
     default="cbz",
     required=False,
     show_default=True,
     help="Archive format to create. An empty string means dont archive the folder",
+)
+@click.option(
+    "--name-format",
+    "name_format",
+    type=str,
+    default="{default}",
+    required=False,
+    show_default=True,
+    help="Naming format to use when saving chapters. See docs for more infos",
+)
+@click.option(
+    "--name-format-none",
+    "name_format_none",
+    type=str,
+    default="",
+    required=False,
+    show_default=True,
+    help="String to use when the variable of the custom name format is empty",
 )
 @click.option(
     "--forcevol",
@@ -199,6 +218,8 @@ def main(
     lang: str,
     list_chapters: bool,
     chapter_format: str,
+    name_format: str,
+    name_format_none: str,
     forcevol: bool,
     wait_time: float,
     hook_manga_pre: str,
@@ -232,6 +253,8 @@ def main(
             chapters=chapters,
             list_chapters=list_chapters,
             file_format=chapter_format,
+            name_format=name_format,
+            name_format_none=name_format_none,
             forcevol=forcevol,
             download_path=path,
             download_wait=wait_time,
