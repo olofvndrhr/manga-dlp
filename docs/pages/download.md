@@ -69,7 +69,7 @@ This will save all mangas/chapters in the path `/media/mangas/<manga title>/<cha
 
 ## Set output format
 
-> `--format` currently only works with `""`, `"pdf"`, `"zip"`, `"rar"` and `"cbz"`.
+> `--format` currently only works with `""`, `"pdf"`, `"zip"`, `"cbr"` and `"cbz"`.
 > As it just renames the zip file with the new
 > suffix (except pdf).
 
@@ -82,17 +82,64 @@ see more in the Docker [README.md](../docker/).
 
 **Supported format options:**
 
-* cbz - `--format "cbz"` or `--format ".cbz"` **- default**
-* cbr - `--format "cbr"` or `--format ".cbr"`
-* zip - `--format "zip"` or `--format ".zip"`
-* pdf - `--format "pdf"` or `--format ".pdf"`
-* _none_ - `--format ""` - this saves the images just in a folder
+* cbz -> `--format "cbz"` **- default**
+* cbr -> `--format "cbr"`
+* zip -> `--format "zip"`
+* pdf -> `--format "pdf"`
+* _none_ -> `--format ""` - this saves the images just in a folder
 
 **Example:**
 
 `python3 manga-dlp.py <other options> --format "zip"`
 
 This will download the chapter and save it as a zip archive.
+
+## Set chapter naming format
+
+You can specify the naming format of the downloaded chapters with the `--name-format` option.
+Just be sure that you use quotation marks so that the cli parser interprets it as one string.
+
+Available placeholders are:
+
+- `{manga_title}` -> The name of the manga
+- `{chapter_name}` -> The name of the chapter
+- `{chapter_vol}` -> The volume number of the chapter
+- `{chapter_num}` -> The chapter number
+
+**Example:**
+
+- Manga title: "Test title"
+- Chapter name: "Test chapter"
+- Chapter volume: 3
+- Chapter number: 2
+
+`python3 manga-dlp.py <other options> --format "cbz" --name-format "{chapter_name}-{chapter_vol}-{chapter_num}"`
+
+This will create an archive with the name: `Test chapter-3-2.cbz`
+
+You don't have to use all variables, but if you use an invalid placeholder, it will fall back to the default naming.
+
+### Set empty variables
+
+If the placeholder variables are empty, the default behaviour is to set it as an empty string. But this can be changed
+with the `--name-format-none` flag.
+
+**Example:**
+
+- Manga title: "Test title"
+- Chapter name: "Test chapter"
+- Chapter volume:
+- Chapter number: 2
+
+`python3 manga-dlp.py <other options> --format "cbz" --name-format "{chapter_name}-{chapter_vol}-{chapter_num}`
+
+This would create an archive with the name: `Test chapter--2.cbz`
+
+So to fix this issue you need to set the `--name-format-none` flag.
+
+`python3 manga-dlp.py <other options> --format "cbz" --name-format "{chapter_name}-{chapter_vol}-{chapter_num} --name-format-none "0"`
+
+This will create an archive with the name: `Test chapter-0-2.cbz`
 
 ## Read links from a file
 

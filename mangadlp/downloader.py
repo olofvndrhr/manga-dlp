@@ -31,7 +31,7 @@ def download_chapter(
         counter = 1
         while counter <= 3:
             try:
-                r = requests.get(image, stream=True)
+                r = requests.get(image, timeout=10, stream=True)
                 if r.status_code != 200:
                     log.error(f"Request for image {image} failed, retrying")
                     raise ConnectionError

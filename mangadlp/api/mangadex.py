@@ -59,7 +59,7 @@ class Mangadex:
         while counter <= 3:
             try:
                 manga_data = requests.get(
-                    f"{self.api_base_url}/manga/{self.manga_uuid}"
+                    f"{self.api_base_url}/manga/{self.manga_uuid}", timeout=10
                 )
             except Exception:
                 if counter >= 3:
@@ -116,7 +116,8 @@ class Mangadex:
     def check_chapter_lang(self) -> int:
         log.debug(f"Checking for chapters in specified language for: {self.manga_uuid}")
         r = requests.get(
-            f"{self.api_base_url}/manga/{self.manga_uuid}/feed?limit=0&{self.api_additions}"
+            f"{self.api_base_url}/manga/{self.manga_uuid}/feed?limit=0&{self.api_additions}",
+            timeout=10,
         )
         try:
             total_chapters = r.json()["total"]
@@ -142,34 +143,32 @@ class Mangadex:
             sys.exit(1)
 
         chapter_data = {}
-        last_chapter = ["", ""]
+        last_volume, last_chapter = ("", "")
         offset = 0
         while offset < total_chapters:  # if more than 500 chapters
             r = requests.get(
-                f"{self.api_base_url}/manga/{self.manga_uuid}/feed?{api_sorting}&limit=500&offset={offset}&{self.api_additions}"
+                f"{self.api_base_url}/manga/{self.manga_uuid}/feed?{api_sorting}&limit=500&offset={offset}&{self.api_additions}",
+                timeout=10,
             )
             for chapter in r.json()["data"]:
+                attributes: dict = chapter["attributes"]
                 # chapter infos from feed
-                chapter_num = chapter["attributes"]["chapter"]
-                chapter_vol = chapter["attributes"]["volume"]
-                chapter_uuid = chapter["id"]
-                chapter_name = chapter["attributes"]["title"]
-                chapter_external = chapter["attributes"]["externalUrl"]
+                chapter_num = attributes.get("chapter") or ""
+                chapter_vol = attributes.get("volume") or ""
+                chapter_uuid = chapter.get("id") or ""
+                chapter_name = attributes.get("title") or ""
+                chapter_external = attributes.get("externalUrl") or ""
 
                 # check for chapter title and fix it
-                if chapter_name is None:
-                    chapter_name = "No Title"
-                else:
+                if chapter_name:
                     chapter_name = utils.fix_name(chapter_name)
                 # check if the chapter is external (can't download them)
-                if chapter_external is not None:
+                if chapter_external:
+                    log.debug(f"Chapter is external. Skipping: {chapter_uuid}")
                     continue
-                # name chapter "oneshot" if there is no chapter number
-                if chapter_num is None:
-                    chapter_num = "Oneshot"
 
                 # check if its duplicate from the last entry
-                if last_chapter[0] == chapter_vol and last_chapter[1] == chapter_num:
+                if last_volume == chapter_vol and last_chapter == chapter_num:
                     continue
 
                 # export chapter data as a dict
@@ -183,7 +182,7 @@ class Mangadex:
                     chapter_name,
                 ]
                 # add last chapter to duplicate check
-                last_chapter = [chapter_vol, chapter_num]
+                last_volume, last_chapter = (chapter_vol, chapter_num)
 
             # increase offset for mangas with more than 500 chapters
             offset += 500
@@ -201,7 +200,7 @@ class Mangadex:
         counter = 1
         while counter <= 3:
             try:
-                r = requests.get(f"{athome_url}/{chapter_uuid}")
+                r = requests.get(f"{athome_url}/{chapter_uuid}", timeout=10)
                 api_data = r.json()
                 if api_data["result"] != "ok":
                     log.error(f"No chapter with the id {chapter_uuid} found")
@@ -241,10 +240,10 @@ class Mangadex:
     def create_chapter_list(self) -> list:
         log.debug(f"Creating chapter list for: {self.manga_uuid}")
         chapter_list = []
-        for chapter in self.manga_chapter_data.items():
-            chapter_info = self.get_chapter_infos(chapter[0])
-            chapter_number = chapter_info["chapter"]
-            volume_number = chapter_info["volume"]
+        for index, _ in self.manga_chapter_data.items():
+            chapter_info: dict = self.get_chapter_infos(index)
+            chapter_number: str = chapter_info["chapter"]
+            volume_number: str = chapter_info["volume"]
             if self.forcevol:
                 chapter_list.append(f"{volume_number}:{chapter_number}")
             else:
@@ -254,11 +253,11 @@ class Mangadex:
 
     # create easy to access chapter infos
     def get_chapter_infos(self, chapter: str) -> dict:
-        log.debug(f"Getting chapter infos for: {self.manga_chapter_data[chapter][0]}")
-        chapter_uuid = self.manga_chapter_data[chapter][0]
-        chapter_vol = self.manga_chapter_data[chapter][1]
-        chapter_num = self.manga_chapter_data[chapter][2]
-        chapter_name = self.manga_chapter_data[chapter][3]
+        chapter_uuid: str = self.manga_chapter_data[chapter][0]
+        chapter_vol: str = self.manga_chapter_data[chapter][1]
+        chapter_num: str = self.manga_chapter_data[chapter][2]
+        chapter_name: str = self.manga_chapter_data[chapter][3]
+        log.debug(f"Getting chapter infos for: {chapter_uuid}")
 
         return {
             "uuid": chapter_uuid,
