@@ -99,6 +99,7 @@ def fix_name(filename: str) -> str:
 
 # create name for chapter
 def get_filename(
+    manga_title: str,
     chapter_name: str,
     chapter_vol: str,
     chapter_num: str,
@@ -111,6 +112,7 @@ def get_filename(
         log.debug(f"Using custom name format: '{name_format}'")
         try:
             filename = name_format.format(
+                manga_title=manga_title or name_format_none,
                 chapter_name=chapter_name or name_format_none,
                 chapter_vol=chapter_vol or name_format_none,
                 chapter_num=chapter_num or name_format_none,
@@ -120,27 +122,27 @@ def get_filename(
         else:
             return filename
 
+    # set vol to 0 if none found
+    chapter_vol = chapter_vol or "0"
+
     # use default format
     log.debug("Using default name format")
     # if chapter is a oneshot
-    if not chapter_num:
+    if not chapter_num or "oneshot" in [chapter_name.lower(), chapter_num.lower()]:
         return "Oneshot"
-    if "oneshot" in [chapter_name.lower(), chapter_num.lower()]:
-        return "Oneshot"
+
     # if the chapter has no name
+    if not chapter_name and forcevol:
+        return f"Vol. {chapter_vol} Ch. {chapter_num}"
     if not chapter_name:
-        return (
-            f"Vol. {chapter_vol} Ch. {chapter_num}"
-            if forcevol
-            else f"Ch. {chapter_num}"
-        )
+        return f"Ch. {chapter_num}"
+
     # if the chapter has a name
     # return with volume if option is set, else just the chapter num and name
-    return (
-        f"Vol. {chapter_vol} Ch. {chapter_num} - {chapter_name}"
-        if forcevol
-        else f"Ch. {chapter_num} - {chapter_name}"
-    )
+    if forcevol:
+        return f"Vol. {chapter_vol} Ch. {chapter_num} - {chapter_name}"
+
+    return f"Ch. {chapter_num} - {chapter_name}"
 
 
 def progress_bar(progress: float, total: float) -> None:

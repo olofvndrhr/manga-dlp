@@ -97,15 +97,18 @@ This will download the chapter and save it as a zip archive.
 ## Set chapter naming format
 
 You can specify the naming format of the downloaded chapters with the `--name-format` option.
+Just be sure that you use quotation marks so that the cli parser interprets it as one string.
 
 Available placeholders are:
 
+- `{manga_title}` -> The name of the manga
 - `{chapter_name}` -> The name of the chapter
 - `{chapter_vol}` -> The volume number of the chapter
 - `{chapter_num}` -> The chapter number
 
 **Example:**
 
+- Manga title: "Test title"
 - Chapter name: "Test chapter"
 - Chapter volume: 3
 - Chapter number: 2
@@ -123,6 +126,7 @@ with the `--name-format-none` flag.
 
 **Example:**
 
+- Manga title: "Test title"
 - Chapter name: "Test chapter"
 - Chapter volume:
 - Chapter number: 2

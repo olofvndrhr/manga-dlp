@@ -153,11 +153,11 @@ class Mangadex:
             for chapter in r.json()["data"]:
                 attributes: dict = chapter["attributes"]
                 # chapter infos from feed
-                chapter_num = attributes.get("chapter", "") or ""
-                chapter_vol = attributes.get("volume", "") or ""
-                chapter_uuid = chapter.get("id", "") or ""
-                chapter_name = attributes.get("title", "") or ""
-                chapter_external = attributes.get("externalUrl", "") or ""
+                chapter_num = attributes.get("chapter") or ""
+                chapter_vol = attributes.get("volume") or ""
+                chapter_uuid = chapter.get("id") or ""
+                chapter_name = attributes.get("title") or ""
+                chapter_external = attributes.get("externalUrl") or ""
 
                 # check for chapter title and fix it
                 if chapter_name:

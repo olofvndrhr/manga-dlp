@@ -278,6 +278,7 @@ class MangaDLP:
 
         # get filename for chapter (without suffix)
         chapter_filename = utils.get_filename(
+            self.manga_title,
             chapter_infos["name"],
             chapter_infos["volume"],
             chapter,
