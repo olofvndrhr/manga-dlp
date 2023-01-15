@@ -95,6 +95,7 @@ def test_fix_name():
 
 
 def test_get_filename_forcevol():
+    manga_name = "The test manga"
     chapter_name = "The holy test Chapter"
     chapter_vol = "2"
     chapter_num = "44"
@@ -104,6 +105,7 @@ def test_get_filename_forcevol():
     filename = "Vol. 2 Ch. 44 - The holy test Chapter"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -116,6 +118,7 @@ def test_get_filename_forcevol():
 
 
 def test_get_filename_forcevol_noname():
+    manga_name = "The test manga"
     chapter_name = ""
     chapter_vol = "2"
     chapter_num = "44"
@@ -125,6 +128,30 @@ def test_get_filename_forcevol_noname():
     filename = "Vol. 2 Ch. 44"
     assert (
         utils.get_filename(
+            manga_name,
+            chapter_name,
+            chapter_vol,
+            chapter_num,
+            forcevol,
+            name_format,
+            name_format_none,
+        )
+        == filename
+    )
+
+
+def test_get_filename_novol():
+    manga_name = "The test manga"
+    chapter_name = ""
+    chapter_vol = ""
+    chapter_num = "1"
+    forcevol = True
+    name_format = "{default}"
+    name_format_none = ""
+    filename = "Vol. 0 Ch. 1"
+    assert (
+        utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -137,6 +164,7 @@ def test_get_filename_forcevol_noname():
 
 
 def test_get_filename():
+    manga_name = "The test manga"
     chapter_name = "The holy test Chapter"
     chapter_vol = "2"
     chapter_num = "44"
@@ -146,6 +174,7 @@ def test_get_filename():
     filename = "Ch. 44 - The holy test Chapter"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -158,6 +187,7 @@ def test_get_filename():
 
 
 def test_get_filename_oneshot():
+    manga_name = "The test manga"
     chapter_name = "Oneshot"
     chapter_vol = ""
     chapter_num = ""
@@ -167,6 +197,7 @@ def test_get_filename_oneshot():
     filename = "Oneshot"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -179,6 +210,7 @@ def test_get_filename_oneshot():
 
 
 def test_get_filename_noname():
+    manga_name = "The test manga"
     chapter_name = ""
     chapter_vol = "1"
     chapter_num = "1"
@@ -188,6 +220,7 @@ def test_get_filename_noname():
     filename = "Ch. 1"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -200,15 +233,17 @@ def test_get_filename_noname():
 
 
 def test_get_filename_custom_format():
+    manga_name = "The test manga"
     chapter_name = "Test"
     chapter_vol = "1"
     chapter_num = "1"
     forcevol = False
-    name_format = "{chapter_name}-{chapter_num}-{chapter_vol}"
+    name_format = "{manga_title}-{chapter_name}-{chapter_num}-{chapter_vol}"
     name_format_none = ""
-    filename = "Test-1-1"
+    filename = "The test manga-Test-1-1"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -221,6 +256,7 @@ def test_get_filename_custom_format():
 
 
 def test_get_filename_custom_format_err():
+    manga_name = "The test manga"
     chapter_name = "Test"
     chapter_vol = "1"
     chapter_num = "1"
@@ -230,6 +266,7 @@ def test_get_filename_custom_format_err():
     filename = "Ch. 1 - Test"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
@@ -242,6 +279,7 @@ def test_get_filename_custom_format_err():
 
 
 def test_get_filename_custom_format_none():
+    manga_name = "The test manga"
     chapter_name = ""
     chapter_vol = "1"
     chapter_num = ""
@@ -251,6 +289,7 @@ def test_get_filename_custom_format_none():
     filename = "ABC-ABC-1"
     assert (
         utils.get_filename(
+            manga_name,
             chapter_name,
             chapter_vol,
             chapter_num,
