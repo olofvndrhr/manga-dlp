@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
-## [2.2.17] - 2023-01-XX
+## [2.2.17] - 2023-01-15
 
 ### Fixed
 
@@ -25,10 +25,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Make `--format` a `click.Choice` option
 - In the `--format` option the leading dot is now invalid. `--format .cbz` -> `--format cbz`
 - Changed empty values from the api from None to an empty string
 - Minor code readability improvements
-- Make `--format` a `click.Choice` option
 
 ## [2.2.16] - 2022-12-30
 
