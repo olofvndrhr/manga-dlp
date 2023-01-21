@@ -82,9 +82,8 @@ def get_chapter_list(chapters: str, available_chapters: list) -> list:
 
 # remove illegal characters etc
 def fix_name(filename: str) -> str:
-    filename = filename.encode(encoding="ascii", errors="ignore").decode(
-        encoding="utf8"
-    )
+    log.debug(f"Input name='{filename}'")
+    filename = filename.encode(encoding="utf8", errors="ignore").decode(encoding="utf8")
     # remove illegal characters
     filename = re.sub(r'[/\\<>:;|?*!@"]', "", filename)
     # remove multiple dots
@@ -94,6 +93,7 @@ def fix_name(filename: str) -> str:
     # remove trailing and beginning spaces
     filename = re.sub("([ \t]+$)|(^[ \t]+)", "", filename)
 
+    log.debug(f"Output name='{filename}'")
     return filename
 
 

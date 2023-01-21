@@ -27,10 +27,9 @@ def test_uuid_link_false():
     language = "en"
     forcevol = False
 
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(RuntimeError) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == SystemExit
-    assert e.value.code == 1
+    assert e.type == RuntimeError
 
 
 def test_title():
@@ -40,6 +39,24 @@ def test_title():
     test = Mangadex(url_uuid, language, forcevol)
 
     assert test.manga_title == "Komi-san wa Komyushou Desu"
+
+
+def test_alt_title():
+    url_uuid = "https://mangadex.org/title/5a90308a-8b12-4a4d-9c6d-2487028fe319/uzaki-chan-wants-to-hang-out"
+    language = "fr"
+    forcevol = False
+    test = Mangadex(url_uuid, language, forcevol)
+
+    assert test.manga_title == "Uzaki-chan wants to hang out"
+
+
+def test_alt_title_fallback():
+    url_uuid = "https://mangadex.org/title/d7037b2a-874a-4360-8a7b-07f2899152fd/mairimashita-iruma-kun"
+    language = "fr"
+    forcevol = False
+    test = Mangadex(url_uuid, language, forcevol)
+
+    assert test.manga_title == "Iruma à l’école des démons"
 
 
 def test_chapter_infos():
@@ -66,10 +83,9 @@ def test_non_existing_manga():
     language = "en"
     forcevol = False
 
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(RuntimeError) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == SystemExit
-    assert e.value.code == 1
+    assert e.type == RuntimeError
 
 
 def test_api_failure(monkeypatch):
@@ -81,10 +97,9 @@ def test_api_failure(monkeypatch):
     language = "en"
     forcevol = False
 
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(RuntimeError) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == SystemExit
-    assert e.value.code == 1
+    assert e.type == RuntimeError
 
 
 def test_chapter_lang_en():
@@ -101,11 +116,10 @@ def test_empty_chapter_lang():
     language = "ch"
     forcevol = False
 
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(RuntimeError) as e:
         Mangadex(url_uuid, language, forcevol)
         Mangadex(url_uuid, language, forcevol).check_chapter_lang()
-    assert e.type == KeyError or e.type == SystemExit
-    assert e.value.code == 1
+    assert e.type == KeyError or e.type == RuntimeError
 
 
 def test_not_existing_lang():
@@ -113,10 +127,9 @@ def test_not_existing_lang():
     language = "zz"
     forcevol = False
 
-    with pytest.raises(SystemExit) as e:
+    with pytest.raises(RuntimeError) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == SystemExit
-    assert e.value.code == 1
+    assert e.type == RuntimeError
 
 
 def test_create_chapter_list():

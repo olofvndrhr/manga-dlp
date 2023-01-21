@@ -9,6 +9,24 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.18] - 2023-01-21
+
+### Fixed
+
+- Fixed manga titles on non english language
+- Fixed title & filename fixing to not use `ascii` but `uft8`
+
+### Added
+
+- Fallback title to english of none was found in requested language
+- More debug logs
+- More tests
+
+### Changed
+
+- Now uses the first found alt-title. Before it was the last
+- Removed `sys.exit` in the api
+
 ## [2.2.17] - 2023-01-15
 
 ### Fixed

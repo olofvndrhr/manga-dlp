@@ -1,5 +1,4 @@
 import re
-import sys
 from time import sleep
 
 import requests
@@ -46,37 +45,14 @@ class Mangadex:
         self.api_additions = f"{self.api_language}&{self.api_content_ratings}"
 
         # infos from functions
-        self.manga_uuid = self.get_manga_uuid()
-        self.manga_data = self.get_manga_data()
-        self.manga_title = self.get_manga_title()
-        self.manga_chapter_data = self.get_chapter_data()
-        self.chapter_list = self.create_chapter_list()
-
-    # make initial request
-    def get_manga_data(self) -> dict:
-        log.debug(f"Getting manga data for: {self.manga_uuid}")
-        counter = 1
-        while counter <= 3:
-            try:
-                manga_data = requests.get(
-                    f"{self.api_base_url}/manga/{self.manga_uuid}", timeout=10
-                )
-            except Exception:
-                if counter >= 3:
-                    log.error("Maybe the MangaDex API is down?")
-                    sys.exit(1)
-                else:
-                    log.error("Mangadex API not reachable. Retrying")
-                    sleep(2)
-                    counter += 1
-            else:
-                break
-        # check if manga exists
-        if manga_data.json()["result"] != "ok":
-            log.error("Manga not found")
-            sys.exit(1)
-
-        return manga_data.json()
+        try:
+            self.manga_uuid = self.get_manga_uuid()
+            self.manga_data = self.get_manga_data()
+            self.manga_title = self.get_manga_title()
+            self.manga_chapter_data = self.get_chapter_data()
+            self.chapter_list = self.create_chapter_list()
+        except Exception as exc:
+            raise RuntimeError from exc
 
     # get the uuid for the manga
     def get_manga_uuid(self) -> str:
@@ -87,29 +63,68 @@ class Mangadex:
         # try to get uuid in string
         try:
             uuid = uuid_regex.search(self.url_uuid)[0]  # type: ignore
-        except Exception:
+        except Exception as exc:
             log.error("No valid UUID found")
-            sys.exit(1)
+            raise KeyError("No valid UUID found") from exc
 
         return uuid
+
+    # make initial request
+    def get_manga_data(self) -> dict:
+        log.debug(f"Getting manga data for: {self.manga_uuid}")
+        counter = 1
+        while counter <= 3:
+            try:
+                response = requests.get(
+                    f"{self.api_base_url}/manga/{self.manga_uuid}", timeout=10
+                )
+            except Exception as exc:
+                if counter >= 3:
+                    log.error("Maybe the MangaDex API is down?")
+                    raise ConnectionError("Maybe the MangaDex API is down?") from exc
+                log.error("Mangadex API not reachable. Retrying")
+                sleep(2)
+                counter += 1
+            else:
+                break
+        # check if manga exists
+        if response.json()["result"] != "ok":
+            log.error("Manga not found")
+            raise KeyError("Manga not found")
+
+        return response.json()["data"]
 
     # get the title of the manga (and fix the filename)
     def get_manga_title(self) -> str:
         log.debug(f"Getting manga title for: {self.manga_uuid}")
-        manga_data = self.manga_data
+        attributes = self.manga_data["attributes"]
+        # try to get the title in requested language
         try:
-            title = manga_data["data"]["attributes"]["title"][self.language]
+            title = attributes["title"][self.language]
         except Exception:
-            # search in alt titles
-            try:
-                alt_titles = {}
-                for title in manga_data["data"]["attributes"]["altTitles"]:
-                    alt_titles.update(title)
-                title = alt_titles[self.language]
-            except Exception:  # no title on requested language found
-                log.error("Chapter in requested language not found.")
-                sys.exit(1)
+            log.info("Manga title not found in requested language. Trying alt titles")
+        else:
+            log.debug(f"Language={self.language}, Title='{title}'")
+            return utils.fix_name(title)
 
+        # search in alt titles
+        try:
+            log.debug(f"Alt titles: {attributes['altTitles']}")
+            for item in attributes["altTitles"]:
+                if item.get(self.language):
+                    alt_title = item
+                    break
+            title = alt_title[self.language]
+        except Exception:
+            log.warning(
+                "Manga title also not found in alt titles. Falling back to english title"
+            )
+        else:
+            log.debug(f"Language={self.language}, Alt-title='{title}'")
+            return utils.fix_name(title)
+
+        title = attributes["title"]["en"]
+        log.debug(f"Language=en, Fallback-title='{title}'")
         return utils.fix_name(title)
 
     # check if chapters are available in requested language
@@ -121,16 +136,17 @@ class Mangadex:
         )
         try:
             total_chapters = r.json()["total"]
-        except Exception:
+        except Exception as exc:
             log.error(
                 "Error retrieving the chapters list. Did you specify a valid language code?"
             )
-            return 0
+            raise KeyError from exc
         else:
             if total_chapters == 0:
-                log.error("No chapters available to download!")
-                return 0
+                log.error("No chapters available to download in specified language")
+                raise KeyError
 
+        log.debug(f"Total chapters={total_chapters}")
         return total_chapters
 
     # get chapter data like name, uuid etc
@@ -139,8 +155,6 @@ class Mangadex:
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
-        if total_chapters == 0:
-            sys.exit(1)
 
         chapter_data = {}
         last_volume, last_chapter = ("", "")
