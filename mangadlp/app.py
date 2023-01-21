@@ -72,7 +72,12 @@ class MangaDLP:
         self.pre_checks()
         # init api
         self.api_used = self.check_api(self.url_uuid)
-        self.api = self.api_used(self.url_uuid, self.language, self.forcevol)
+        try:
+            log.debug("Initializing api")
+            self.api = self.api_used(self.url_uuid, self.language, self.forcevol)
+        except Exception:
+            log.error("Can't initialize api. Exiting")
+            sys.exit(1)
         # get manga title and uuid
         self.manga_uuid = self.api.manga_uuid
         self.manga_title = self.api.manga_title
