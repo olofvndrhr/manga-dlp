@@ -16,7 +16,7 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
             for file in chapter_path.iterdir():
                 zipfile.write(file, file.name)
         # rename zip to file format requested
-        zip_path.rename(zip_path.with_suffix(file_format))
+        zip_path.replace(zip_path.with_suffix(file_format))
     except Exception as exc:
         raise IOError from exc
 
@@ -40,7 +40,7 @@ def make_pdf(chapter_path: Path) -> None:
 
 
 # create a list of chapters
-def get_chapter_list(chapters: str, available_chapters: list) -> list:
+def get_chapter_list(chapters: str, available_chapters: list) -> list[str]:
     # check if there are available chapter
     chapter_list: list[str] = []
     for chapter in chapters.split(","):
