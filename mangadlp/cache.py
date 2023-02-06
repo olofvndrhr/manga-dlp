@@ -15,14 +15,16 @@ class CacheDB:
         self._prepare()
 
         self.db_data = self.read_db()
+        # create db key entry if not found
         if not self.db_data.get(self.db_key):
             self.db_data[self.db_key] = {}
         self.db_uuid_data: dict = self.db_data[self.db_key]
         self.db_uuid_chapters: list = self.db_uuid_data.get("chapters") or []
 
     def _prepare(self):
-        if self.db_path.exists() and self.db_path.is_file():
+        if self.db_path.exists():
             return
+        # create empty cache
         try:
             self.db_path.touch()
             self.db_path.write_text(json.dumps({}), encoding="utf8")
