@@ -44,8 +44,10 @@ class CacheDB:
     def add_chapter(self, chapter: str) -> None:
         log.info(f"Adding chapter to cache-db: {chapter}")
         self.db_uuid_chapters.append(chapter)
+        # dedup entries
+        updated_chapters = list({*self.db_uuid_chapters})
         try:
-            self.db_data[self.db_key]["chapters"] = self.db_uuid_chapters
+            self.db_data[self.db_key]["chapters"] = sorted(updated_chapters)
             self.db_path.write_text(json.dumps(self.db_data, indent=4), encoding="utf8")
         except Exception as exc:
             log.error("Can't write cache-db")
