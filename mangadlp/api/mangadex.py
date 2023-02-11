@@ -112,7 +112,7 @@ class Mangadex:
                     alt_title = item
                     break
             title = alt_title[self.language]
-        except KeyError:
+        except (KeyError, UnboundLocalError):
             log.warning(
                 "Manga title also not found in alt titles. Falling back to english title"
             )
