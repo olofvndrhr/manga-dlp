@@ -32,7 +32,6 @@ class InterceptHandler(logging.Handler):
 
 # init logger with format and log level
 def prepare_logger(loglevel: int = 20) -> None:
-
     config: dict = {
         "handlers": [
             {

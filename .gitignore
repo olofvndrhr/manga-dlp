@@ -13,6 +13,7 @@ mangas.txt
 .idea/
 venv
 test.sh
+.ruff_cache/
 
 ### Python template
 # Byte-compiled / optimized / DLL files

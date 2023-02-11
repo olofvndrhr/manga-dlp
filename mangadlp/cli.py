@@ -237,7 +237,6 @@ def main(
     hook_chapter_post: str,
     cache_path: str,
 ):  # pylint: disable=too-many-locals
-
     """
     Script to download mangas from various sites
 
