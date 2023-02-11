@@ -41,7 +41,7 @@ def download_chapter(
             except Exception as exc:
                 if counter >= 3:
                     log.error("Maybe the MangaDex Servers are down?")
-                    raise ConnectionError from exc
+                    raise exc
                 sleep(download_wait)
                 counter += 1
             else:
@@ -54,7 +54,7 @@ def download_chapter(
                 shutil.copyfileobj(r.raw, file)
         except Exception as exc:
             log.error("Can't write file")
-            raise IOError from exc
+            raise exc
 
         image_num += 1
         sleep(download_wait)
