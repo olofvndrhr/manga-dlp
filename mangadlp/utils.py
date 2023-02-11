@@ -18,6 +18,7 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
         # rename zip to file format requested
         zip_path.replace(zip_path.with_suffix(file_format))
     except Exception as exc:
+        log.error(f"Can't create '{file_format}' archive")
         raise exc
 
 
@@ -40,7 +41,7 @@ def make_pdf(chapter_path: Path) -> None:
 
 
 # create a list of chapters
-def get_chapter_list(chapters: str, available_chapters: list) -> list[str]:
+def get_chapter_list(chapters: str, available_chapters: list) -> list:
     # check if there are available chapter
     chapter_list: list[str] = []
     for chapter in chapters.split(","):

@@ -78,11 +78,10 @@ def test_full_with_input_cbz_info(wait_20s):
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
+@pytest.mark.skipif(
+    platform.machine() != "x86_64", reason="pdf only supported on amd64"
+)
 def test_full_with_input_pdf(wait_20s):
-    # check if its arm64, if yes skip this step
-    if platform.machine() != "x86_64":
-        return True
-
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
     chapters = "1"
