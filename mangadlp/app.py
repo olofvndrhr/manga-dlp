@@ -168,8 +168,8 @@ class MangaDLP:
         # prepare cache if specified
         if self.cache_path:
             cache = CacheDB(self.cache_path, self.manga_uuid, self.language)
-            cache_chapters = cache.db_uuid_chapters
-            log.info(f"Cached chapters: {cache_chapters}")
+            cached_chapters = cache.db_uuid_chapters
+            log.info(f"Cached chapters: {cached_chapters}")
 
         # create dict with all variables for the hooks
         self.hook_infos.update(
@@ -200,7 +200,7 @@ class MangaDLP:
         skipped_chapters: list[Any] = []
         error_chapters: list[Any] = []
         for chapter in chapters_to_download:
-            if self.cache_path and chapter in cache_chapters:
+            if self.cache_path and chapter in cached_chapters:
                 log.info("Chapter is in cache. Skipping download")
                 continue
 
