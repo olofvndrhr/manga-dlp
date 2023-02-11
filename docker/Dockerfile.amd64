@@ -1,8 +1,8 @@
-FROM cr.44net.ch/baseimages/debian-s6:11.5-linux-amd64
+FROM cr.44net.ch/baseimages/debian-s6:11.6-linux-amd64
 
 # set version label
 ARG BUILD_VERSION
-ENV MDLP_VERSION=${BUILD_VERSION}
+ENV IMAGE_VERSION=${BUILD_VERSION}
 LABEL version="${BUILD_VERSION}"
 LABEL maintainer="Ivan Schaller"
 LABEL description="A CLI manga downloader"
