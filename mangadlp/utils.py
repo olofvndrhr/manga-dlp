@@ -16,9 +16,10 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
             for file in chapter_path.iterdir():
                 zipfile.write(file, file.name)
         # rename zip to file format requested
-        zip_path.rename(zip_path.with_suffix(file_format))
+        zip_path.replace(zip_path.with_suffix(file_format))
     except Exception as exc:
-        raise IOError from exc
+        log.error(f"Can't create '{file_format}' archive")
+        raise exc
 
 
 def make_pdf(chapter_path: Path) -> None:
@@ -26,7 +27,7 @@ def make_pdf(chapter_path: Path) -> None:
         import img2pdf  # pylint: disable=import-outside-toplevel
     except Exception as exc:
         log.error("Cant import img2pdf. Please install it first")
-        raise ImportError from exc
+        raise exc
 
     pdf_path: Path = Path(f"{chapter_path}.pdf")
     images: list[str] = []
@@ -36,7 +37,7 @@ def make_pdf(chapter_path: Path) -> None:
         pdf_path.write_bytes(img2pdf.convert(images))
     except Exception as exc:
         log.error("Can't create '.pdf' archive")
-        raise IOError from exc
+        raise exc
 
 
 # create a list of chapters

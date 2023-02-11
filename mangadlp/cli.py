@@ -99,7 +99,7 @@ def readin_list(_ctx, _param, value) -> list:
     "-p",
     "--path",
     "path",
-    type=click.Path(exists=False),
+    type=click.Path(exists=False, writable=True, path_type=Path),
     default="downloads",
     required=False,
     show_default=True,
@@ -207,6 +207,15 @@ def readin_list(_ctx, _param, value) -> list:
     show_default=True,
     help="Commands to execute after the chapter download finished",
 )
+@click.option(
+    "--cache-path",
+    "cache_path",
+    type=click.Path(exists=False, writable=True, path_type=str),
+    default=None,
+    required=False,
+    show_default=True,
+    help="Where to store the cache-db. If no path is given, cache is disabled",
+)
 @click.pass_context
 def main(
     ctx: click.Context,
@@ -214,7 +223,7 @@ def main(
     read_mangas: list,
     verbosity: int,
     chapters: str,
-    path: str,
+    path: Path,
     lang: str,
     list_chapters: bool,
     chapter_format: str,
@@ -226,8 +235,8 @@ def main(
     hook_manga_post: str,
     hook_chapter_pre: str,
     hook_chapter_post: str,
+    cache_path: str,
 ):  # pylint: disable=too-many-locals
-
     """
     Script to download mangas from various sites
 
@@ -262,6 +271,7 @@ def main(
             manga_post_hook_cmd=hook_manga_post,
             chapter_pre_hook_cmd=hook_chapter_pre,
             chapter_post_hook_cmd=hook_chapter_post,
+            cache_path=cache_path,
         )
         mdlp.get_manga()
 

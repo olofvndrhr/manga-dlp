@@ -45,14 +45,11 @@ class Mangadex:
         self.api_additions = f"{self.api_language}&{self.api_content_ratings}"
 
         # infos from functions
-        try:
-            self.manga_uuid = self.get_manga_uuid()
-            self.manga_data = self.get_manga_data()
-            self.manga_title = self.get_manga_title()
-            self.manga_chapter_data = self.get_chapter_data()
-            self.chapter_list = self.create_chapter_list()
-        except Exception as exc:
-            raise RuntimeError from exc
+        self.manga_uuid = self.get_manga_uuid()
+        self.manga_data = self.get_manga_data()
+        self.manga_title = self.get_manga_title()
+        self.manga_chapter_data = self.get_chapter_data()
+        self.chapter_list = self.create_chapter_list()
 
     # get the uuid for the manga
     def get_manga_uuid(self) -> str:
@@ -65,7 +62,7 @@ class Mangadex:
             uuid = uuid_regex.search(self.url_uuid)[0]  # type: ignore
         except Exception as exc:
             log.error("No valid UUID found")
-            raise KeyError("No valid UUID found") from exc
+            raise exc
 
         return uuid
 
@@ -81,7 +78,7 @@ class Mangadex:
             except Exception as exc:
                 if counter >= 3:
                     log.error("Maybe the MangaDex API is down?")
-                    raise ConnectionError("Maybe the MangaDex API is down?") from exc
+                    raise exc
                 log.error("Mangadex API not reachable. Retrying")
                 sleep(2)
                 counter += 1
@@ -90,7 +87,7 @@ class Mangadex:
         # check if manga exists
         if response.json()["result"] != "ok":
             log.error("Manga not found")
-            raise KeyError("Manga not found")
+            raise KeyError
 
         return response.json()["data"]
 
@@ -101,7 +98,7 @@ class Mangadex:
         # try to get the title in requested language
         try:
             title = attributes["title"][self.language]
-        except Exception:
+        except KeyError:
             log.info("Manga title not found in requested language. Trying alt titles")
         else:
             log.debug(f"Language={self.language}, Title='{title}'")
@@ -115,7 +112,7 @@ class Mangadex:
                     alt_title = item
                     break
             title = alt_title[self.language]
-        except Exception:
+        except (KeyError, UnboundLocalError):
             log.warning(
                 "Manga title also not found in alt titles. Falling back to english title"
             )
@@ -140,7 +137,7 @@ class Mangadex:
             log.error(
                 "Error retrieving the chapters list. Did you specify a valid language code?"
             )
-            raise KeyError from exc
+            raise exc
         else:
             if total_chapters == 0:
                 log.error("No chapters available to download in specified language")

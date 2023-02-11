@@ -2,12 +2,13 @@ import re
 import shutil
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 from loguru import logger as log
 
 from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
+from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
 
 
@@ -22,7 +23,7 @@ class MangaDLP:
         list_chapters (bool): List all available chapters and exit
         file_format (str): Archive format to create. An empty string means don't archive the folder
         forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
-        download_path (str): Download path. Defaults to '<script_dir>/downloads'
+        download_path (str/Path): Download path. Defaults to '<script_dir>/downloads'
         download_wait (float): Time to wait for each picture to download in seconds
 
     """
@@ -37,29 +38,31 @@ class MangaDLP:
         name_format: str = "{default}",
         name_format_none: str = "",
         forcevol: bool = False,
-        download_path: str = "downloads",
+        download_path: Union[str, Path] = "downloads",
         download_wait: float = 0.5,
         manga_pre_hook_cmd: str = "",
         manga_post_hook_cmd: str = "",
         chapter_pre_hook_cmd: str = "",
         chapter_post_hook_cmd: str = "",
+        cache_path: str = "",
     ) -> None:
         # init parameters
-        self.url_uuid: str = url_uuid
-        self.language: str = language
-        self.chapters: str = chapters
-        self.list_chapters: bool = list_chapters
-        self.file_format: str = file_format
-        self.name_format: str = name_format
-        self.name_format_none: str = name_format_none
-        self.forcevol: bool = forcevol
-        self.download_path: str = download_path
-        self.download_wait: float = download_wait
-        self.manga_pre_hook_cmd: str = manga_pre_hook_cmd
-        self.manga_post_hook_cmd: str = manga_post_hook_cmd
-        self.chapter_pre_hook_cmd: str = chapter_pre_hook_cmd
-        self.chapter_post_hook_cmd: str = chapter_post_hook_cmd
+        self.url_uuid = url_uuid
+        self.language = language
+        self.chapters = chapters
+        self.list_chapters = list_chapters
+        self.file_format = file_format
+        self.name_format = name_format
+        self.name_format_none = name_format_none
+        self.forcevol = forcevol
+        self.download_path: Path = Path(download_path)
+        self.download_wait = download_wait
+        self.manga_pre_hook_cmd = manga_pre_hook_cmd
+        self.manga_post_hook_cmd = manga_post_hook_cmd
+        self.chapter_pre_hook_cmd = chapter_pre_hook_cmd
+        self.chapter_post_hook_cmd = chapter_post_hook_cmd
         self.hook_infos: dict = {}
+        self.cache_path = cache_path
 
         # prepare everything
         self._prepare()
@@ -134,10 +137,6 @@ class MangaDLP:
 
     # once called per manga
     def get_manga(self) -> None:
-        # create empty skipped chapters list
-        skipped_chapters: list[Any] = []
-        error_chapters: list[Any] = []
-
         print_divider = "========================================="
         # show infos
         log.info(f"{print_divider}")
@@ -166,6 +165,12 @@ class MangaDLP:
         # create manga folder
         self.manga_path.mkdir(parents=True, exist_ok=True)
 
+        # prepare cache if specified
+        if self.cache_path:
+            cache = CacheDB(self.cache_path, self.manga_uuid, self.language)
+            cached_chapters = cache.db_uuid_chapters
+            log.info(f"Cached chapters: {cached_chapters}")
+
         # create dict with all variables for the hooks
         self.hook_infos.update(
             {
@@ -178,7 +183,7 @@ class MangaDLP:
                 "chapters_to_download": chapters_to_download,
                 "file_format": self.file_format,
                 "forcevol": self.forcevol,
-                "download_path": self.download_path,
+                "download_path": str(self.download_path),
                 "manga_path": self.manga_path,
             }
         )
@@ -192,31 +197,46 @@ class MangaDLP:
         )
 
         # get chapters
+        skipped_chapters: list[Any] = []
+        error_chapters: list[Any] = []
         for chapter in chapters_to_download:
-            return_infos = self.get_chapter(chapter)
-            error_chapters.append(return_infos.get("error"))
-            skipped_chapters.append(return_infos.get("skipped"))
+            if self.cache_path and chapter in cached_chapters:
+                log.info("Chapter is in cache. Skipping download")
+                continue
 
-            if self.file_format and return_infos["chapter_path"]:
-                return_infos = self.archive_chapter(return_infos["chapter_path"])
-                error_chapters.append(return_infos.get("error"))
-                skipped_chapters.append(return_infos.get("skipped"))
-
-            # check if chapter was skipped
             try:
-                return_infos["skipped"]
-            # chapter was not skipped
-            except KeyError:
-                # done with chapter
-                log.info(f"Done with chapter '{chapter}'\n")
+                chapter_path = self.get_chapter(chapter)
+            except FileExistsError:
+                skipped_chapters.append(chapter)
+                # update cache
+                if self.cache_path:
+                    cache.add_chapter(chapter)
+                continue
+            except Exception:
+                error_chapters.append(chapter)
+                continue
 
-                # start chapter post hook
-                run_hook(
-                    command=self.chapter_post_hook_cmd,
-                    hook_type="chapter_post",
-                    status="successful",
-                    **self.hook_infos,
-                )
+            if self.file_format:
+                try:
+                    self.archive_chapter(chapter_path)
+                except Exception:
+                    error_chapters.append(chapter)
+                    continue
+
+            # done with chapter
+            log.info(f"Done with chapter '{chapter}'")
+
+            # update cache
+            if self.cache_path:
+                cache.add_chapter(chapter)
+
+            # start chapter post hook
+            run_hook(
+                command=self.chapter_post_hook_cmd,
+                hook_type="chapter_post",
+                status="successful",
+                **self.hook_infos,
+            )
 
         # done with manga
         log.info(f"{print_divider}")
@@ -243,7 +263,7 @@ class MangaDLP:
         log.info(f"{print_divider}\n")
 
     # once called per chapter
-    def get_chapter(self, chapter: str) -> dict:
+    def get_chapter(self, chapter: str) -> Path:
         # get chapter infos
         chapter_infos = self.api.get_chapter_infos(chapter)
         log.debug(f"Chapter infos: {chapter_infos}")
@@ -271,15 +291,8 @@ class MangaDLP:
                 **self.hook_infos,
             )
 
-            # add to skipped chapters list
-            return (
-                {
-                    "error": f"{chapter_infos['volume']}:{chapter_infos['chapter']}",
-                    "chapter_path": None,
-                }
-                if self.forcevol
-                else {"error": f"{chapter_infos['chapter']}", "chapter_path": None}
-            )
+            # error
+            raise SystemError
 
         # get filename for chapter (without suffix)
         chapter_filename = utils.get_filename(
@@ -311,15 +324,8 @@ class MangaDLP:
                 **self.hook_infos,
             )
 
-            # add to skipped chapters list
-            return (
-                {
-                    "skipped": f"{chapter_infos['volume']}:{chapter_infos['chapter']}",
-                    "chapter_path": None,
-                }
-                if self.forcevol
-                else {"skipped": f"{chapter_infos['chapter']}", "chapter_path": None}
-            )
+            # skipped
+            raise FileExistsError
 
         # create chapter folder (skips it if it already exists)
         chapter_path.mkdir(parents=True, exist_ok=True)
@@ -361,7 +367,7 @@ class MangaDLP:
         except KeyboardInterrupt:
             log.critical("Stopping")
             sys.exit(1)
-        except Exception:
+        except Exception as exc:
             log.error(f"Cant download: '{chapter_filename}'. Skipping")
 
             # run chapter post hook
@@ -373,24 +379,17 @@ class MangaDLP:
                 **self.hook_infos,
             )
 
-            # add to skipped chapters list
-            return (
-                {
-                    "error": f"{chapter_infos['volume']}:{chapter_infos['chapter']}",
-                    "chapter_path": None,
-                }
-                if self.forcevol
-                else {"error": f"{chapter_infos['chapter']}", "chapter_path": None}
-            )
+            # chapter error
+            raise exc
 
-        else:
-            # Done with chapter
-            log.info(f"Successfully downloaded: '{chapter_filename}'")
+        # Done with chapter
+        log.info(f"Successfully downloaded: '{chapter_filename}'")
 
-            return {"chapter_path": chapter_path}
+        # ok
+        return chapter_path
 
     # create an archive of the chapter if needed
-    def archive_chapter(self, chapter_path: Path) -> dict:
+    def archive_chapter(self, chapter_path: Path) -> None:
         log.info(f"Creating archive '{chapter_path}{self.file_format}'")
         try:
             # check if image folder is existing
@@ -401,14 +400,9 @@ class MangaDLP:
                 utils.make_pdf(chapter_path)
             else:
                 utils.make_archive(chapter_path, self.file_format)
-        except Exception:
+        except Exception as exc:
             log.error("Archive error. Skipping chapter")
-            # add to skipped chapters list
-            return {
-                "error": chapter_path,
-            }
-        else:
-            # remove image folder
-            shutil.rmtree(chapter_path)
+            raise exc
 
-        return {}
+        # remove image folder
+        shutil.rmtree(chapter_path)

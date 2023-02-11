@@ -159,3 +159,11 @@ link3
 `python3 manga-dlp.py --read mangas.txt --list`
 
 This will list all available chapters for link1, link2 and link3.
+
+## Create basic cache
+
+With the `--cache-path <cache file>` option you can let the script create a very basic json cache. Your downloaded
+chapters will be
+tracked there, and the script doesn't have to check on disk if you already downloaded it.
+
+If the option is unset (default), then no caching will be done.

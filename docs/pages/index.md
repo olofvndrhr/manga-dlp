@@ -94,27 +94,27 @@ Script to download mangas from various sites
 Options:
 --help                          Show this message and exit.
 --version                       Show the version and exit.
-
 source: [mutually_exclusive, required]
--u, --url, --uuid TEXT          URL or UUID of the manga
---read FILE                     Path of file with manga links to download. One per line
-
+-u, --url, --uuid TEXT        URL or UUID of the manga
+--read FILE                   Path of file with manga links to download. One per line
 verbosity: [mutually_exclusive]
---loglevel INTEGER              Custom log level  [default: 20]
---warn                          Only log warnings and higher
---debug                         Debug logging. Log EVERYTHING
-
+--loglevel INTEGER            Custom log level
+--warn                        Only log warnings and higher
+--debug                       Debug logging. Log EVERYTHING
 -c, --chapters TEXT             Chapters to download
 -p, --path PATH                 Download path  [default: downloads]
 -l, --language TEXT             Manga language  [default: en]
 --list                          List all available chapters
---format TEXT                   Archive format to create. An empty string means dont archive the folder  [default: cbz]
+--format [cbz|cbr|zip|pdf|]     Archive format to create. An empty string means dont archive the folder  [default: cbz]
+--name-format TEXT              Naming format to use when saving chapters. See docs for more infos  [default: {default}]
+--name-format-none TEXT         String to use when the variable of the custom name format is empty
 --forcevol                      Force naming of volumes. For mangas where chapters reset each volume
 --wait FLOAT                    Time to wait for each picture to download in seconds(float)  [default: 0.5]
 --hook-manga-pre TEXT           Commands to execute before the manga download starts
 --hook-manga-post TEXT          Commands to execute after the manga download finished
 --hook-chapter-pre TEXT         Commands to execute before the chapter download starts
 --hook-chapter-post TEXT        Commands to execute after the chapter download finished
+--cache-path PATH               Where to store the cache-db. If no path is given, cache is disabled
 ```
 
 ## Contribution / Bugs

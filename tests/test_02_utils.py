@@ -27,9 +27,9 @@ def test_make_archive_false():
     archive_path = Path("tests/test_dir2.cbz")
     img_path = Path("tests/test_dir2")
     file_format = "cbz"
-    with pytest.raises(IOError) as e:
+    with pytest.raises(Exception) as e:
         utils.make_archive(img_path, file_format)
-    assert e.type == IOError
+    assert e.type == FileNotFoundError
     assert not archive_path.exists()
     # cleanup
     Path("tests/test_dir2.zip").unlink()

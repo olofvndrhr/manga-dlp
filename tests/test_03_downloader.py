@@ -42,9 +42,9 @@ def test_downloader_fail(monkeypatch):
     chapter_path = Path("tests/test_folder1")
     chapter_path.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(requests, "get", fail_url)
-    with pytest.raises(ConnectionError) as e:
+    with pytest.raises(TypeError) as e:
         downloader.download_chapter(images, str(chapter_path), 2)
 
-    assert e.type == ConnectionError
+    assert e.type == TypeError
     # cleanup
     shutil.rmtree(chapter_path, ignore_errors=True)

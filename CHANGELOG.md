@@ -9,6 +9,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.19] - 2023-02-11
+
+### Added
+
+- First version of the chapter cache (very basic functionality)
+
+### Fixed
+
+- Fixed all exception re-raises to include the original stack trace
+
+### Changed
+
+- Simplified chapter download loop
+
 ## [2.2.18] - 2023-01-21
 
 ### Fixed
