@@ -9,6 +9,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.20] - 2023-02-XX
+
+### Fixed
+
+- Script now doesn't exit if multiple mangas were requested and one had an error
+
 ## [2.2.19] - 2023-02-11
 
 ### Added
