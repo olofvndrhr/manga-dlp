@@ -14,7 +14,6 @@ clone:
     image: woodpeckerci/plugin-git:v1.6.0
     when:
       event: tag
-      tag: "*[!-dev]"
 
 pipeline:
 
@@ -24,7 +23,6 @@ pipeline:
     pull: true
     when:
       event: tag
-      tag: "*[!-dev]"
     commands:
       - python3 -m hatch build --clean
 
@@ -34,9 +32,8 @@ pipeline:
     pull: true
     when:
       event: tag
-      tag: "*[!-dev]"
     commands:
-      - bash get_release_notes.sh ${CI_COMMIT_TAG}
+      - bash get_release_notes.sh ${CI_COMMIT_TAG%%-dev}
 
   # publish release on github (github.com/olofvndrhr/manga-dlp)
   publish-release-github:
@@ -44,7 +41,6 @@ pipeline:
     pull: true
     when:
       event: tag
-      tag: "*[!-dev]"
     settings:
       api_key:
         from_secret: github-olofvndrhr-token
@@ -58,7 +54,6 @@ pipeline:
     pull: true
     when:
       event: tag
-      tag: "*[!-dev]"
     settings:
       api_key:
         from_secret: gitea-olofvndrhr-token
@@ -73,7 +68,6 @@ pipeline:
     pull: true
     when:
       event: tag
-      tag: "*[!-dev]"
     secrets:
       - source: pypi_username
         target: HATCH_INDEX_USER
