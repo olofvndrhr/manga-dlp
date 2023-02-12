@@ -38,9 +38,23 @@ pipeline:
     commands:
       - bash get_release_notes.sh ${CI_COMMIT_TAG}
 
+  # publish release on github (github.com/olofvndrhr/manga-dlp)
+  publish-release-github:
+    image: woodpeckerci/plugin-github-release
+    pull: true
+    when:
+      event: tag
+      branch: master
+    settings:
+      api_key:
+        from_secret: github-olofvndrhr-token
+      files: dist/*
+      title: ${CI_COMMIT_TAG}
+      note: RELEASENOTES.md
+
   # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
   publish-release-gitea:
-    image: plugins/gitea-release
+    image: woodpeckerci/plugin-gitea-release
     pull: true
     when:
       event: tag
@@ -49,20 +63,6 @@ pipeline:
       api_key:
         from_secret: gitea-olofvndrhr-token
       base_url: https://git.44net.ch
-      files: dist/*
-      title: ${CI_COMMIT_TAG}
-      note: RELEASENOTES.md
-
-  # publish release on github (github.com/olofvndrhr/manga-dlp)
-  publish-release-github:
-    image: plugins/github-release
-    pull: true
-    when:
-      event: tag
-      branch: master
-    settings:
-      api_key:
-        from_secret: github-olofvndrhr-token
       files: dist/*
       title: ${CI_COMMIT_TAG}
       note: RELEASENOTES.md

@@ -15,6 +15,7 @@ clone:
     image: woodpeckerci/plugin-git:v1.6.0
     when:
       event: tag
+      branch: master
 
 pipeline:
 
@@ -24,6 +25,7 @@ pipeline:
     pull: true
     when:
       event: tag
+      branch: master
     settings:
       spec: docker/manifest.tmpl
       auto_tag: true
