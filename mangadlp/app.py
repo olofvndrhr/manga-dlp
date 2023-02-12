@@ -166,7 +166,9 @@ class MangaDLP:
 
         # prepare cache if specified
         if self.cache_path:
-            cache = CacheDB(self.cache_path, self.manga_uuid, self.language)
+            cache = CacheDB(
+                self.cache_path, self.manga_uuid, self.language, self.manga_title
+            )
             cached_chapters = cache.db_uuid_chapters
             log.info(f"Cached chapters: {cached_chapters}")
 
@@ -200,7 +202,7 @@ class MangaDLP:
         error_chapters: list[Any] = []
         for chapter in chapters_to_download:
             if self.cache_path and chapter in cached_chapters:
-                log.info("Chapter is in cache. Skipping download")
+                log.info(f"Chapter '{chapter}' is in cache. Skipping download")
                 continue
 
             try:
