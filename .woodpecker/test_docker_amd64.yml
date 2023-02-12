@@ -11,20 +11,20 @@ depends_on:
 
 clone:
   git:
+    image: woodpeckerci/plugin-git:v1.6.0
     when:
       branch: master
       event: pull_request
-    image: woodpeckerci/plugin-git:v1.6.0
 
 pipeline:
 
   # build docker image for amd64 - x86
   test-build-amd64:
+    image: plugins/docker
+    pull: true
     when:
       branch: master
       event: pull_request
-    image: plugins/docker
-    pull: true
     settings:
       dry_run: true
       repo: olofvndrhr/manga-dlp
