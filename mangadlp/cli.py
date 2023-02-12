@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import click
@@ -276,6 +277,11 @@ def main(
             )
             mdlp.get_manga()
         except (KeyboardInterrupt, Exception) as exc:
+            # if only a single manga is requested and had an error, then exit
+            if len(requested_mangas) == 1:
+                log.error(f"Error with manga: {manga}")
+                sys.exit(1)
+            # else continue with the other ones
             log.error(f"Skipping: {manga}. Reason={exc}")
 
 
