@@ -11,30 +11,30 @@ depends_on:
 
 clone:
   git:
+    image: woodpeckerci/plugin-git:v1.6.0
     when:
       branch: master
       event: pull_request
-    image: woodpeckerci/plugin-git:v1.6.0
 
 pipeline:
 
   # build wheel and dist
   test-build-pypi:
+    image: cr.44net.ch/ci-plugins/tests
+    pull: true
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
     commands:
       - python3 -m hatch build --clean
 
   # create release-notes
   test-create-release-notes:
+    image: cr.44net.ch/baseimages/debian-base
+    pull: true
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/baseimages/debian-base
-    pull: true
     commands:
       - bash get_release_notes.sh latest
       - cat RELEASENOTES.md

@@ -11,20 +11,18 @@ depends_on:
 
 clone:
   git:
-    when:
-      #branch: master
-      event: tag
     image: woodpeckerci/plugin-git:v1.6.0
+    when:
+      event: tag
 
 pipeline:
 
   # build and publish docker image for amd64 - x86
   build-amd64:
-    when:
-      #branch: master
-      event: tag
     image: plugins/docker
     pull: true
+    when:
+      event: tag
     settings:
       repo: olofvndrhr/manga-dlp
       platforms: linux/amd64

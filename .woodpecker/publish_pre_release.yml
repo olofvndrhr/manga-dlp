@@ -1,7 +1,7 @@
 ###################
-# publish release #
+# publish pre-release #
 ###################
-# branch: master
+# branch: dev
 # event: tag
 
 platform: linux/amd64
@@ -14,7 +14,7 @@ clone:
     image: woodpeckerci/plugin-git:v1.6.0
     when:
       event: tag
-      branch: master
+      tag: "*-dev"
 
 pipeline:
 
@@ -24,41 +24,42 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*-dev"
     commands:
       - python3 -m hatch build --clean
 
-  # create release-notes
-  create-release-notes:
+  # create pre-release-notes
+  create-pre-release-notes:
     image: cr.44net.ch/baseimages/debian-base
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*-dev"
     commands:
-      - bash get_release_notes.sh ${CI_COMMIT_TAG}
+      - bash get_release_notes.sh ${CI_COMMIT_TAG%%-dev}
 
-  # publish release on github (github.com/olofvndrhr/manga-dlp)
-  publish-release-github:
+  # publish pre-release on github (github.com/olofvndrhr/manga-dlp)
+  publish-pre-release-github:
     image: woodpeckerci/plugin-github-release
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*-dev"
     settings:
       api_key:
         from_secret: github-olofvndrhr-token
       files: dist/*
       title: ${CI_COMMIT_TAG}
       note: RELEASENOTES.md
+      prerelease: true
 
-  # publish release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
-  publish-release-gitea:
+  # publish pre-release on gitea (git.44net.ch/olofvndrhr/manga-dlp)
+  publish-pre-release-gitea:
     image: woodpeckerci/plugin-gitea-release
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*-dev"
     settings:
       api_key:
         from_secret: gitea-olofvndrhr-token
@@ -66,18 +67,19 @@ pipeline:
       files: dist/*
       title: ${CI_COMMIT_TAG}
       note: RELEASENOTES.md
+      prerelease: true
 
-  # release pypi
-  release-pypi:
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
-    when:
-      event: tag
-      branch: master
-    secrets:
-      - source: pypi_username
-        target: HATCH_INDEX_USER
-      - source: pypi_token
-        target: HATCH_INDEX_AUTH
-    commands:
-      - python3 -m hatch publish --no-prompt --yes
+#  # pre-release pypi
+#  pre-release-pypi:
+#    image: cr.44net.ch/ci-plugins/tests
+#    pull: true
+#    when:
+#      event: tag
+#      tag: "*-dev"
+#    secrets:
+#      - source: pypi_username
+#        target: HATCH_INDEX_USER
+#      - source: pypi_token
+#        target: HATCH_INDEX_AUTH
+#    commands:
+#      - python3 -m hatch publish --no-prompt --yes

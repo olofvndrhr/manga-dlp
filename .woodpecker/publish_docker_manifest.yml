@@ -12,20 +12,20 @@ depends_on:
 
 clone:
   git:
-    when:
-      #branch: master
-      event: tag
     image: woodpeckerci/plugin-git:v1.6.0
+    when:
+      event: tag
+      branch: master
 
 pipeline:
 
   # publish docker manifest for automatic multi arch pulls
   publish-manifest:
-    when:
-      #branch: master
-      event: tag
     image: plugins/manifest
     pull: true
+    when:
+      event: tag
+      branch: master
     settings:
       spec: docker/manifest.tmpl
       auto_tag: true

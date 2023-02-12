@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import click
@@ -256,24 +257,32 @@ def main(
     requested_mangas = [url_uuid] if url_uuid else read_mangas
 
     for manga in requested_mangas:
-        mdlp = app.MangaDLP(
-            url_uuid=manga,
-            language=lang,
-            chapters=chapters,
-            list_chapters=list_chapters,
-            file_format=chapter_format,
-            name_format=name_format,
-            name_format_none=name_format_none,
-            forcevol=forcevol,
-            download_path=path,
-            download_wait=wait_time,
-            manga_pre_hook_cmd=hook_manga_pre,
-            manga_post_hook_cmd=hook_manga_post,
-            chapter_pre_hook_cmd=hook_chapter_pre,
-            chapter_post_hook_cmd=hook_chapter_post,
-            cache_path=cache_path,
-        )
-        mdlp.get_manga()
+        try:
+            mdlp = app.MangaDLP(
+                url_uuid=manga,
+                language=lang,
+                chapters=chapters,
+                list_chapters=list_chapters,
+                file_format=chapter_format,
+                name_format=name_format,
+                name_format_none=name_format_none,
+                forcevol=forcevol,
+                download_path=path,
+                download_wait=wait_time,
+                manga_pre_hook_cmd=hook_manga_pre,
+                manga_post_hook_cmd=hook_manga_post,
+                chapter_pre_hook_cmd=hook_chapter_pre,
+                chapter_post_hook_cmd=hook_chapter_post,
+                cache_path=cache_path,
+            )
+            mdlp.get_manga()
+        except (KeyboardInterrupt, Exception) as exc:
+            # if only a single manga is requested and had an error, then exit
+            if len(requested_mangas) == 1:
+                log.error(f"Error with manga: {manga}")
+                sys.exit(1)
+            # else continue with the other ones
+            log.error(f"Skipping: {manga}. Reason={exc}")
 
 
 if __name__ == "__main__":

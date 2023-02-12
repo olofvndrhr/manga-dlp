@@ -1,6 +1,5 @@
 import re
 import shutil
-import sys
 from pathlib import Path
 from typing import Any, Union
 
@@ -78,9 +77,9 @@ class MangaDLP:
         try:
             log.debug("Initializing api")
             self.api = self.api_used(self.url_uuid, self.language, self.forcevol)
-        except Exception:
+        except Exception as exc:
             log.error("Can't initialize api. Exiting")
-            sys.exit(1)
+            raise exc
         # get manga title and uuid
         self.manga_uuid = self.api.manga_uuid
         self.manga_title = self.api.manga_title
@@ -96,7 +95,7 @@ class MangaDLP:
             log.error(
                 'You need to specify a manga url/uuid with "-u" or a list with "--read"'
             )
-            sys.exit(1)
+            raise ValueError
         # checks if --list is not used
         if not self.list_chapters:
             if not self.chapters:
@@ -104,15 +103,15 @@ class MangaDLP:
                 log.error(
                     'You need to specify one or more chapters to download. To see all chapters use "--list"'
                 )
-                sys.exit(1)
+                raise ValueError
             # if forcevol is used, but didn't specify a volume in the chapters selected
             if self.forcevol and ":" not in self.chapters:
                 log.error("You need to specify the volume if you use --forcevol")
-                sys.exit(1)
+                raise ValueError
             # if forcevol is not used, but a volume is specified
             if not self.forcevol and ":" in self.chapters:
                 log.error("Don't specify the volume without --forcevol")
-                sys.exit(1)
+                raise ValueError
 
     # check the api which needs to be used
     def check_api(self, url_uuid: str) -> type:
@@ -129,11 +128,11 @@ class MangaDLP:
         # this is only for testing multiple apis
         if api_test.search(url_uuid):
             log.critical("Not supported yet")
-            sys.exit(1)
+            raise ValueError
 
         # no supported api found
         log.error(f"No supported api in link/uuid found: {url_uuid}")
-        sys.exit(1)
+        raise ValueError
 
     # once called per manga
     def get_manga(self) -> None:
@@ -206,6 +205,8 @@ class MangaDLP:
 
             try:
                 chapter_path = self.get_chapter(chapter)
+            except KeyboardInterrupt as exc:
+                raise exc
             except FileExistsError:
                 skipped_chapters.append(chapter)
                 # update cache
@@ -273,9 +274,9 @@ class MangaDLP:
             chapter_image_urls = self.api.get_chapter_images(
                 chapter, self.download_wait
             )
-        except KeyboardInterrupt:
-            log.critical("Stopping")
-            sys.exit(1)
+        except KeyboardInterrupt as exc:
+            log.critical("Keyboard interrupt. Stopping")
+            raise exc
 
         # check if the image urls are empty. if yes skip this chapter (for mass downloads)
         if not chapter_image_urls:
@@ -364,9 +365,9 @@ class MangaDLP:
             downloader.download_chapter(
                 chapter_image_urls, chapter_path, self.download_wait
             )
-        except KeyboardInterrupt:
-            log.critical("Stopping")
-            sys.exit(1)
+        except KeyboardInterrupt as exc:
+            log.critical("Keyboard interrupt. Stopping")
+            raise exc
         except Exception as exc:
             log.error(f"Cant download: '{chapter_filename}'. Skipping")
 

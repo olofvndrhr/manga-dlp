@@ -11,20 +11,20 @@ depends_on:
 
 clone:
   git:
+    image: woodpeckerci/plugin-git:v1.6.0
     when:
       branch: master
       event: pull_request
-    image: woodpeckerci/plugin-git:v1.6.0
 
 pipeline:
 
   # test code with different python versions - arm64
   test-tox-arm64:
+    image: cr.44net.ch/ci-plugins/multipy
+    pull: true
     when:
       branch: master
       event: pull_request
-    image: cr.44net.ch/ci-plugins/multipy
-    pull: true
     commands:
       - grep -v img2pdf contrib/requirements_dev.txt > contrib/requirements_dev_arm64.txt
       - rm -f contrib/requirements_dev.txt
