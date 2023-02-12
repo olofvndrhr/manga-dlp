@@ -24,7 +24,7 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*!(-dev)"
     commands:
       - python3 -m hatch build --clean
 
@@ -34,7 +34,7 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*!(-dev)"
     commands:
       - bash get_release_notes.sh ${CI_COMMIT_TAG}
 
@@ -44,7 +44,7 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*!(-dev)"
     settings:
       api_key:
         from_secret: github-olofvndrhr-token
@@ -58,7 +58,7 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*!(-dev)"
     settings:
       api_key:
         from_secret: gitea-olofvndrhr-token
@@ -73,7 +73,7 @@ pipeline:
     pull: true
     when:
       event: tag
-      branch: master
+      tag: "*!(-dev)"
     secrets:
       - source: pypi_username
         target: HATCH_INDEX_USER
