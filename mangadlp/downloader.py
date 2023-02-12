@@ -1,6 +1,5 @@
 import logging
 import shutil
-import sys
 from pathlib import Path
 from time import sleep
 from typing import Union
@@ -35,9 +34,8 @@ def download_chapter(
                 if r.status_code != 200:
                     log.error(f"Request for image {image} failed, retrying")
                     raise ConnectionError
-            except KeyboardInterrupt:
-                log.critical("Stopping")
-                sys.exit(1)
+            except KeyboardInterrupt as exc:
+                raise exc
             except Exception as exc:
                 if counter >= 3:
                     log.error("Maybe the MangaDex Servers are down?")
