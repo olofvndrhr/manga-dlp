@@ -9,6 +9,7 @@ from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
 from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
+from mangadlp.metadata import write_metadata
 
 
 class MangaDLP:
@@ -205,20 +206,34 @@ class MangaDLP:
                 log.info(f"Chapter '{chapter}' is in cache. Skipping download")
                 continue
 
+            # download chapter
             try:
                 chapter_path = self.get_chapter(chapter)
             except KeyboardInterrupt as exc:
                 raise exc
             except FileExistsError:
+                # skipping chapter download as its already available
                 skipped_chapters.append(chapter)
                 # update cache
                 if self.cache_path:
                     cache.add_chapter(chapter)
                 continue
             except Exception:
+                # skip download/packing due to an error
                 error_chapters.append(chapter)
                 continue
 
+            # add metadata
+            try:
+                metadata = self.api.create_metadata(chapter)
+                write_metadata(
+                    chapter_path,
+                    {"Format": self.file_format.removeprefix("."), **metadata},
+                )
+            except Exception:
+                log.warning(f"Can't write metadata for chapter '{chapter}'")
+
+            # pack downloaded folder
             if self.file_format:
                 try:
                     self.archive_chapter(chapter_path)
@@ -268,7 +283,7 @@ class MangaDLP:
     # once called per chapter
     def get_chapter(self, chapter: str) -> Path:
         # get chapter infos
-        chapter_infos = self.api.get_chapter_infos(chapter)
+        chapter_infos: dict = self.api.manga_chapter_data[chapter]
         log.debug(f"Chapter infos: {chapter_infos}")
 
         # get image urls for chapter

@@ -9,6 +9,22 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.2.21] - 2023-02-11
+
+### Added
+
+- Metadata is now added to each chapter. Schema
+  standard: [https://anansi-project.github.io/docs/comicinfo/schemas/v2.0](https://anansi-project.github.io/docs/comicinfo/schemas/v2.0)
+- `xmltodict` as a package requirement
+
+### Fixed
+
+- API template typos
+
+### Changed
+
+- Simplified the chapter info generation
+
 ## [2.2.20] - 2023-02-12
 
 ### Fixed

@@ -169,13 +169,15 @@ class Mangadex:
                 chapter_uuid = chapter.get("id") or ""
                 chapter_name = attributes.get("title") or ""
                 chapter_external = attributes.get("externalUrl") or ""
+                chapter_pages = attributes.get("pages") or ""
 
                 # check for chapter title and fix it
                 if chapter_name:
                     chapter_name = utils.fix_name(chapter_name)
+
                 # check if the chapter is external (can't download them)
                 if chapter_external:
-                    log.debug(f"Chapter is external. Skipping: {chapter_uuid}")
+                    log.debug(f"Chapter is external. Skipping: {chapter_name}")
                     continue
 
                 # check if its duplicate from the last entry
@@ -186,12 +188,13 @@ class Mangadex:
                 chapter_index = (
                     chapter_num if not self.forcevol else f"{chapter_vol}:{chapter_num}"
                 )
-                chapter_data[chapter_index] = [
-                    chapter_uuid,
-                    chapter_vol,
-                    chapter_num,
-                    chapter_name,
-                ]
+                chapter_data[chapter_index] = {
+                    "uuid": chapter_uuid,
+                    "volume": chapter_vol,
+                    "chapter": chapter_num,
+                    "name": chapter_name,
+                    "pages": chapter_pages,
+                }
                 # add last chapter to duplicate check
                 last_volume, last_chapter = (chapter_vol, chapter_num)
 
@@ -204,7 +207,7 @@ class Mangadex:
     def get_chapter_images(self, chapter: str, wait_time: float) -> list:
         log.debug(f"Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
-        chapter_uuid = self.manga_chapter_data[chapter][0]
+        chapter_uuid = self.manga_chapter_data[chapter]["uuid"]
 
         # retry up to two times if the api applied rate limits
         api_error = False
@@ -251,10 +254,9 @@ class Mangadex:
     def create_chapter_list(self) -> list:
         log.debug(f"Creating chapter list for: {self.manga_uuid}")
         chapter_list = []
-        for index, _ in self.manga_chapter_data.items():
-            chapter_info: dict = self.get_chapter_infos(index)
-            chapter_number: str = chapter_info["chapter"]
-            volume_number: str = chapter_info["volume"]
+        for data in self.manga_chapter_data.values():
+            chapter_number: str = data["chapter"]
+            volume_number: str = data["volume"]
             if self.forcevol:
                 chapter_list.append(f"{volume_number}:{chapter_number}")
             else:
@@ -262,17 +264,20 @@ class Mangadex:
 
         return chapter_list
 
-    # create easy to access chapter infos
-    def get_chapter_infos(self, chapter: str) -> dict:
-        chapter_uuid: str = self.manga_chapter_data[chapter][0]
-        chapter_vol: str = self.manga_chapter_data[chapter][1]
-        chapter_num: str = self.manga_chapter_data[chapter][2]
-        chapter_name: str = self.manga_chapter_data[chapter][3]
-        log.debug(f"Getting chapter infos for: {chapter_uuid}")
+    def create_metadata(self, chapter: str) -> dict:
+        log.info("Creating metadata from api")
 
-        return {
-            "uuid": chapter_uuid,
-            "volume": chapter_vol,
-            "chapter": chapter_num,
-            "name": chapter_name,
+        chapter_data = self.manga_chapter_data[chapter]
+        metadata = {
+            "Volume": chapter_data["volume"],
+            "Number": chapter_data["chapter"],
+            "PageCount": chapter_data["pages"],
+            "Count": len(self.manga_chapter_data),
+            "LanguageISO": self.language,
+            "Title": self.manga_title,
+            "Summary": self.manga_data["attributes"]["description"].get("en"),
+            "Genre": self.manga_data["attributes"].get("publicationDemographic"),
+            "Web": f"https://mangadex.org/title/{self.manga_uuid}",
         }
+
+        return metadata

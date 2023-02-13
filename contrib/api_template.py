@@ -34,17 +34,28 @@ class YourAPI:
         # attributes needed by app.py
         self.manga_uuid = "abc"
         self.manga_title = "abc"
-        self.chapter_list = "abc"
+        self.chapter_list = ["1", "2"]
 
         # methods needed by app.py
         # get chapter infos as a dictionary
-        def get_chapter_infos(chapter: str) -> dict:
+        def get_manga_chapter_data(chapter: str) -> dict:
             # these keys have to be returned
             return {
-                "uuid": chapter_uuid,
-                "volume": chapter_vol,
-                "chapter": chapter_num,
-                "name": chapter_name,
+                "1": {
+                    "uuid": "abc",
+                    "volume": "1",
+                    "chapter": "1",
+                    "name": "test",
+                },
+            }
+            # or with --forcevol
+            return {
+                "1:1": {
+                    "uuid": "abc",
+                    "volume": "1",
+                    "chapter": "1",
+                    "name": "test",
+                },
             }
 
         # get chapter images as a list (full links)
@@ -55,3 +66,12 @@ class YourAPI:
                 "https://abc.def/image/1234.png",
                 "https://abc.def/image/12345.png",
             ]
+
+        # get metadata with correct keys for ComicInfo.xml
+        def create_metadata(self, chapter: str) -> dict:
+            # example
+            return {
+                "Volume": "abc",
+                "LanguageISO": "en",
+                "Title": "test",
+            }
