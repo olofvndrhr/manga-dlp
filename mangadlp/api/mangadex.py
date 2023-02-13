@@ -138,10 +138,9 @@ class Mangadex:
                 "Error retrieving the chapters list. Did you specify a valid language code?"
             )
             raise exc
-        else:
-            if total_chapters == 0:
-                log.error("No chapters available to download in specified language")
-                raise KeyError
+        if total_chapters == 0:
+            log.error("No chapters available to download in specified language")
+            raise KeyError
 
         log.debug(f"Total chapters={total_chapters}")
         return total_chapters
@@ -272,9 +271,10 @@ class Mangadex:
             "Volume": chapter_data["volume"],
             "Number": chapter_data["chapter"],
             "PageCount": chapter_data["pages"],
+            "Title": chapter_data["name"],
+            "Series": self.manga_title,
             "Count": len(self.manga_chapter_data),
             "LanguageISO": self.language,
-            "Title": self.manga_title,
             "Summary": self.manga_data["attributes"]["description"].get("en"),
             "Genre": self.manga_data["attributes"].get("publicationDemographic"),
             "Web": f"https://mangadex.org/title/{self.manga_uuid}",

@@ -5,6 +5,10 @@ from loguru import logger as log
 
 
 def write_metadata(chapter_path: Path, metadata: dict) -> None:
+    if metadata["Format"] == "pdf":
+        log.warning("Can't add metadata for pdf format. Skipping")
+        return
+
     try:
         metadata_template = Path("mangadlp/metadata/ComicInfo.xml").read_text(
             encoding="utf8"
@@ -27,5 +31,6 @@ def write_metadata(chapter_path: Path, metadata: dict) -> None:
         log.debug(f"Updating metadata: '{key}' = '{value}'")
         metadata_empty["ComicInfo"][key] = value
 
-    metadata_export = xmltodict.unparse(metadata_empty, pretty=True, indent=(" " * 4))
+    metadata_export = xmltodict.unparse(metadata_empty, pretty=True, indent=" " * 4)
+    metadata_file.touch(exist_ok=True)
     metadata_file.write_text(metadata_export, encoding="utf8")

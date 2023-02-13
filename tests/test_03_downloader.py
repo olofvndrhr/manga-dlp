@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import requests
 
-import mangadlp.downloader as downloader
+from mangadlp import downloader
 
 
 def test_downloader():

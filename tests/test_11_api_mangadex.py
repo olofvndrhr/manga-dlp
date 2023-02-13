@@ -64,7 +64,7 @@ def test_chapter_infos():
     language = "en"
     forcevol = False
     test = Mangadex(url_uuid, language, forcevol)
-    chapter_infos = test.get_chapter_infos("1")
+    chapter_infos = test.manga_chapter_data["1"]
     chapter_uuid = chapter_infos["uuid"]
     chapter_name = chapter_infos["name"]
     chapter_num = chapter_infos["chapter"]
@@ -239,3 +239,24 @@ def test_get_chapter_images_error(monkeypatch):
     monkeypatch.setattr(requests, "get", fail_url)
 
     assert not test.get_chapter_images(chapter_num, 2)
+
+
+def test_chapter_metadata():
+    url_uuid = "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu"
+    language = "en"
+    forcevol = False
+    test = Mangadex(url_uuid, language, forcevol)
+    chapter_metadata = test.create_metadata("1")
+    manga_name = chapter_metadata["Series"]
+    chapter_name = chapter_metadata["Title"]
+    chapter_num = chapter_metadata["Number"]
+    chapter_volume = chapter_metadata["Volume"]
+    chapter_url = chapter_metadata["Web"]
+
+    assert (manga_name, chapter_name, chapter_volume, chapter_num, chapter_url) == (
+        "Komi-san wa Komyushou Desu",
+        "A Normal Person",
+        "1",
+        "1",
+        "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8",
+    )

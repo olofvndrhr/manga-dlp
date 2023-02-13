@@ -22,9 +22,10 @@ class YourAPI:
     api_base_url = "https://api.mangadex.org"
     img_base_url = "https://uploads.mangadex.org"
 
-    # get infos to initiate class
     def __init__(self, url_uuid, language, forcevol):
-        # static info
+        """
+        get infos to initiate class
+        """
         self.api_name = "Your API Name"
 
         self.url_uuid = url_uuid
@@ -34,32 +35,49 @@ class YourAPI:
         # attributes needed by app.py
         self.manga_uuid = "abc"
         self.manga_title = "abc"
-        self.chapter_list = ["1", "2"]
+        self.chapter_list = ["1", "2", "2.1", "5", "10"]
+        self.manga_chapter_data = {  # example data
+            "1": {
+                "uuid": "abc",
+                "volume": "1",
+                "chapter": "1",
+                "name": "test",
+            },
+            "2": {
+                "uuid": "abc",
+                "volume": "1",
+                "chapter": "2",
+                "name": "test",
+            },
+        }
+        # or with --forcevol
+        self.manga_chapter_data = {
+            "1:1": {
+                "uuid": "abc",
+                "volume": "1",
+                "chapter": "1",
+                "name": "test",
+            },
+            "1:2": {
+                "uuid": "abc",
+                "volume": "1",
+                "chapter": "2",
+                "name": "test",
+            },
+        }
 
-        # methods needed by app.py
-        # get chapter infos as a dictionary
-        def get_manga_chapter_data(chapter: str) -> dict:
-            # these keys have to be returned
-            return {
-                "1": {
-                    "uuid": "abc",
-                    "volume": "1",
-                    "chapter": "1",
-                    "name": "test",
-                },
-            }
-            # or with --forcevol
-            return {
-                "1:1": {
-                    "uuid": "abc",
-                    "volume": "1",
-                    "chapter": "1",
-                    "name": "test",
-                },
-            }
-
-        # get chapter images as a list (full links)
         def get_chapter_images(chapter: str, download_wait: float) -> list:
+            """
+            Get chapter images as a list (full links)
+
+            Args:
+                chapter: The chapter number (chapter data index)
+                download_wait: Wait time between image downloads
+
+            Returns:
+                The list of urls of the page images
+            """
+
             # example
             return [
                 "https://abc.def/image/123.png",
@@ -67,8 +85,18 @@ class YourAPI:
                 "https://abc.def/image/12345.png",
             ]
 
-        # get metadata with correct keys for ComicInfo.xml
         def create_metadata(self, chapter: str) -> dict:
+            """
+            Get metadata with correct keys for ComicInfo.xml
+            Provide as much metadata as possible. empty/false values will be ignored
+
+            Args:
+                chapter: The chapter number (chapter data index)
+
+            Returns:
+                The metadata as a dict
+            """
+
             # example
             return {
                 "Volume": "abc",

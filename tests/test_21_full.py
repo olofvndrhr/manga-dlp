@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-import mangadlp.app as app
+from mangadlp import app
 
 
 @pytest.fixture
@@ -107,12 +107,14 @@ def test_full_with_input_folder(wait_20s):
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1")
+    metadata_path = Path("tests/Shikimori's Not Just a Cutie/ComicInfo.xml")
     command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --debug --wait 2"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
 
     assert manga_path.exists() and manga_path.is_dir()
     assert chapter_path.exists() and chapter_path.is_dir()
+    assert metadata_path.exists() and metadata_path.is_file()
     # cleanup
     shutil.rmtree(manga_path, ignore_errors=True)
 

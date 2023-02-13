@@ -9,7 +9,7 @@ from loguru import logger as log
 
 # create an archive of the chapter images
 def make_archive(chapter_path: Path, file_format: str) -> None:
-    zip_path: Path = Path(f"{chapter_path}.zip")
+    zip_path = Path(f"{chapter_path}.zip")
     try:
         # create zip
         with ZipFile(zip_path, "w") as zipfile:
@@ -29,7 +29,7 @@ def make_pdf(chapter_path: Path) -> None:
         log.error("Cant import img2pdf. Please install it first")
         raise exc
 
-    pdf_path: Path = Path(f"{chapter_path}.pdf")
+    pdf_path = Path(f"{chapter_path}.pdf")
     images: list[str] = []
     for file in chapter_path.iterdir():
         images.append(str(file))
