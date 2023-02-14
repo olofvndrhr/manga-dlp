@@ -97,6 +97,23 @@ class YourAPI:
                 The metadata as a dict
             """
 
+            # metadata types. have to be correct to be valid
+            {
+                "Title": str,
+                "Series": str,
+                "Number": str,
+                "Count": int,
+                "Volume": int,
+                "Summary": str,
+                "Genre": str,
+                "Web": str,
+                "PageCount": int,
+                "LanguageISO": str,
+                "Format": str,
+                "ScanInformation": str,
+                "SeriesGroup": str,
+            }
+
             # example
             return {
                 "Volume": "abc",

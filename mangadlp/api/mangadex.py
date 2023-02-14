@@ -163,12 +163,12 @@ class Mangadex:
             for chapter in r.json()["data"]:
                 attributes: dict = chapter["attributes"]
                 # chapter infos from feed
-                chapter_num = attributes.get("chapter") or ""
-                chapter_vol = attributes.get("volume") or ""
-                chapter_uuid = chapter.get("id") or ""
-                chapter_name = attributes.get("title") or ""
-                chapter_external = attributes.get("externalUrl") or ""
-                chapter_pages = attributes.get("pages") or ""
+                chapter_num: str = attributes.get("chapter") or ""
+                chapter_vol: str = attributes.get("volume") or ""
+                chapter_uuid: str = chapter.get("id") or ""
+                chapter_name: str = attributes.get("title") or ""
+                chapter_external: str = attributes.get("externalUrl") or ""
+                chapter_pages: int = attributes.get("pages") or 0
 
                 # check for chapter title and fix it
                 if chapter_name:
@@ -268,7 +268,7 @@ class Mangadex:
 
         chapter_data = self.manga_chapter_data[chapter]
         metadata = {
-            "Volume": chapter_data["volume"],
+            "Volume": int(chapter_data["volume"]),
             "Number": chapter_data["chapter"],
             "PageCount": chapter_data["pages"],
             "Title": chapter_data["name"],
