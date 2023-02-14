@@ -18,6 +18,7 @@ def test_metadata_creation():
         "Summary": "summary1",
         "Genre": "genre1",
         "Web": "https://mangadex.org",
+        "Format": "cbz",
     }
 
     write_metadata(metadata_path, metadata)
