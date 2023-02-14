@@ -45,6 +45,7 @@ class MangaDLP:
         chapter_pre_hook_cmd: str = "",
         chapter_post_hook_cmd: str = "",
         cache_path: str = "",
+        add_metadata: bool = True,
     ) -> None:
         # init parameters
         self.url_uuid = url_uuid
@@ -63,6 +64,7 @@ class MangaDLP:
         self.chapter_post_hook_cmd = chapter_post_hook_cmd
         self.hook_infos: dict = {}
         self.cache_path = cache_path
+        self.add_metadata = add_metadata
 
         # prepare everything
         self._prepare()
@@ -224,14 +226,15 @@ class MangaDLP:
                 continue
 
             # add metadata
-            try:
-                metadata = self.api.create_metadata(chapter)
-                write_metadata(
-                    chapter_path,
-                    {"Format": self.file_format.removeprefix("."), **metadata},
-                )
-            except Exception:
-                log.warning(f"Can't write metadata for chapter '{chapter}'")
+            if self.add_metadata:
+                try:
+                    metadata = self.api.create_metadata(chapter)
+                    write_metadata(
+                        chapter_path,
+                        {"Format": self.file_format.removeprefix("."), **metadata},
+                    )
+                except Exception:
+                    log.warning(f"Can't write metadata for chapter '{chapter}'")
 
             # pack downloaded folder
             if self.file_format:

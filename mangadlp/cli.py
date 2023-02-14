@@ -217,6 +217,15 @@ def readin_list(_ctx, _param, value) -> list:
     show_default=True,
     help="Where to store the cache-db. If no path is given, cache is disabled",
 )
+@click.option(
+    "--add-metadata/--no-metadata",
+    "add_metadata",
+    is_flag=True,
+    default=True,
+    required=False,
+    show_default=True,
+    help="Enable/disable creation of metadata via ComicInfo.xml",
+)
 @click.pass_context
 def main(
     ctx: click.Context,
@@ -237,6 +246,7 @@ def main(
     hook_chapter_pre: str,
     hook_chapter_post: str,
     cache_path: str,
+    add_metadata: bool,
 ):  # pylint: disable=too-many-locals
     """
     Script to download mangas from various sites
@@ -274,6 +284,7 @@ def main(
                 chapter_pre_hook_cmd=hook_chapter_pre,
                 chapter_post_hook_cmd=hook_chapter_post,
                 cache_path=cache_path,
+                add_metadata=add_metadata,
             )
             mdlp.get_manga()
         except (KeyboardInterrupt, Exception) as exc:
