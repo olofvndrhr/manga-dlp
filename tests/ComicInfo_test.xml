@@ -10,11 +10,11 @@
     <Web>https://mangadex.org</Web>
     <PageCount>99</PageCount>
     <LanguageISO>en</LanguageISO>
-    <Format></Format>
+    <Format>cbz</Format>
     <ScanInformation></ScanInformation>
     <SeriesGroup></SeriesGroup>
     <BlackAndWhite>Unknown</BlackAndWhite>
-    <Manga>Yes</Manga>
     <AgeRating>Unknown</AgeRating>
+    <Manga>Yes</Manga>
     <Notes>Downloaded with https://github.com/olofvndrhr/manga-dlp</Notes>
 </ComicInfo>

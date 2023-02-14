@@ -256,7 +256,7 @@ def test_chapter_metadata():
     assert (manga_name, chapter_name, chapter_volume, chapter_num, chapter_url) == (
         "Komi-san wa Komyushou Desu",
         "A Normal Person",
-        "1",
+        1,
         "1",
         "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8",
     )

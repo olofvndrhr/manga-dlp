@@ -8,10 +8,10 @@ def test_metadata_creation():
     metadata_path = Path("tests/")
     metadata_file = Path("tests/ComicInfo.xml")
     metadata = {
-        "Volume": "1",
+        "Volume": 1,
         "Number": "2",
-        "PageCount": "99",
-        "Count": "10",
+        "PageCount": 99,
+        "Count": 10,
         "LanguageISO": "en",
         "Title": "title1",
         "Series": "series1",

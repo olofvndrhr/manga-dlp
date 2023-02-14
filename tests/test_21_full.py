@@ -107,7 +107,7 @@ def test_full_with_input_folder(wait_20s):
     download_path = "tests"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     chapter_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1")
-    metadata_path = Path("tests/Shikimori's Not Just a Cutie/ComicInfo.xml")
+    metadata_path = Path("tests/Shikimori's Not Just a Cutie/Ch. 1/ComicInfo.xml")
     command_args = f"-u {url_uuid} -l {language} -c {chapters} --path {download_path} --format '{file_format}' --debug --wait 2"
     script_path = "manga-dlp.py"
     os.system(f"python3 {script_path} {command_args}")
