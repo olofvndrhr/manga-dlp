@@ -1,5 +1,4 @@
 # api template for manga-dlp
-from typing import Any
 
 
 class YourAPI:

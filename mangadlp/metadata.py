@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Tuple
 
 import xmltodict
 from loguru import logger as log
@@ -8,7 +8,7 @@ METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: dict[str, tuple[type, Any, list]] = {
+METADATA_TYPES: Dict[str, Tuple[type, Any, list]] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
@@ -59,7 +59,7 @@ METADATA_TYPES: dict[str, tuple[type, Any, list]] = {
 }
 
 
-def validate_metadata(metadata_in: dict) -> dict:
+def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
     log.info("Validating metadata")
 
     metadata_valid: dict[str, dict] = {"ComicInfo": {}}

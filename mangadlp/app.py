@@ -17,18 +17,23 @@ class MangaDLP:
     After initialization, start the script with the function get_manga().
 
     Args:
-        url_uuid (str): URL or UUID of the manga
-        language (str): Manga language with country codes. "en" --> english
-        chapters (str): Chapters to download, "all" for every chapter available
-        list_chapters (bool): List all available chapters and exit
-        file_format (str): Archive format to create. An empty string means don't archive the folder
-        forcevol (bool): Force naming of volumes. Useful for mangas where chapters reset each volume
-        download_path (str/Path): Download path. Defaults to '<script_dir>/downloads'
-        download_wait (float): Time to wait for each picture to download in seconds
-
+        url_uuid: URL or UUID of the manga
+        language: Manga language with country codes. "en" --> english
+        chapters: Chapters to download, "all" for every chapter available
+        list_chapters: List all available chapters and exit
+        file_format: Archive format to create. An empty string means don't archive the folder
+        forcevol: Force naming of volumes. Useful for mangas where chapters reset each volume
+        download_path: Download path. Defaults to '<script_dir>/downloads'
+        download_wait: Time to wait for each picture to download in seconds
+        manga_pre_hook_cmd: Command(s) to before after each manga
+        manga_post_hook_cmd: Command(s) to run after each manga
+        chapter_pre_hook_cmd: Command(s) to run before each chapter
+        chapter_post_hook_cmd: Command(s) to run after each chapter
+        cache_path: Path to the json cache. If emitted, no cache is used
+        add_metadata: Flag to toggle creation & inclusion of metadata
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-locals
         self,
         url_uuid: str,
         language: str = "en",
@@ -62,9 +67,9 @@ class MangaDLP:
         self.manga_post_hook_cmd = manga_post_hook_cmd
         self.chapter_pre_hook_cmd = chapter_pre_hook_cmd
         self.chapter_post_hook_cmd = chapter_post_hook_cmd
-        self.hook_infos: dict = {}
         self.cache_path = cache_path
         self.add_metadata = add_metadata
+        self.hook_infos: dict = {}
 
         # prepare everything
         self._prepare()

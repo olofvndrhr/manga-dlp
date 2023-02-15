@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Union
+from typing import Dict, List, Union
 
 from loguru import logger as log
 
@@ -33,7 +33,7 @@ class CacheDB:
 
         self.db_uuid_chapters: list = self.db_uuid_data.get("chapters") or []
 
-    def _prepare_db(self):
+    def _prepare_db(self) -> None:
         if self.db_path.exists():
             return
         # create empty cache
@@ -44,11 +44,11 @@ class CacheDB:
             log.error("Can't create db-file")
             raise exc
 
-    def _read_db(self) -> dict:
+    def _read_db(self) -> Dict[str, dict]:
         log.info(f"Reading cache-db: {self.db_path}")
         try:
             db_txt = self.db_path.read_text(encoding="utf8")
-            db_dict: dict = json.loads(db_txt)
+            db_dict: dict[str, dict] = json.loads(db_txt)
         except Exception as exc:
             log.error("Can't load cache-db")
             raise exc
@@ -73,7 +73,7 @@ class CacheDB:
             raise exc
 
 
-def sort_chapters(chapters: list) -> list:
+def sort_chapters(chapters: list) -> List[str]:
     try:
         sorted_list = sorted(chapters, key=float)
     except Exception:

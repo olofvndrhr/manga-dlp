@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List
 from zipfile import ZipFile
 
 from loguru import logger as log
@@ -41,7 +41,7 @@ def make_pdf(chapter_path: Path) -> None:
 
 
 # create a list of chapters
-def get_chapter_list(chapters: str, available_chapters: list) -> list:
+def get_chapter_list(chapters: str, available_chapters: list) -> List[str]:
     # check if there are available chapter
     chapter_list: list[str] = []
     for chapter in chapters.split(","):

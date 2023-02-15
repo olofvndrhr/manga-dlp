@@ -99,7 +99,7 @@ def readin_list(_ctx, _param, value) -> list:
 @click.option(
     "-p",
     "--path",
-    "path",
+    "download_path",
     type=click.Path(exists=False, writable=True, path_type=Path),
     default="downloads",
     required=False,
@@ -109,7 +109,7 @@ def readin_list(_ctx, _param, value) -> list:
 @click.option(
     "-l",
     "--language",
-    "lang",
+    "language",
     type=str,
     default="en",
     required=False,
@@ -127,7 +127,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.option(
     "--format",
-    "chapter_format",
+    "file_format",
     multiple=False,
     type=click.Choice(["cbz", "cbr", "zip", "pdf", ""], case_sensitive=False),
     default="cbz",
@@ -164,7 +164,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.option(
     "--wait",
-    "wait_time",
+    "download_wait",
     type=float,
     default=0.5,
     required=False,
@@ -174,7 +174,7 @@ def readin_list(_ctx, _param, value) -> list:
 # hook options
 @click.option(
     "--hook-manga-pre",
-    "hook_manga_pre",
+    "manga_pre_hook_cmd",
     type=str,
     default=None,
     required=False,
@@ -183,7 +183,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.option(
     "--hook-manga-post",
-    "hook_manga_post",
+    "manga_post_hook_cmd",
     type=str,
     default=None,
     required=False,
@@ -192,7 +192,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.option(
     "--hook-chapter-pre",
-    "hook_chapter_pre",
+    "chapter_pre_hook_cmd",
     type=str,
     default=None,
     required=False,
@@ -201,7 +201,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.option(
     "--hook-chapter-post",
-    "hook_chapter_post",
+    "chapter_post_hook_cmd",
     type=str,
     default=None,
     required=False,
@@ -227,31 +227,15 @@ def readin_list(_ctx, _param, value) -> list:
     help="Enable/disable creation of metadata via ComicInfo.xml",
 )
 @click.pass_context
-def main(
-    ctx: click.Context,
-    url_uuid: str,
-    read_mangas: list,
-    verbosity: int,
-    chapters: str,
-    path: Path,
-    lang: str,
-    list_chapters: bool,
-    chapter_format: str,
-    name_format: str,
-    name_format_none: str,
-    forcevol: bool,
-    wait_time: float,
-    hook_manga_pre: str,
-    hook_manga_post: str,
-    hook_chapter_pre: str,
-    hook_chapter_post: str,
-    cache_path: str,
-    add_metadata: bool,
-):  # pylint: disable=too-many-locals
+def main(ctx: click.Context, **kwargs) -> None:
     """
     Script to download mangas from various sites
 
     """
+
+    url_uuid: str = kwargs.pop("url_uuid")
+    read_mangas: list[str] = kwargs.pop("read_mangas")
+    verbosity: int = kwargs.pop("verbosity")
 
     # set log level to INFO if not set
     if not verbosity:
@@ -268,24 +252,7 @@ def main(
 
     for manga in requested_mangas:
         try:
-            mdlp = app.MangaDLP(
-                url_uuid=manga,
-                language=lang,
-                chapters=chapters,
-                list_chapters=list_chapters,
-                file_format=chapter_format,
-                name_format=name_format,
-                name_format_none=name_format_none,
-                forcevol=forcevol,
-                download_path=path,
-                download_wait=wait_time,
-                manga_pre_hook_cmd=hook_manga_pre,
-                manga_post_hook_cmd=hook_manga_post,
-                chapter_pre_hook_cmd=hook_chapter_pre,
-                chapter_post_hook_cmd=hook_chapter_post,
-                cache_path=cache_path,
-                add_metadata=add_metadata,
-            )
+            mdlp = app.MangaDLP(url_uuid=manga, **kwargs)
             mdlp.get_manga()
         except (KeyboardInterrupt, Exception) as exc:
             # if only a single manga is requested and had an error, then exit

@@ -18,6 +18,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added `xmltodict` as a package requirement
 - Cache now also saves the manga title
 - New tests
+- More typo annotations for function, compatible with python3.8
 
 ### Fixed
 
