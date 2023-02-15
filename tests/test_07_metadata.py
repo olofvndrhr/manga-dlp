@@ -1,4 +1,8 @@
+import shutil
+import subprocess
 from pathlib import Path
+
+import xmlschema
 
 from mangadlp.metadata import write_metadata
 
@@ -30,3 +34,38 @@ def test_metadata_creation():
 
     # cleanup
     metadata_file.unlink()
+
+
+def test_metadata_chapter_validity():
+    url_uuid = "https://mangadex.org/title/76ee7069-23b4-493c-bc44-34ccbf3051a8/tomo-chan-wa-onna-no-ko"
+    manga_path = Path("tests/Tomo-chan wa Onna no ko")
+    metadata_path = Path(
+        "tests/Tomo-chan wa Onna no ko/Ch. 1 - Once In A Life Time Misfire/ComicInfo.xml"
+    )
+    language = "en"
+    chapters = "1"
+    download_path = "tests"
+    command_args = [
+        "-u",
+        url_uuid,
+        "-l",
+        language,
+        "-c",
+        chapters,
+        "--path",
+        download_path,
+        "--format",
+        "",
+        "--debug",
+    ]
+    schema = xmlschema.XMLSchema("mangadlp/metadata/ComicInfo_v2.0.xsd")
+
+    script_path = "manga-dlp.py"
+    command = ["python3", script_path] + command_args
+
+    assert subprocess.call(command) == 0
+    assert metadata_path.is_file()
+    assert schema.is_valid(metadata_path)
+
+    # cleanup
+    shutil.rmtree(manga_path, ignore_errors=True)

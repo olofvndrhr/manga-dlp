@@ -6,15 +6,11 @@
     <Count>10</Count>
     <Volume>1</Volume>
     <Summary>summary1</Summary>
+    <Notes>Downloaded with https://github.com/olofvndrhr/manga-dlp</Notes>
     <Genre>genre1</Genre>
     <Web>https://mangadex.org</Web>
     <PageCount>99</PageCount>
     <LanguageISO>en</LanguageISO>
     <Format>cbz</Format>
-    <ScanInformation></ScanInformation>
-    <SeriesGroup></SeriesGroup>
-    <BlackAndWhite>Unknown</BlackAndWhite>
-    <AgeRating>Unknown</AgeRating>
     <Manga>Yes</Manga>
-    <Notes>Downloaded with https://github.com/olofvndrhr/manga-dlp</Notes>
 </ComicInfo>

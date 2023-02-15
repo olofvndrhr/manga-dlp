@@ -1,7 +1,103 @@
 from pathlib import Path
+from typing import Any
 
 import xmltodict
 from loguru import logger as log
+
+METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
+# define metadata types and valid values. an empty list means no value check
+METADATA_TYPES: dict[str, tuple[type, Any, list]] = {
+    "Title": (str, None, []),
+    "Series": (str, None, []),
+    "Number": (str, None, []),
+    "Count": (int, None, []),
+    "Volume": (int, None, []),
+    "AlternateSeries": (str, None, []),
+    "AlternateNumber": (str, None, []),
+    "AlternateCount": (int, None, []),
+    "Summary": (str, None, []),
+    "Notes": (str, "Downloaded with https://github.com/olofvndrhr/manga-dlp", []),
+    "Year": (int, None, []),
+    "Month": (int, None, []),
+    "Day": (int, None, []),
+    "Writer": (str, None, []),
+    "Colorist": (str, None, []),
+    "Publisher": (str, None, []),
+    "Genre": (str, None, []),
+    "Web": (str, None, []),
+    "PageCount": (int, None, []),
+    "LanguageISO": (str, None, []),
+    "Format": (str, None, []),
+    "BlackAndWhite": (str, None, ["Yes", "No", "Unknown"]),
+    "Manga": (str, "Yes", ["Yes", "No", "Unknown", "YesAndRightToLeft"]),
+    "ScanInformation": (str, None, []),
+    "SeriesGroup": (str, None, []),
+    "AgeRating": (
+        str,
+        None,
+        [
+            "Unknown",
+            "Adults Only 18+",
+            "Early Childhood",
+            "Everyone",
+            "Everyone 10+",
+            "G",
+            "Kids to Adults",
+            "M",
+            "MA15+",
+            "Mature 17+",
+            "PG",
+            "R18+",
+            "Rating Pending",
+            "Teen",
+            "X18+",
+        ],
+    ),
+    "CommunityRating": (int, None, [1, 2, 3, 4, 5]),
+}
+
+
+def validate_metadata(metadata_in: dict) -> dict:
+    log.info("Validating metadata")
+
+    metadata_valid: dict[str, dict] = {"ComicInfo": {}}
+    for key, value in METADATA_TYPES.items():
+        metadata_type, metadata_default, metadata_validation = value
+
+        # add default value if present
+        if metadata_default:
+            log.info(f"Setting default value for Key:{key} -> value={metadata_default}")
+            metadata_valid["ComicInfo"][key] = metadata_default
+
+        # check if metadata key is available
+        try:
+            md_to_check = metadata_in[key]
+        except KeyError:
+            continue
+        # check if provided metadata item is empty
+        if not md_to_check:
+            continue
+
+        # check if metadata type is correct
+        log.debug(f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}")
+        if not isinstance(md_to_check, metadata_type):  # noqa
+            log.warning(
+                f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}"
+            )
+            continue
+
+        # check if metadata is valid
+        log.debug(f"Key:{key} -> value={md_to_check} -> valid={metadata_validation}")
+        if (len(metadata_validation) > 0) and (md_to_check not in metadata_validation):
+            log.warning(
+                f"Metadata is invalid: {key}:{metadata_validation} -> {md_to_check}"
+            )
+            continue
+
+        log.debug(f"Updating metadata: '{key}' = '{md_to_check}'")
+        metadata_valid["ComicInfo"][key] = md_to_check
+
+    return metadata_valid
 
 
 def write_metadata(chapter_path: Path, metadata: dict) -> None:
@@ -9,55 +105,14 @@ def write_metadata(chapter_path: Path, metadata: dict) -> None:
         log.warning("Can't add metadata for pdf format. Skipping")
         return
 
-    # define metadata types
-    metadata_types: dict[str, type] = {
-        "Title": str,
-        "Series": str,
-        "Number": str,
-        "Count": int,
-        "Volume": int,
-        "Summary": str,
-        "Genre": str,
-        "Web": str,
-        "PageCount": int,
-        "LanguageISO": str,
-        "Format": str,
-        "ScanInformation": str,
-        "SeriesGroup": str,
-    }
-
-    try:
-        metadata_template = Path("mangadlp/metadata/ComicInfo.xml").read_text(
-            encoding="utf8"
-        )
-        metadata_empty: dict[str, dict] = xmltodict.parse(metadata_template)
-    except Exception as exc:
-        log.error("Can't open or parse xml template")
-        raise exc
     metadata_file = chapter_path / "ComicInfo.xml"
 
-    log.info(f"Writing metadata to: '{metadata_file}'")
     log.debug(f"Metadata items: {metadata}")
-    for key, value in metadata.items():
-        # check if metadata is empty
-        if not value:
-            continue
-        # try to match with template
-        try:
-            metadata_empty["ComicInfo"][key]
-        except KeyError:
-            continue
-        # check if metadata type is correct
-        log.debug(f"Key:{key} -> value={type(value)} -> check={metadata_types[key]}")
-        if not isinstance(value, metadata_types[key]):  # noqa
-            log.warning(
-                f"Metadata has wrong type: {key}:{metadata_types[key]} -> {value}"
-            )
-            continue
+    metadata_valid = validate_metadata(metadata)
 
-        log.debug(f"Updating metadata: '{key}' = '{value}'")
-        metadata_empty["ComicInfo"][key] = value
-
-    metadata_export = xmltodict.unparse(metadata_empty, pretty=True, indent=" " * 4)
+    log.info(f"Writing metadata to: '{metadata_file}'")
+    metadata_export = xmltodict.unparse(
+        metadata_valid, pretty=True, indent=" " * 4, short_empty_elements=True
+    )
     metadata_file.touch(exist_ok=True)
     metadata_file.write_text(metadata_export, encoding="utf8")
