@@ -14,8 +14,7 @@ from mangadlp.utils import get_file_format
 
 
 def match_api(url_uuid: str) -> type:
-    """
-    Match the correct api class from a string
+    """Match the correct api class from a string
 
     Args:
         url_uuid: url/uuid to check
