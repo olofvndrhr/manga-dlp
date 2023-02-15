@@ -107,7 +107,7 @@ verbosity: [mutually_exclusive]
 -p, --path PATH                 Download path  [default: downloads]
 -l, --language TEXT             Manga language  [default: en]
 --list                          List all available chapters
---format [cbz|cbr|zip|pdf|]     Archive format to create. An empty string means dont archive the folder  [default: cbz]
+--format [cbz|cbr|zip|pdf|]     Archive format to create. An empty string means don't archive the folder  [default: cbz]
 --name-format TEXT              Naming format to use when saving chapters. See docs for more infos  [default: {default}]
 --name-format-none TEXT         String to use when the variable of the custom name format is empty
 --forcevol                      Force naming of volumes. For mangas where chapters reset each volume

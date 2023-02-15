@@ -133,7 +133,7 @@ def readin_list(_ctx, _param, value) -> list:
     default="cbz",
     required=False,
     show_default=True,
-    help="Archive format to create. An empty string means dont archive the folder",
+    help="Archive format to create. An empty string means don't archive the folder",
 )
 @click.option(
     "--name-format",

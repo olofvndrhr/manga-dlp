@@ -89,8 +89,8 @@ def test_metadata_validation_values2():
     metadata = {
         "BlackAndWhite": "No",
         "Manga": "YesAndRightToLeft",
-        "AgeRating": "12+",
-        "CommunityRating": 10,
+        "AgeRating": "12+",  # invalid
+        "CommunityRating": 10,  # invalid
     }
 
     valid_metadata = validate_metadata(metadata)
