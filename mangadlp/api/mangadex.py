@@ -267,11 +267,15 @@ class Mangadex:
         log.info("Creating metadata from api")
 
         chapter_data = self.manga_chapter_data[chapter]
+        try:
+            volume = int(chapter_data.get("volume"))
+        except (ValueError, TypeError):
+            volume = None
         metadata = {
-            "Volume": int(chapter_data["volume"]),
-            "Number": chapter_data["chapter"],
-            "PageCount": chapter_data["pages"],
-            "Title": chapter_data["name"],
+            "Volume": volume,
+            "Number": chapter_data.get("chapter"),
+            "PageCount": chapter_data.get("pages"),
+            "Title": chapter_data.get("name"),
             "Series": self.manga_title,
             "Count": len(self.manga_chapter_data),
             "LanguageISO": self.language,

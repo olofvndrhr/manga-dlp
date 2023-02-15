@@ -68,7 +68,9 @@ def validate_metadata(metadata_in: dict) -> dict:
 
         # add default value if present
         if metadata_default:
-            log.info(f"Setting default value for Key:{key} -> value={metadata_default}")
+            log.debug(
+                f"Setting default value for Key:{key} -> value={metadata_default}"
+            )
             metadata_valid["ComicInfo"][key] = metadata_default
 
         # check if metadata key is available
