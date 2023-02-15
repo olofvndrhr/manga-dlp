@@ -4,8 +4,10 @@ from typing import Any
 import xmltodict
 from loguru import logger as log
 
+METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
-# define metadata types and valid values. an empty list means no value check
+# define metadata types, defaults and valid values. an empty list means no value check
+# {key: (type, default value, valid values)}
 METADATA_TYPES: dict[str, tuple[type, Any, list]] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
@@ -105,7 +107,7 @@ def write_metadata(chapter_path: Path, metadata: dict) -> None:
         log.warning("Can't add metadata for pdf format. Skipping")
         return
 
-    metadata_file = chapter_path / "ComicInfo.xml"
+    metadata_file = chapter_path / METADATA_FILENAME
 
     log.debug(f"Metadata items: {metadata}")
     metadata_valid = validate_metadata(metadata)

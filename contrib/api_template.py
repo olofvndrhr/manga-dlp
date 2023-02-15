@@ -1,4 +1,5 @@
 # api template for manga-dlp
+from typing import Any
 
 
 class YourAPI:
@@ -97,21 +98,60 @@ class YourAPI:
                 The metadata as a dict
             """
 
-            # metadata types. have to be correct to be valid
+            # metadata types. have to be valid
+            # {key: (type, default value, valid values)}
             {
-                "Title": str,
-                "Series": str,
-                "Number": str,
-                "Count": int,
-                "Volume": int,
-                "Summary": str,
-                "Genre": str,
-                "Web": str,
-                "PageCount": int,
-                "LanguageISO": str,
-                "Format": str,
-                "ScanInformation": str,
-                "SeriesGroup": str,
+                "Title": (str, None, []),
+                "Series": (str, None, []),
+                "Number": (str, None, []),
+                "Count": (int, None, []),
+                "Volume": (int, None, []),
+                "AlternateSeries": (str, None, []),
+                "AlternateNumber": (str, None, []),
+                "AlternateCount": (int, None, []),
+                "Summary": (str, None, []),
+                "Notes": (
+                    str,
+                    "Downloaded with https://github.com/olofvndrhr/manga-dlp",
+                    [],
+                ),
+                "Year": (int, None, []),
+                "Month": (int, None, []),
+                "Day": (int, None, []),
+                "Writer": (str, None, []),
+                "Colorist": (str, None, []),
+                "Publisher": (str, None, []),
+                "Genre": (str, None, []),
+                "Web": (str, None, []),
+                "PageCount": (int, None, []),
+                "LanguageISO": (str, None, []),
+                "Format": (str, None, []),
+                "BlackAndWhite": (str, None, ["Yes", "No", "Unknown"]),
+                "Manga": (str, "Yes", ["Yes", "No", "Unknown", "YesAndRightToLeft"]),
+                "ScanInformation": (str, None, []),
+                "SeriesGroup": (str, None, []),
+                "AgeRating": (
+                    str,
+                    None,
+                    [
+                        "Unknown",
+                        "Adults Only 18+",
+                        "Early Childhood",
+                        "Everyone",
+                        "Everyone 10+",
+                        "G",
+                        "Kids to Adults",
+                        "M",
+                        "MA15+",
+                        "Mature 17+",
+                        "PG",
+                        "R18+",
+                        "Rating Pending",
+                        "Teen",
+                        "X18+",
+                    ],
+                ),
+                "CommunityRating": (int, None, [1, 2, 3, 4, 5]),
             }
 
             # example

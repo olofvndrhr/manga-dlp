@@ -30,6 +30,7 @@ dependencies = [
     "loguru>=0.6.0",
     "click>=8.1.3",
     "click-option-group>=0.5.5",
+    "xmltodict>=0.13.0"
 ]
 
 [project.urls]
@@ -60,6 +61,8 @@ dependencies = [
     "loguru>=0.6.0",
     "click>=8.1.3",
     "click-option-group>=0.5.5",
+    "xmltodict>=0.13.0",
+    "xmlschema>=2.2.1",
     "img2pdf>=0.4.4",
     "hatch>=1.6.0",
     "hatchling>=1.11.0",

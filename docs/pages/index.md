@@ -115,6 +115,7 @@ verbosity: [mutually_exclusive]
 --hook-chapter-pre TEXT         Commands to execute before the chapter download starts
 --hook-chapter-post TEXT        Commands to execute after the chapter download finished
 --cache-path PATH               Where to store the cache-db. If no path is given, cache is disabled
+--add-metadata / --no-metadata  Enable/disable creation of metadata via ComicInfo.xml  [default: add-metadata]
 ```
 
 ## Contribution / Bugs

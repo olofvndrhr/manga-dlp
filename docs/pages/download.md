@@ -7,6 +7,10 @@
 └── <download path>/
     └── <manga title>/
         └── <chapter title>/
+            └── ComicInfo.xml (optional)
+            └── 001.png
+            └── 002.png
+            └── etc.
 ```
 
 **Example:**
@@ -167,3 +171,12 @@ chapters will be
 tracked there, and the script doesn't have to check on disk if you already downloaded it.
 
 If the option is unset (default), then no caching will be done.
+
+## Add metadata
+
+manga-dlp supports the creation of metadata files in the downloaded chapter.
+The metadata is based on the newer [ComicRack/Anansi](https://anansi-project.github.io/docs/introduction) standard.
+The default option is to add the metadata in the folder/archive with the name `ComicInfo.xml`.
+If you don't want metadata, you can pass the `--no-metadata` flag.
+
+> pdf format does not support metadata at the moment
