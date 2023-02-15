@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import mangadlp.app as app
-import mangadlp.utils as utils
+from mangadlp import app, utils
 
 
 def test_make_archive_true():

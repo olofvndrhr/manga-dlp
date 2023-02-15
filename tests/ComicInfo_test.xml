@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComicInfo>
+    <Title>title1</Title>
+    <Series>series1</Series>
+    <Number>2</Number>
+    <Count>10</Count>
+    <Volume>1</Volume>
+    <Summary>summary1</Summary>
+    <Notes>Downloaded with https://github.com/olofvndrhr/manga-dlp</Notes>
+    <Genre>genre1</Genre>
+    <Web>https://mangadex.org</Web>
+    <PageCount>99</PageCount>
+    <LanguageISO>en</LanguageISO>
+    <Format>cbz</Format>
+    <Manga>Yes</Manga>
+</ComicInfo>

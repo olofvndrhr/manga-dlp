@@ -9,6 +9,30 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.3.0] - 2023-02-15
+
+### Added
+
+- Metadata is now added to each chapter. Schema
+  standard: [https://anansi-project.github.io/docs/comicinfo/schemas/v2.0](https://anansi-project.github.io/docs/comicinfo/schemas/v2.0)
+- Added `xmltodict` as a package requirement
+- Cache now also saves the manga title
+- New tests
+- More typo annotations for function, compatible with python3.8
+- File format checker if you use the MangaDLP class directly
+
+### Fixed
+
+- API template typos
+- Some useless type annotations
+
+### Changed
+
+- Simplified the chapter info generation
+- Updated the license year
+- Updated the API template
+- Updated the API detection and removed it from the MangaDLP class
+
 ## [2.2.20] - 2023-02-12
 
 ### Fixed
