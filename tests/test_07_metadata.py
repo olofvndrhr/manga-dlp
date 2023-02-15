@@ -4,7 +4,7 @@ from pathlib import Path
 
 import xmlschema
 
-from mangadlp.metadata import write_metadata
+from mangadlp.metadata import validate_metadata, write_metadata
 
 
 def test_metadata_creation():
@@ -34,6 +34,72 @@ def test_metadata_creation():
 
     # cleanup
     metadata_file.unlink()
+
+
+def test_metadata_validation():
+    metadata = {
+        "Volume": "1",  # invalid
+        "Number": "2",
+        "PageCount": "99",  # invalid
+        "Count": "10",  # invalid
+        "LanguageISO": 1,  # invalid
+        "Title": "title1",
+        "Series": "series1",
+        "Summary": "summary1",
+        "Genre": "genre1",
+        "Web": "https://mangadex.org",
+        "Format": "cbz",
+    }
+
+    valid_metadata = validate_metadata(metadata)
+
+    assert valid_metadata["ComicInfo"] == {
+        "Title": "title1",
+        "Series": "series1",
+        "Number": "2",
+        "Summary": "summary1",
+        "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
+        "Genre": "genre1",
+        "Web": "https://mangadex.org",
+        "Format": "cbz",
+        "Manga": "Yes",
+    }
+
+
+def test_metadata_validation_values():
+    metadata = {
+        "BlackAndWhite": "No",
+        "Manga": "YesAndRightToLeft",
+        "AgeRating": "Rating Pending",
+        "CommunityRating": 4,
+    }
+
+    valid_metadata = validate_metadata(metadata)
+
+    assert valid_metadata["ComicInfo"] == {
+        "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
+        "BlackAndWhite": "No",
+        "Manga": "YesAndRightToLeft",
+        "AgeRating": "Rating Pending",
+        "CommunityRating": 4,
+    }
+
+
+def test_metadata_validation_values2():
+    metadata = {
+        "BlackAndWhite": "No",
+        "Manga": "YesAndRightToLeft",
+        "AgeRating": "12+",
+        "CommunityRating": 10,
+    }
+
+    valid_metadata = validate_metadata(metadata)
+
+    assert valid_metadata["ComicInfo"] == {
+        "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
+        "BlackAndWhite": "No",
+        "Manga": "YesAndRightToLeft",
+    }
 
 
 def test_metadata_chapter_validity():
