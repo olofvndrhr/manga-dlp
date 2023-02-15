@@ -1,12 +1,9 @@
 import os
-import platform
 import shutil
 import time
 from pathlib import Path
 
 import pytest
-
-from mangadlp import app
 
 
 @pytest.fixture

@@ -233,41 +233,6 @@ def test_full_with_read_skip_cbz(wait_10s):
     shutil.rmtree(manga_path, ignore_errors=True)
 
 
-def test_full_with_all_flags(wait_20s):
-    manga_path = Path("tests/Tomo-chan wa Onna no ko")
-    chapter_path = Path(
-        "tests/Tomo-chan wa Onna no ko/Ch. 1 - Once In A Life Time Misfire.cbz"
-    )
-    cache_path = Path("tests/cache.json")
-    flags = [
-        "-u https://mangadex.org/title/76ee7069-23b4-493c-bc44-34ccbf3051a8/tomo-chan-wa-onna-no-ko",
-        "--loglevel 10",
-        "-l en",
-        "-c 1",
-        "--path tests",
-        "--format cbz",
-        "--name-format 'Ch.{chapter_num} - {chapter_name}'",
-        "--name-format-none 0",
-        "--forcevol",
-        "--wait 2",
-        "--hook-manga-pre echo 0",
-        "--hook-manga-post 1",
-        "--hook-chapter-pre 2",
-        "--hook-chapter-post 3",
-        "--cache-path tests/cache.json",
-        "--add-metadata",
-    ]
-    script_path = "manga-dlp.py"
-    os.system(f"python3 {script_path} {' '.join(flags)}")
-
-    assert manga_path.exists() and manga_path.is_dir()
-    assert chapter_path.exists() and chapter_path.is_file()
-    assert cache_path.exists() and cache_path.is_file()
-    # cleanup
-    shutil.rmtree(manga_path, ignore_errors=True)
-    cache_path.unlink(missing_ok=True)
-
-
 # def test_full_without_input():
 #     script_path = "manga-dlp.py"
 #     assert os.system(f"python3 {script_path}") != 0
