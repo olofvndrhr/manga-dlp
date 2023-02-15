@@ -10,6 +10,46 @@ from mangadlp.api.mangadex import Mangadex
 from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
 from mangadlp.metadata import write_metadata
+from mangadlp.utils import get_file_format
+
+
+def match_api(url_uuid: str) -> type:
+    """
+    Match the correct api class from a string
+
+    Args:
+        url_uuid: url/uuid to check
+
+    Returns:
+        The class of the API to use
+    """
+
+    # apis to check
+    apis: list[tuple[str, re.Pattern, type]] = [
+        (
+            "mangadex.org",
+            re.compile(
+                r"(mangadex.org)|([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"
+            ),
+            Mangadex,
+        ),
+        (
+            "test.org",
+            re.compile(r"(test.test)"),
+            type,
+        ),
+    ]
+
+    # check url for match
+    for api_name, api_re, api_cls in apis:
+        if not api_re.search(url_uuid):
+            continue
+        log.info(f"API matched: {api_name}")
+        return api_cls
+
+    # no supported api found
+    log.error(f"No supported api in link/uuid found: {url_uuid}")
+    raise ValueError
 
 
 class MangaDLP:
@@ -75,13 +115,12 @@ class MangaDLP:
         self._prepare()
 
     def _prepare(self) -> None:
-        # set manga format suffix
-        if self.file_format and self.file_format[0] != ".":
-            self.file_format = f".{self.file_format}"
+        # check and set correct file suffix/format
+        self.file_format = get_file_format(self.file_format)
         # start prechecks
-        self.pre_checks()
+        self._pre_checks()
         # init api
-        self.api_used = self.check_api(self.url_uuid)
+        self.api_used = match_api(self.url_uuid)
         try:
             log.debug("Initializing api")
             self.api = self.api_used(self.url_uuid, self.language, self.forcevol)
@@ -94,9 +133,9 @@ class MangaDLP:
         # get chapter list
         self.manga_chapter_list = self.api.chapter_list
         self.manga_total_chapters = len(self.manga_chapter_list)
-        self.manga_path = Path(f"{self.download_path}/{self.manga_title}")
+        self.manga_path = self.download_path / self.manga_title
 
-    def pre_checks(self) -> None:
+    def _pre_checks(self) -> None:
         # prechecks userinput/options
         # no url and no readin list given
         if not self.url_uuid:
@@ -120,27 +159,6 @@ class MangaDLP:
             if not self.forcevol and ":" in self.chapters:
                 log.error("Don't specify the volume without --forcevol")
                 raise ValueError
-
-    # check the api which needs to be used
-    def check_api(self, url_uuid: str) -> type:
-        # apis to check
-        api_mangadex = re.compile(
-            r"(mangadex.org)|([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"
-        )
-        api_test = re.compile("test.test")
-
-        # check url for match
-        if api_mangadex.search(url_uuid):
-            log.debug("Matched api: mangadex.org")
-            return Mangadex
-        # this is only for testing multiple apis
-        if api_test.search(url_uuid):
-            log.critical("Not supported yet")
-            raise ValueError
-
-        # no supported api found
-        log.error(f"No supported api in link/uuid found: {url_uuid}")
-        raise ValueError
 
     # once called per manga
     def get_manga(self) -> None:
@@ -236,10 +254,12 @@ class MangaDLP:
                     metadata = self.api.create_metadata(chapter)
                     write_metadata(
                         chapter_path,
-                        {"Format": self.file_format.removeprefix("."), **metadata},
+                        {"Format": self.file_format[1:], **metadata},
                     )
-                except Exception:
-                    log.warning(f"Can't write metadata for chapter '{chapter}'")
+                except Exception as exc:
+                    log.warning(
+                        f"Can't write metadata for chapter '{chapter}'. Reason={exc}"
+                    )
 
             # pack downloaded folder
             if self.file_format:

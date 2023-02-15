@@ -19,6 +19,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Cache now also saves the manga title
 - New tests
 - More typo annotations for function, compatible with python3.8
+- File format checker if you use the MangaDLP class directly
 
 ### Fixed
 
@@ -30,6 +31,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified the chapter info generation
 - Updated the license year
 - Updated the API template
+- Updated the API detection and removed it from the MangaDLP class
 
 ## [2.2.20] - 2023-02-12
 

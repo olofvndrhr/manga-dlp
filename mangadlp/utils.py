@@ -145,6 +145,20 @@ def get_filename(
     return f"Ch. {chapter_num} - {chapter_name}"
 
 
+def get_file_format(file_format: str) -> str:
+    if not file_format:
+        return ""
+
+    if re.match(r"\.?[a-z0-9]+", file_format, flags=re.I):
+        if file_format[0] != ".":
+            file_format = f".{file_format}"
+    else:
+        log.error(f"Invalid file format: '{file_format}'")
+        raise ValueError
+
+    return file_format
+
+
 def progress_bar(progress: float, total: float) -> None:
     time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     percent = int(progress / (int(total) / 100))

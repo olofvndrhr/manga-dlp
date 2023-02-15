@@ -1,10 +1,18 @@
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
+import pytest
 import xmlschema
 
 from mangadlp.metadata import validate_metadata, write_metadata
+
+
+@pytest.fixture
+def wait_20s():
+    print("sleeping 20 seconds because of api timeouts")
+    time.sleep(20)
 
 
 def test_metadata_creation():
@@ -102,12 +110,10 @@ def test_metadata_validation_values2():
     }
 
 
-def test_metadata_chapter_validity():
+def test_metadata_chapter_validity(wait_20s):
     url_uuid = "https://mangadex.org/title/76ee7069-23b4-493c-bc44-34ccbf3051a8/tomo-chan-wa-onna-no-ko"
     manga_path = Path("tests/Tomo-chan wa Onna no ko")
-    metadata_path = Path(
-        "tests/Tomo-chan wa Onna no ko/Ch. 1 - Once In A Life Time Misfire/ComicInfo.xml"
-    )
+    metadata_path = manga_path / "Ch. 1 - Once In A Life Time Misfire/ComicInfo.xml"
     language = "en"
     chapters = "1"
     download_path = "tests"

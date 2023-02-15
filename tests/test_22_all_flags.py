@@ -18,7 +18,7 @@ def wait_20s():
     time.sleep(20)
 
 
-def test_full_with_all_flags(wait_10s):
+def test_full_with_all_flags(wait_20s):
     manga_path = Path("tests/Tomo-chan wa Onna no ko")
     chapter_path = manga_path / "Ch. 1 - Once In A Life Time Misfire.cbz"
     cache_path = Path("tests/test_cache.json")
