@@ -1,3 +1,5 @@
+from typing import List, Dict, Union
+
 # api template for manga-dlp
 
 
@@ -23,7 +25,7 @@ class YourAPI:
     api_base_url = "https://api.mangadex.org"
     img_base_url = "https://uploads.mangadex.org"
 
-    def __init__(self, url_uuid, language, forcevol):
+    def __init__(self, url_uuid: str, language: str, forcevol: bool):
         """get infos to initiate class."""
         self.api_name = "Your API Name"
 
@@ -35,7 +37,7 @@ class YourAPI:
         self.manga_uuid = "abc"
         self.manga_title = "abc"
         self.chapter_list = ["1", "2", "2.1", "5", "10"]
-        self.manga_chapter_data = {  # example data
+        self.manga_chapter_data: Dict[str, Dict[str, str | int]] = {  # example data
             "1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -50,7 +52,7 @@ class YourAPI:
             },
         }
         # or with --forcevol
-        self.manga_chapter_data = {
+        self.manga_chapter_data: Dict[str, Dict[str, str | int]] = {
             "1:1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -65,7 +67,7 @@ class YourAPI:
             },
         }
 
-        def get_chapter_images(chapter: str, download_wait: float) -> list:
+        def get_chapter_images(self, chapter: str, wait_time: float) -> List[str]:
             """Get chapter images as a list (full links).
 
             Args:
@@ -82,7 +84,7 @@ class YourAPI:
                 "https://abc.def/image/12345.png",
             ]
 
-        def create_metadata(chapter: str) -> dict:
+        def create_metadata(self, chapter: str) -> Dict[str, Union[str, int, None]]:
             """Get metadata with correct keys for ComicInfo.xml.
 
             Provide as much metadata as possible. empty/false values will be ignored.
@@ -95,7 +97,7 @@ class YourAPI:
             """
             # metadata types. have to be valid
             # {key: (type, default value, valid values)}
-            {
+            metadata_types = {
                 "Title": (str, None, []),
                 "Series": (str, None, []),
                 "Number": (str, None, []),
