@@ -38,6 +38,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
+      - just install_deps
       - just test_pyright
 
   # ruff test - python
