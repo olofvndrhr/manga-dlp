@@ -133,7 +133,7 @@ def test_metadata_chapter_validity(wait_20s):
     schema = xmlschema.XMLSchema("mangadlp/metadata/ComicInfo_v2.0.xsd")
 
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert metadata_path.is_file()

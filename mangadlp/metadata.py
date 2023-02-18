@@ -84,7 +84,7 @@ def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
 
         # check if metadata type is correct
         log.debug(f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}")
-        if not isinstance(md_to_check, metadata_type):  # noqa
+        if not isinstance(md_to_check, metadata_type):
             log.warning(
                 f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}"
             )

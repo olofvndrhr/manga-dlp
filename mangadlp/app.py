@@ -14,7 +14,7 @@ from mangadlp.utils import get_file_format
 
 
 def match_api(url_uuid: str) -> type:
-    """Match the correct api class from a string
+    """Match the correct api class from a string.
 
     Args:
         url_uuid: url/uuid to check
@@ -22,7 +22,6 @@ def match_api(url_uuid: str) -> type:
     Returns:
         The class of the API to use
     """
-
     # apis to check
     apis: list[tuple[str, re.Pattern, type]] = [
         (
@@ -53,6 +52,7 @@ def match_api(url_uuid: str) -> type:
 
 class MangaDLP:
     """Download Mangas from supported sites.
+
     After initialization, start the script with the function get_manga().
 
     Args:

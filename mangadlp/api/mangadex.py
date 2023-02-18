@@ -9,7 +9,8 @@ from mangadlp import utils
 
 class Mangadex:
     """Mangadex API Class.
-    Get infos for a manga from mangadex.org
+
+    Get infos for a manga from mangadex.org.
 
     Args:
         url_uuid (str): URL or UUID of the manga

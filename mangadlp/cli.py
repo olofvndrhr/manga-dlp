@@ -228,11 +228,7 @@ def readin_list(_ctx, _param, value) -> list:
 )
 @click.pass_context
 def main(ctx: click.Context, **kwargs) -> None:
-    """
-    Script to download mangas from various sites
-
-    """
-
+    """Script to download mangas from various sites."""
     url_uuid: str = kwargs.pop("url_uuid")
     read_mangas: list[str] = kwargs.pop("read_mangas")
     verbosity: int = kwargs.pop("verbosity")

@@ -5,7 +5,10 @@ from loguru import logger as log
 
 
 def run_hook(command: str, hook_type: str, **kwargs) -> int:
-    """
+    """Run a command.
+
+    Run a command with subprocess.run and add kwargs to the environment.
+
     Args:
         command (str): command to run
         hook_type (str): type of the hook
@@ -14,7 +17,6 @@ def run_hook(command: str, hook_type: str, **kwargs) -> int:
     Returns:
         exit_code (int): exit code of command
     """
-
     # check if hook commands are empty
     if not command or command == "None":
         log.debug(f"Hook '{hook_type}' empty. Not running")

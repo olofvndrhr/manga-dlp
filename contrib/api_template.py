@@ -3,7 +3,8 @@
 
 class YourAPI:
     """Your API Class.
-    Get infos for a manga from example.org
+
+    Get infos for a manga from example.org.
 
     Args:
         url_uuid (str): URL or UUID of the manga
@@ -23,9 +24,7 @@ class YourAPI:
     img_base_url = "https://uploads.mangadex.org"
 
     def __init__(self, url_uuid, language, forcevol):
-        """
-        get infos to initiate class
-        """
+        """get infos to initiate class."""
         self.api_name = "Your API Name"
 
         self.url_uuid = url_uuid
@@ -67,8 +66,7 @@ class YourAPI:
         }
 
         def get_chapter_images(chapter: str, download_wait: float) -> list:
-            """
-            Get chapter images as a list (full links)
+            """Get chapter images as a list (full links).
 
             Args:
                 chapter: The chapter number (chapter data index)
@@ -77,7 +75,6 @@ class YourAPI:
             Returns:
                 The list of urls of the page images
             """
-
             # example
             return [
                 "https://abc.def/image/123.png",
@@ -85,10 +82,10 @@ class YourAPI:
                 "https://abc.def/image/12345.png",
             ]
 
-        def create_metadata(self, chapter: str) -> dict:
-            """
-            Get metadata with correct keys for ComicInfo.xml
-            Provide as much metadata as possible. empty/false values will be ignored
+        def create_metadata(chapter: str) -> dict:
+            """Get metadata with correct keys for ComicInfo.xml.
+
+            Provide as much metadata as possible. empty/false values will be ignored.
 
             Args:
                 chapter: The chapter number (chapter data index)
@@ -96,7 +93,6 @@ class YourAPI:
             Returns:
                 The metadata as a dict
             """
-
             # metadata types. have to be valid
             # {key: (type, default value, valid values)}
             {

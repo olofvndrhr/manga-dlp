@@ -8,9 +8,7 @@ LOGURU_FMT = "{time:%Y-%m-%dT%H:%M:%S%z} | <level>[{level: <7}]</level> [{name: 
 
 # from loguru docs
 class InterceptHandler(logging.Handler):
-    """
-    Intercept python logging messages and log them via loguru.logger
-    """
+    """Intercept python logging messages and log them via loguru.logger."""
 
     def emit(self, record):
         # Get corresponding Loguru level if it exists
