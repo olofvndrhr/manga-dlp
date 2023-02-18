@@ -82,7 +82,10 @@ test_black:
     @python3 -m black --check --diff .
 
 test_mypy:
-    @python3 -m mypy --install-types --non-interactive --ignore-missing-imports .
+    @python3 -m mypy --install-types --non-interactive --ignore-missing-imports mangadlp/
+
+test_pyright:
+    @python3 -m pyright mangadlp/
 
 test_ruff:
     @python3 -m ruff --diff .
@@ -118,6 +121,7 @@ lint:
     just test_shfmt
     just test_black
     just test_mypy
+    just test_pyright
     just test_ruff
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
@@ -127,6 +131,7 @@ tests:
     just test_shfmt
     just test_black
     just test_mypy
+    just test_pyright
     just test_ruff
     just test_pytest
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
@@ -137,6 +142,7 @@ tests_full:
     just test_shfmt
     just test_black
     just test_mypy
+    just test_pyright
     just test_ruff
     just test_build
     just test_tox

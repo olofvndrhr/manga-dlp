@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Union
 
 import xmltodict
 from loguru import logger as log
@@ -8,7 +8,7 @@ METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: Dict[str, Tuple[type, Any, list]] = {
+METADATA_TYPES: Dict[str, Tuple[type, Any, list[Union[str, int]]]] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
@@ -59,10 +59,12 @@ METADATA_TYPES: Dict[str, Tuple[type, Any, list]] = {
 }
 
 
-def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
+def validate_metadata(
+    metadata_in: Dict[str, Union[str, int]]
+) -> Dict[str, Dict[str, Union[str, int]]]:
     log.info("Validating metadata")
 
-    metadata_valid: dict[str, dict] = {"ComicInfo": {}}
+    metadata_valid: dict[str, Dict[str, Union[str, int]]] = {"ComicInfo": {}}
     for key, value in METADATA_TYPES.items():
         metadata_type, metadata_default, metadata_validation = value
 
@@ -104,7 +106,7 @@ def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
     return metadata_valid
 
 
-def write_metadata(chapter_path: Path, metadata: dict) -> None:
+def write_metadata(chapter_path: Path, metadata: Dict[str, Union[str, int]]) -> None:
     if metadata["Format"] == "pdf":
         log.warning("Can't add metadata for pdf format. Skipping")
         return

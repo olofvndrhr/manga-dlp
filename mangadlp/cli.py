@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import Any, List
 
 import click
 from click_option_group import (
@@ -15,7 +16,7 @@ from mangadlp.logger import prepare_logger
 
 
 # read in the list of links from a file
-def readin_list(_ctx, _param, value) -> list:
+def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
     if not value:
         return []
 
@@ -38,8 +39,8 @@ def readin_list(_ctx, _param, value) -> list:
 @click.help_option()
 @click.version_option(version=__version__, package_name="manga-dlp")
 # manga selection
-@optgroup.group("source", cls=RequiredMutuallyExclusiveOptionGroup)
-@optgroup.option(
+@optgroup.group("source", cls=RequiredMutuallyExclusiveOptionGroup)  # type: ignore
+@optgroup.option(  # type: ignore
     "-u",
     "--url",
     "--uuid",
@@ -49,19 +50,19 @@ def readin_list(_ctx, _param, value) -> list:
     show_default=True,
     help="URL or UUID of the manga",
 )
-@optgroup.option(
+@optgroup.option(  # type: ignore
     "--read",
     "read_mangas",
     is_eager=True,
     callback=readin_list,
-    type=click.Path(exists=True, dir_okay=False),
+    type=click.Path(exists=True, dir_okay=False, path_type=str),
     default=None,
     show_default=True,
     help="Path of file with manga links to download. One per line",
 )
 # logging options
-@optgroup.group("verbosity", cls=MutuallyExclusiveOptionGroup)
-@optgroup.option(
+@optgroup.group("verbosity", cls=MutuallyExclusiveOptionGroup)  # type: ignore
+@optgroup.option(  # type: ignore
     "--loglevel",
     "verbosity",
     type=int,
@@ -69,7 +70,7 @@ def readin_list(_ctx, _param, value) -> list:
     show_default=True,
     help="Custom log level",
 )
-@optgroup.option(
+@optgroup.option(  # type: ignore
     "--warn",
     "verbosity",
     flag_value=30,
@@ -77,7 +78,7 @@ def readin_list(_ctx, _param, value) -> list:
     show_default=True,
     help="Only log warnings and higher",
 )
-@optgroup.option(
+@optgroup.option(  # type: ignore
     "--debug",
     "verbosity",
     flag_value=10,
@@ -227,7 +228,7 @@ def readin_list(_ctx, _param, value) -> list:
     help="Enable/disable creation of metadata via ComicInfo.xml",
 )
 @click.pass_context
-def main(ctx: click.Context, **kwargs) -> None:
+def main(ctx: click.Context, **kwargs: Any) -> None:
     """Script to download mangas from various sites."""
     url_uuid: str = kwargs.pop("url_uuid")
     read_mangas: list[str] = kwargs.pop("read_mangas")

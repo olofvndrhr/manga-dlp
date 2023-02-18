@@ -2,7 +2,7 @@ import logging
 import shutil
 from pathlib import Path
 from time import sleep
-from typing import Union
+from typing import List, Union
 
 import requests
 from loguru import logger as log
@@ -12,7 +12,7 @@ from mangadlp import utils
 
 # download images
 def download_chapter(
-    image_urls: list,
+    image_urls: List[str],
     chapter_path: Union[str, Path],
     download_wait: float,
 ) -> None:
@@ -48,8 +48,8 @@ def download_chapter(
         # write image
         try:
             with image_path.open("wb") as file:
-                r.raw.decode_content = True
-                shutil.copyfileobj(r.raw, file)
+                r.raw.decode_content = True  # pyright:ignore
+                shutil.copyfileobj(r.raw, file)  # pyright:ignore
         except Exception as exc:
             log.error("Can't write file")
             raise exc

@@ -24,7 +24,7 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
 
 def make_pdf(chapter_path: Path) -> None:
     try:
-        import img2pdf  # pylint: disable=import-outside-toplevel
+        import img2pdf  # pylint: disable=import-outside-toplevel # pyright:ignore
     except Exception as exc:
         log.error("Cant import img2pdf. Please install it first")
         raise exc
@@ -34,14 +34,14 @@ def make_pdf(chapter_path: Path) -> None:
     for file in chapter_path.iterdir():
         images.append(str(file))
     try:
-        pdf_path.write_bytes(img2pdf.convert(images))
+        pdf_path.write_bytes(img2pdf.convert(images))  # pyright:ignore
     except Exception as exc:
         log.error("Can't create '.pdf' archive")
         raise exc
 
 
 # create a list of chapters
-def get_chapter_list(chapters: str, available_chapters: list) -> List[str]:
+def get_chapter_list(chapters: str, available_chapters: List[str]) -> List[str]:
     # check if there are available chapter
     chapter_list: list[str] = []
     for chapter in chapters.split(","):

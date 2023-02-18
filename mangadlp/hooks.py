@@ -1,10 +1,11 @@
 import os
 import subprocess
+from typing import Any
 
 from loguru import logger as log
 
 
-def run_hook(command: str, hook_type: str, **kwargs) -> int:
+def run_hook(command: str, hook_type: str, **kwargs: Any) -> int:
     """Run a command.
 
     Run a command with subprocess.run and add kwargs to the environment.

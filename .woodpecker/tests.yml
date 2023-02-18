@@ -33,6 +33,13 @@ pipeline:
     commands:
       - just test_mypy
 
+  # check static typing - python
+  test-pyright:
+    image: cr.44net.ch/ci-plugins/tests
+    pull: true
+    commands:
+      - just test_pyright
+
   # ruff test - python
   test-ruff:
     image: cr.44net.ch/ci-plugins/tests

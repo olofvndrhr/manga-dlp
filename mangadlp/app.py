@@ -1,7 +1,7 @@
 import re
 import shutil
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Dict, List, Tuple, Union
 
 from loguru import logger as log
 
@@ -23,7 +23,7 @@ def match_api(url_uuid: str) -> type:
         The class of the API to use
     """
     # apis to check
-    apis: list[tuple[str, re.Pattern, type]] = [
+    apis: List[Tuple[str, re.Pattern[str], type]] = [
         (
             "mangadex.org",
             re.compile(
@@ -108,7 +108,7 @@ class MangaDLP:
         self.chapter_post_hook_cmd = chapter_post_hook_cmd
         self.cache_path = cache_path
         self.add_metadata = add_metadata
-        self.hook_infos: dict = {}
+        self.hook_infos: Dict[str, Any] = {}
 
         # prepare everything
         self._prepare()
@@ -226,7 +226,7 @@ class MangaDLP:
         skipped_chapters: list[Any] = []
         error_chapters: list[Any] = []
         for chapter in chapters_to_download:
-            if self.cache_path and chapter in cached_chapters:
+            if self.cache_path and chapter in cached_chapters:  # pyright:ignore
                 log.info(f"Chapter '{chapter}' is in cache. Skipping download")
                 continue
 
@@ -240,7 +240,7 @@ class MangaDLP:
                 skipped_chapters.append(chapter)
                 # update cache
                 if self.cache_path:
-                    cache.add_chapter(chapter)
+                    cache.add_chapter(chapter)  # pyright:ignore
                 continue
             except Exception:
                 # skip download/packing due to an error
@@ -273,7 +273,7 @@ class MangaDLP:
 
             # update cache
             if self.cache_path:
-                cache.add_chapter(chapter)
+                cache.add_chapter(chapter)  # pyright:ignore
 
             # start chapter post hook
             run_hook(
@@ -310,7 +310,7 @@ class MangaDLP:
     # once called per chapter
     def get_chapter(self, chapter: str) -> Path:
         # get chapter infos
-        chapter_infos: dict = self.api.manga_chapter_data[chapter]
+        chapter_infos: Dict[str, Union[str, int]] = self.api.manga_chapter_data[chapter]
         log.debug(f"Chapter infos: {chapter_infos}")
 
         # get image urls for chapter
@@ -342,8 +342,8 @@ class MangaDLP:
         # get filename for chapter (without suffix)
         chapter_filename = utils.get_filename(
             self.manga_title,
-            chapter_infos["name"],
-            chapter_infos["volume"],
+            chapter_infos["name"],  # type:ignore
+            chapter_infos["volume"],  # type:ignore
             chapter,
             self.forcevol,
             self.name_format,
@@ -352,7 +352,7 @@ class MangaDLP:
         log.debug(f"Filename: '{chapter_filename}'")
 
         # set download path for chapter (image folder)
-        chapter_path = self.manga_path / chapter_filename
+        chapter_path: Path = self.manga_path / chapter_filename
         # set archive path with file format
         chapter_archive_path = Path(f"{chapter_path}{self.file_format}")
 
