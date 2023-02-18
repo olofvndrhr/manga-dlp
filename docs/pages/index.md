@@ -17,13 +17,13 @@ Code Analysis
 Meta
 
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
-[![Linter](https://img.shields.io/badge/linter-pylint-yellowgreen)](https://pylint.pycqa.org/en/latest/)
+[![Linter](https://img.shields.io/badge/linter-ruff-red)](https://github.com/charliermarsh/ruff)
 [![Types](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
-[![Imports](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://github.com/pycqa/isort)
 [![Tests](https://img.shields.io/badge/tests-pytest%20%7C%20tox-yellow)](https://github.com/pytest-dev/pytest/)
 [![Coverage](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
 [![License](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
 [![Compatibility](https://img.shields.io/pypi/pyversions/manga-dlp)](https://pypi.org/project/manga-dlp/)
+
 ---
 
 ## Description
@@ -40,7 +40,7 @@ you just want the folder with all the pictures use the flag `--nocbz`.
 
 ## _Currently_ Supported sites
 
-- [Mangadex.org](https://mangadex.org/)
+-   [Mangadex.org](https://mangadex.org/)
 
 ## Usage
 
@@ -134,10 +134,10 @@ If you encounter any bugs, also just open an issue with a description of the pro
 
 ## TODO's
 
-- <del>Make docker container for easy distribution</del>
-  --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
-- <del>Automate release</del>
-  --> Done with woodpecker-ci
-- <del>Make pypi package</del>
-  --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
-- Add more supported sites
+-   <del>Make docker container for easy distribution</del>
+    --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
+-   <del>Automate release</del>
+    --> Done with woodpecker-ci
+-   <del>Make pypi package</del>
+    --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
+-   Add more supported sites
