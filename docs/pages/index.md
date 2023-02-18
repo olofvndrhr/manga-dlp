@@ -18,7 +18,7 @@ Meta
 
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![Linter](https://img.shields.io/badge/linter-ruff-red)](https://github.com/charliermarsh/ruff)
-[![Types](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
+[![Types](https://img.shields.io/badge/types-pyright-blue)](https://github.com/microsoft/pyright)
 [![Tests](https://img.shields.io/badge/tests-pytest%20%7C%20tox-yellow)](https://github.com/pytest-dev/pytest/)
 [![Coverage](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
 [![License](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
@@ -41,6 +41,18 @@ you just want the folder with all the pictures use the flag `--nocbz`.
 ## _Currently_ Supported sites
 
 -   [Mangadex.org](https://mangadex.org/)
+
+## Features (not complete)
+
+-   Metadata support with ComicInfo.xml
+-   Json caching
+-   Custom hooks after/before each download
+-   Custom chapter name format
+-   Volume support
+-   Multiple archive formats supported (cbz,cbr,zip,none)
+-   Language selection
+-   Download all chapters directly
+-   And others...
 
 ## Usage
 
