@@ -56,7 +56,7 @@ def test_alt_title_fallback():
     forcevol = False
     test = Mangadex(url_uuid, language, forcevol)
 
-    assert test.manga_title == "Iruma à l`école des démons"
+    assert test.manga_title == "Iruma à l’école des démons"  # noqa
 
 
 def test_chapter_infos():
