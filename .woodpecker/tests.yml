@@ -34,7 +34,7 @@ pipeline:
       - just test_mypy
 
   # ruff test - python
-  test-pylint:
+  test-ruff:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
