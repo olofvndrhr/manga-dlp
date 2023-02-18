@@ -26,7 +26,7 @@ pipeline:
       branch: master
       event: pull_request
     commands:
-      - python3 -m hatch build --clean
+      - just test_build
 
   # create release-notes
   test-create-release-notes:

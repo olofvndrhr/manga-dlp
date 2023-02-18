@@ -17,51 +17,28 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - shfmt -d -i 4 -bn -ci -sr .
+      - just test_shfmt
 
   # check code style - python
   test-black:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - python3 -m black --check --diff .
-
-  # check imports - python
-  test-isort:
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
-    commands:
-      - python3 -m isort --check-only --diff .
-
-  # check unused and missing imports - python
-  test-autoflake:
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
-    commands:
-      - python3 -m autoflake --remove-all-unused-imports -r -v mangadlp/
-      - python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
+      - just test_black
 
   # check static typing - python
   test-mypy:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - python3 -m mypy --install-types --non-interactive mangadlp/
+      - just test_mypy
 
-  # mccabe, pycodestyle, pyflakes tests - python
-  test-pylama:
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
-    commands:
-      - python3 -m pylama mangadlp/
-
-  # pylint test - python
+  # ruff test - python
   test-pylint:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - python3 -m pip install -r requirements.txt
-      - python3 -m pylint --fail-under 9 mangadlp/
+      - just test_ruff
 
   # test mkdocs generation
   test-mkdocs:
@@ -72,14 +49,14 @@ pipeline:
       - cd docs || exit 1
       - python3 -m mkdocs build --strict
 
-  # test code with different python versions - python
+  # test code with pytest - python
   test-tox-pytest:
     when:
       event: [ push ]
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - python3 -m tox -e basic
+      - just test_pytest
 
   # generate coverage report - python
   test-tox-coverage:
@@ -89,7 +66,7 @@ pipeline:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
     commands:
-      - python3 -m tox -e coverage
+      - just test_coverage
 
   # analyse code with sonarqube and upload it
   sonarqube-analysis:
