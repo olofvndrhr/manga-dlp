@@ -27,13 +27,6 @@ pipeline:
       - just test_black
 
   # check static typing - python
-  test-mypy:
-    image: cr.44net.ch/ci-plugins/tests
-    pull: true
-    commands:
-      - just test_mypy
-
-  # check static typing - python
   test-pyright:
     image: cr.44net.ch/ci-plugins/tests
     pull: true
