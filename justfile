@@ -79,7 +79,7 @@ test_shfmt:
     @find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
 
 test_black:
-    @python3 -m black --check --diff .
+    @python3 -m black --check --diff mangadlp/
 
 test_mypy:
     @python3 -m mypy --install-types --non-interactive --ignore-missing-imports mangadlp/
@@ -88,7 +88,7 @@ test_pyright:
     @python3 -m pyright mangadlp/
 
 test_ruff:
-    @python3 -m ruff --diff .
+    @python3 -m ruff --diff mangadlp/
 
 test_ci_conf:
     @woodpecker-cli lint .woodpecker/

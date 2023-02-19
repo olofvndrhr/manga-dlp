@@ -37,7 +37,9 @@ class YourAPI:
         self.manga_uuid = "abc"
         self.manga_title = "abc"
         self.chapter_list = ["1", "2", "2.1", "5", "10"]
-        self.manga_chapter_data: Dict[str, Dict[str, str | int]] = {  # example data
+        self.manga_chapter_data: Dict[
+            str, Dict[str, Union[str, int]]
+        ] = {  # example data
             "1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -52,7 +54,7 @@ class YourAPI:
             },
         }
         # or with --forcevol
-        self.manga_chapter_data: Dict[str, Dict[str, str | int]] = {
+        self.manga_chapter_data: Dict[str, Dict[str, Union[str, int]]] = {
             "1:1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -97,7 +99,7 @@ class YourAPI:
             """
             # metadata types. have to be valid
             # {key: (type, default value, valid values)}
-            metadata_types = {
+            {
                 "Title": (str, None, []),
                 "Series": (str, None, []),
                 "Number": (str, None, []),
