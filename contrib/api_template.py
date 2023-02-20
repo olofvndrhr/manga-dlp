@@ -1,6 +1,6 @@
 from typing import Dict, List, Union
 
-from mangadlp.metadata import ChapterData
+from mangadlp.types import ChapterData,ComicInfo
 
 # api template for manga-dlp
 
@@ -56,7 +56,7 @@ class YourAPI:
             },
         }
         # or with --forcevol
-        self.manga_chapter_data: Dict[str, Dict[str, Union[str, int]]] = {
+        self.manga_chapter_data: Dict[str, ChapterData] = {
             "1:1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -157,7 +157,7 @@ class YourAPI:
 
             # example
             return {
-                "Volume": "abc",
+                "Volume": 1,
                 "LanguageISO": "en",
                 "Title": "test",
             }

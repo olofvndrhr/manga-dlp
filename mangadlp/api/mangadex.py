@@ -6,7 +6,7 @@ import requests
 from loguru import logger as log
 
 from mangadlp import utils
-from mangadlp.metadata import ChapterData, ComicInfo
+from mangadlp.types import ChapterData, ComicInfo
 
 
 class Mangadex:

@@ -9,7 +9,8 @@ from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
 from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
-from mangadlp.metadata import ChapterData, write_metadata
+from mangadlp.metadata import write_metadata
+from mangadlp.types import ChapterData
 from mangadlp.utils import get_file_format
 
 
