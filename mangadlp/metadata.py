@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, TypedDict, Union
 
 import xmltodict
 from loguru import logger as log
@@ -59,12 +59,59 @@ METADATA_TYPES: Dict[str, Tuple[type, Any, list[Union[str, int]]]] = {
 }
 
 
-def validate_metadata(
-    metadata_in: Dict[str, Union[str, int]]
-) -> Dict[str, Dict[str, Union[str, int]]]:
+class ComicInfo(TypedDict, total=False):
+    """ComicInfo.xml basic types.
+
+    Validation is done via metadata.validate_metadata()
+    All valid types and values are specified in metadata.METADATA_TYPES
+    """
+
+    Title: Optional[str]
+    Series: Optional[str]
+    Number: Optional[str]
+    Count: Optional[int]
+    Volume: Optional[int]
+    AlternateSeries: Optional[str]
+    AlternateNumber: Optional[str]
+    AlternateCount: Optional[int]
+    Summary: Optional[str]
+    Notes: Optional[str]
+    Year: Optional[int]
+    Month: Optional[int]
+    Day: Optional[int]
+    Writer: Optional[str]
+    Colorist: Optional[str]
+    Publisher: Optional[str]
+    Genre: Optional[str]
+    Web: Optional[str]
+    PageCount: Optional[int]
+    LanguageISO: Optional[str]
+    Format: Optional[str]
+    BlackAndWhite: Optional[str]
+    Manga: Optional[str]
+    ScanInformation: Optional[str]
+    SeriesGroup: Optional[str]
+    AgeRating: Optional[str]
+    CommunityRating: Optional[int]
+
+
+class ChapterData(TypedDict):
+    """Basic chapter-data types.
+
+    All values have to be provided.
+    """
+
+    uuid: str
+    volume: str
+    chapter: str
+    name: str
+    pages: int
+
+
+def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
     log.info("Validating metadata")
 
-    metadata_valid: dict[str, Dict[str, Union[str, int]]] = {"ComicInfo": {}}
+    metadata_valid: dict[str, ComicInfo] = {"ComicInfo": {}}
     for key, value in METADATA_TYPES.items():
         metadata_type, metadata_default, metadata_validation = value
 
@@ -77,7 +124,7 @@ def validate_metadata(
 
         # check if metadata key is available
         try:
-            md_to_check = metadata_in[key]
+            md_to_check: Union[str, int, None] = metadata_in[key]
         except KeyError:
             continue
         # check if provided metadata item is empty
@@ -106,8 +153,8 @@ def validate_metadata(
     return metadata_valid
 
 
-def write_metadata(chapter_path: Path, metadata: Dict[str, Union[str, int]]) -> None:
-    if metadata["Format"] == "pdf":
+def write_metadata(chapter_path: Path, metadata: ComicInfo) -> None:
+    if metadata["Format"] == "pdf":  # pyright:ignore
         log.warning("Can't add metadata for pdf format. Skipping")
         return
 

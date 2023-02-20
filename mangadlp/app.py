@@ -9,7 +9,7 @@ from mangadlp import downloader, utils
 from mangadlp.api.mangadex import Mangadex
 from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
-from mangadlp.metadata import write_metadata
+from mangadlp.metadata import ChapterData, write_metadata
 from mangadlp.utils import get_file_format
 
 
@@ -310,7 +310,7 @@ class MangaDLP:
     # once called per chapter
     def get_chapter(self, chapter: str) -> Path:
         # get chapter infos
-        chapter_infos: Dict[str, Union[str, int]] = self.api.manga_chapter_data[chapter]
+        chapter_infos: ChapterData = self.api.manga_chapter_data[chapter]
         log.debug(f"Chapter infos: {chapter_infos}")
 
         # get image urls for chapter
@@ -342,8 +342,8 @@ class MangaDLP:
         # get filename for chapter (without suffix)
         chapter_filename = utils.get_filename(
             self.manga_title,
-            chapter_infos["name"],  # type:ignore
-            chapter_infos["volume"],  # type:ignore
+            chapter_infos["name"],
+            chapter_infos["volume"],
             chapter,
             self.forcevol,
             self.name_format,

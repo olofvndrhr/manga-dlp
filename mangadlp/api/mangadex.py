@@ -1,11 +1,12 @@
 import re
 from time import sleep
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 import requests
 from loguru import logger as log
 
 from mangadlp import utils
+from mangadlp.metadata import ChapterData, ComicInfo
 
 
 class Mangadex:
@@ -150,13 +151,13 @@ class Mangadex:
         return total_chapters
 
     # get chapter data like name, uuid etc
-    def get_chapter_data(self) -> Dict[str, Dict[str, Union[str, int]]]:
+    def get_chapter_data(self) -> Dict[str, ChapterData]:
         log.debug(f"Getting chapter data for: {self.manga_uuid}")
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
 
-        chapter_data = {}
+        chapter_data: dict[str, ChapterData] = {}
         last_volume, last_chapter = ("", "")
         offset = 0
         while offset < total_chapters:  # if more than 500 chapters
@@ -205,7 +206,7 @@ class Mangadex:
             # increase offset for mangas with more than 500 chapters
             offset += 500
 
-        return chapter_data  # type:ignore
+        return chapter_data
 
     # get images for the chapter (mangadex@home)
     def get_chapter_images(self, chapter: str, wait_time: float) -> List[str]:
@@ -259,8 +260,8 @@ class Mangadex:
         log.debug(f"Creating chapter list for: {self.manga_uuid}")
         chapter_list: List[str] = []
         for data in self.manga_chapter_data.values():
-            chapter_number: str = data["chapter"]  # type:ignore
-            volume_number: str = data["volume"]  # type:ignore
+            chapter_number: str = data["chapter"]
+            volume_number: str = data["volume"]
             if self.forcevol:
                 chapter_list.append(f"{volume_number}:{chapter_number}")
             else:
@@ -268,7 +269,7 @@ class Mangadex:
 
         return chapter_list
 
-    def create_metadata(self, chapter: str) -> Dict[str, Union[str, int, None]]:
+    def create_metadata(self, chapter: str) -> ComicInfo:
         log.info("Creating metadata from api")
 
         chapter_data = self.manga_chapter_data[chapter]
@@ -276,7 +277,7 @@ class Mangadex:
             volume = int(chapter_data["volume"])
         except (ValueError, TypeError):
             volume = None
-        metadata = {
+        metadata: ComicInfo = {
             "Volume": volume,
             "Number": chapter_data.get("chapter"),
             "PageCount": chapter_data.get("pages"),
@@ -289,4 +290,4 @@ class Mangadex:
             "Web": f"https://mangadex.org/title/{self.manga_uuid}",
         }
 
-        return metadata  # pyright:ignore
+        return metadata

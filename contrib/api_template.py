@@ -1,4 +1,6 @@
-from typing import List, Dict, Union
+from typing import Dict, List, Union
+
+from mangadlp.metadata import ChapterData
 
 # api template for manga-dlp
 
@@ -37,20 +39,20 @@ class YourAPI:
         self.manga_uuid = "abc"
         self.manga_title = "abc"
         self.chapter_list = ["1", "2", "2.1", "5", "10"]
-        self.manga_chapter_data: Dict[
-            str, Dict[str, Union[str, int]]
-        ] = {  # example data
+        self.manga_chapter_data: Dict[str, ChapterData] = {  # example data
             "1": {
                 "uuid": "abc",
                 "volume": "1",
                 "chapter": "1",
                 "name": "test",
+                "pages" 2,
             },
             "2": {
                 "uuid": "abc",
                 "volume": "1",
                 "chapter": "2",
                 "name": "test",
+                "pages": 45,
             },
         }
         # or with --forcevol
@@ -86,7 +88,7 @@ class YourAPI:
                 "https://abc.def/image/12345.png",
             ]
 
-        def create_metadata(self, chapter: str) -> Dict[str, Union[str, int, None]]:
+        def create_metadata(self, chapter: str) -> ComicInfo:
             """Get metadata with correct keys for ComicInfo.xml.
 
             Provide as much metadata as possible. empty/false values will be ignored.
