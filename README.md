@@ -46,7 +46,7 @@ you just want the folder with all the pictures use the flag `--format ""`.
 
 ## Features (not complete)
 
--   Metadata support with ComicInfo.xml
+-   Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
 -   Json caching
 -   Custom hooks after/before each download
 -   Custom chapter name format
@@ -136,7 +136,7 @@ verbosity: [mutually_exclusive]
 
 For suggestions for improvement, just open a pull request.
 
-If you want to add support for a new site, there is an api [template file](./contrib/api_template.py) which you can use.
+If you want to add support for a new site, there is an api [template file](contrib/api_template.py) which you can use.
 And more infos and tools are in the contrib [README.md](contrib/README.md)
 
 Otherwise, you can open an issue with the name of the site which you want support for (not guaranteed to be
