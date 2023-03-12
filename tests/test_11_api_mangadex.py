@@ -56,7 +56,7 @@ def test_alt_title_fallback():
     forcevol = False
     test = Mangadex(url_uuid, language, forcevol)
 
-    assert test.manga_title == "Iruma à l’école des démons"
+    assert test.manga_title == "Iruma à l’école des démons"  # noqa
 
 
 def test_chapter_infos():
@@ -206,7 +206,6 @@ def test_get_chapter_images():
     test = Mangadex(url_uuid, language, forcevol)
     img_base_url = "https://uploads.mangadex.org"
     chapter_hash = "0752bc5db298beff6b932b9151dd8437"
-    chapter_uuid = "e86ec2c4-c5e4-4710-bfaa-7604f00939c7"
     chapter_num = "1"
     test_list = [
         f"{img_base_url}/data/{chapter_hash}/x1-0deb4c9bfedd5be49e0a90cfb17cf343888239898c9e7451d569c0b3ea2971f4.jpg",

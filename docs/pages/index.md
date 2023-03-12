@@ -17,30 +17,42 @@ Code Analysis
 Meta
 
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
-[![Linter](https://img.shields.io/badge/linter-pylint-yellowgreen)](https://pylint.pycqa.org/en/latest/)
-[![Types](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
-[![Imports](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://github.com/pycqa/isort)
+[![Linter](https://img.shields.io/badge/linter-ruff-red)](https://github.com/charliermarsh/ruff)
+[![Types](https://img.shields.io/badge/types-pyright-blue)](https://github.com/microsoft/pyright)
 [![Tests](https://img.shields.io/badge/tests-pytest%20%7C%20tox-yellow)](https://github.com/pytest-dev/pytest/)
 [![Coverage](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
 [![License](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
 [![Compatibility](https://img.shields.io/pypi/pyversions/manga-dlp)](https://pypi.org/project/manga-dlp/)
+
 ---
 
 ## Description
 
 A manga download script written in python. It only supports [mangadex.org](https://mangadex.org/) for now. But support
-for other sites is planned.
+for other sites is _planned™_.
 
 Before downloading a new chapter, the script always checks if there is already a chapter with the same name in the
 download directory. If found the chapter is skipped. So you can run the script on a schedule to only download new
 chapters without any additional setup.
 
 The default behaiviour is to pack the images to a [cbz archive](https://en.wikipedia.org/wiki/Comic_book_archive). If
-you just want the folder with all the pictures use the flag `--nocbz`.
+you just want the folder with all the pictures use the flag `--format ""`.
 
 ## _Currently_ Supported sites
 
-- [Mangadex.org](https://mangadex.org/)
+-   [Mangadex.org](https://mangadex.org/)
+
+## Features (not complete)
+
+-   Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
+-   Json caching
+-   Custom hooks after/before each download
+-   Custom chapter name format
+-   Volume support
+-   Multiple archive formats supported (cbz,cbr,zip,none)
+-   Language selection
+-   Download all chapters directly
+-   And others...
 
 ## Usage
 
@@ -82,7 +94,7 @@ mangadlp <args> # call script directly
 
 ### With docker
 
-See the docker [README](docker/)
+See the docker [README](https://manga-dlp.ivn.sh/docker/)
 
 ## Options
 
@@ -122,22 +134,20 @@ verbosity: [mutually_exclusive]
 
 For suggestions for improvement, just open a pull request.
 
-If you want to add support for a new site, there is an
-api [template file](https://github.com/olofvndrhr/manga-dlp/blob/master/contrib/api_template.py) which you can use.
-And more infos and tools in the
-contrib [README.md](https://github.com/olofvndrhr/manga-dlp/blob/master/contrib/README.md)
+If you want to add support for a new site, there is an api [template file](https://github.com/olofvndrhr/manga-dlp/tree/master/contrib/api_template.py) which you can use.
+And more infos and tools are in the contrib [README.md](https://github.com/olofvndrhr/manga-dlp/tree/master/contrib/README.md)
 
-Otherwise, you can open am issue with the name of the site which you want support for. (not guaranteed to be
-implemented)
+Otherwise, you can open an issue with the name of the site which you want support for (not guaranteed to be
+implemented).
 
 If you encounter any bugs, also just open an issue with a description of the problem.
 
 ## TODO's
 
-- <del>Make docker container for easy distribution</del>
-  --> [Dockerhub](https://hub.docker.com/repository/docker/olofvndrhr/manga-dlp)
-- <del>Automate release</del>
-  --> Done with woodpecker-ci
-- <del>Make pypi package</del>
-  --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
-- Add more supported sites
+-   <del>Make docker container for easy distribution</del>
+    --> [Dockerhub](https://hub.docker.com/r/olofvndrhr/manga-dlp)
+-   <del>Automate release</del>
+    --> Done with woodpecker-ci
+-   <del>Make pypi package</del>
+    --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
+-   Add more supported sites

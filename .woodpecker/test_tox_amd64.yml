@@ -26,4 +26,4 @@ pipeline:
       branch: master
       event: pull_request
     commands:
-      - python3 -m tox
+      - just test_tox

@@ -40,7 +40,7 @@ def test_manga_pre_hook(wait_10s):
         manga_pre_hook,
     ]
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert hook_file.is_file()
@@ -72,7 +72,7 @@ def test_manga_post_hook(wait_10s):
         manga_post_hook,
     ]
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert hook_file.is_file()
@@ -104,7 +104,7 @@ def test_chapter_pre_hook(wait_10s):
         chapter_pre_hook,
     ]
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert hook_file.is_file()
@@ -136,7 +136,7 @@ def test_chapter_post_hook(wait_10s):
         chapter_post_hook,
     ]
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert hook_file.is_file()
@@ -176,7 +176,7 @@ def test_all_hooks(wait_10s):
         chapter_post_hook,
     ]
     script_path = "manga-dlp.py"
-    command = ["python3", script_path] + command_args
+    command = ["python3", script_path, *command_args]
 
     assert subprocess.call(command) == 0
     assert Path("tests/manga-pre2.txt").is_file()

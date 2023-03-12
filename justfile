@@ -69,44 +69,38 @@ create_venv:
 
 install_deps:
     @echo "installing dependencies"
+    @pip3 install -r requirements.txt
+
+install_deps_dev:
+    @echo "installing dependencies"
     @pip3 install -r contrib/requirements_dev.txt
 
 test_shfmt:
-    @find . -type f \( -name "**.sh" -and -not -path "./venv/*" -and -not -path "./.tox/*" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
+    @find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
 
 test_black:
-    @python3 -m black --check --diff .
+    @python3 -m black --check --diff mangadlp/
 
-test_isort:
-    @python3 -m isort --check-only --diff .
+test_pyright:
+    @python3 -m pyright mangadlp/
 
-test_mypy:
-    @python3 -m mypy --install-types --non-interactive mangadlp/
+test_ruff:
+    @python3 -m ruff --diff mangadlp/
+
+test_ci_conf:
+    @woodpecker-cli lint .woodpecker/
 
 test_pytest:
     @python3 -m tox -e basic
 
-test_autoflake:
-    @python3 -m autoflake --remove-all-unused-imports -r -v mangadlp/
-    @python3 -m autoflake --check --remove-all-unused-imports -r -v mangadlp/
-
-test_pylama:
-    @python3 -m pylama --options tox.ini mangadlp/
-
-test_pylint:
-    @python3 -m pylint --fail-under 9 mangadlp/
+test_coverage:
+    @python3 -m tox -e coverage
 
 test_tox:
     @python3 -m tox
 
-test_tox_coverage:
-    @python3 -m tox -e coverage
-
 test_build:
-    @python3 -m hatch build
-
-test_ci_conf:
-    @woodpecker-cli lint .woodpecker/
+    @python3 -m hatch build --clean
 
 test_docker_build:
     @docker build . -f docker/Dockerfile.amd64 -t manga-dlp:test
@@ -123,11 +117,8 @@ lint:
     -just test_ci_conf
     just test_shfmt
     just test_black
-    just test_isort
-    just test_mypy
-    just test_autoflake
-    just test_pylama
-    just test_pylint
+    just test_pyright
+    just test_ruff
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
 tests:
@@ -135,11 +126,8 @@ tests:
     -just test_ci_conf
     just test_shfmt
     just test_black
-    just test_isort
-    just test_mypy
-    just test_autoflake
-    just test_pylama
-    just test_pylint
+    just test_pyright
+    just test_ruff
     just test_pytest
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
 
@@ -148,13 +136,10 @@ tests_full:
     -just test_ci_conf
     just test_shfmt
     just test_black
-    just test_isort
-    just test_mypy
-    just test_autoflake
-    just test_pylama
-    just test_pylint
+    just test_pyright
+    just test_ruff
     just test_build
     just test_tox
-    just test_tox_coverage
+    just test_coverage
     just test_docker_build
     @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"

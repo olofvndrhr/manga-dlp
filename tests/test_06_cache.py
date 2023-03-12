@@ -6,7 +6,7 @@ from mangadlp.cache import CacheDB
 
 def test_cache_creation():
     cache_file = Path("cache.json")
-    cache = CacheDB(cache_file, "abc", "en", "test")
+    CacheDB(cache_file, "abc", "en", "test")
 
     assert cache_file.exists()
     cache_file.unlink()

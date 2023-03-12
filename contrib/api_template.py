@@ -1,9 +1,14 @@
+from typing import Dict, List, Union
+
+from mangadlp.types import ChapterData,ComicInfo
+
 # api template for manga-dlp
 
 
 class YourAPI:
     """Your API Class.
-    Get infos for a manga from example.org
+
+    Get infos for a manga from example.org.
 
     Args:
         url_uuid (str): URL or UUID of the manga
@@ -22,10 +27,8 @@ class YourAPI:
     api_base_url = "https://api.mangadex.org"
     img_base_url = "https://uploads.mangadex.org"
 
-    def __init__(self, url_uuid, language, forcevol):
-        """
-        get infos to initiate class
-        """
+    def __init__(self, url_uuid: str, language: str, forcevol: bool):
+        """get infos to initiate class."""
         self.api_name = "Your API Name"
 
         self.url_uuid = url_uuid
@@ -36,22 +39,24 @@ class YourAPI:
         self.manga_uuid = "abc"
         self.manga_title = "abc"
         self.chapter_list = ["1", "2", "2.1", "5", "10"]
-        self.manga_chapter_data = {  # example data
+        self.manga_chapter_data: Dict[str, ChapterData] = {  # example data
             "1": {
                 "uuid": "abc",
                 "volume": "1",
                 "chapter": "1",
                 "name": "test",
+                "pages" 2,
             },
             "2": {
                 "uuid": "abc",
                 "volume": "1",
                 "chapter": "2",
                 "name": "test",
+                "pages": 45,
             },
         }
         # or with --forcevol
-        self.manga_chapter_data = {
+        self.manga_chapter_data: Dict[str, ChapterData] = {
             "1:1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -66,9 +71,8 @@ class YourAPI:
             },
         }
 
-        def get_chapter_images(chapter: str, download_wait: float) -> list:
-            """
-            Get chapter images as a list (full links)
+        def get_chapter_images(self, chapter: str, wait_time: float) -> List[str]:
+            """Get chapter images as a list (full links).
 
             Args:
                 chapter: The chapter number (chapter data index)
@@ -77,7 +81,6 @@ class YourAPI:
             Returns:
                 The list of urls of the page images
             """
-
             # example
             return [
                 "https://abc.def/image/123.png",
@@ -85,10 +88,10 @@ class YourAPI:
                 "https://abc.def/image/12345.png",
             ]
 
-        def create_metadata(self, chapter: str) -> dict:
-            """
-            Get metadata with correct keys for ComicInfo.xml
-            Provide as much metadata as possible. empty/false values will be ignored
+        def create_metadata(self, chapter: str) -> ComicInfo:
+            """Get metadata with correct keys for ComicInfo.xml.
+
+            Provide as much metadata as possible. empty/false values will be ignored.
 
             Args:
                 chapter: The chapter number (chapter data index)
@@ -96,7 +99,6 @@ class YourAPI:
             Returns:
                 The metadata as a dict
             """
-
             # metadata types. have to be valid
             # {key: (type, default value, valid values)}
             {
@@ -155,7 +157,7 @@ class YourAPI:
 
             # example
             return {
-                "Volume": "abc",
+                "Volume": 1,
                 "LanguageISO": "en",
                 "Title": "test",
             }

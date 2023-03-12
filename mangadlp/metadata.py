@@ -1,14 +1,18 @@
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple, Union
 
 import xmltodict
 from loguru import logger as log
+
+from mangadlp.types import ComicInfo
 
 METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: Dict[str, Tuple[type, Any, list]] = {
+METADATA_TYPES: Dict[
+    str, Tuple[Any, Union[str, int, None], List[Union[str, int, None]]]
+] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
@@ -59,10 +63,10 @@ METADATA_TYPES: Dict[str, Tuple[type, Any, list]] = {
 }
 
 
-def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
+def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
     log.info("Validating metadata")
 
-    metadata_valid: dict[str, dict] = {"ComicInfo": {}}
+    metadata_valid: dict[str, ComicInfo] = {"ComicInfo": {}}
     for key, value in METADATA_TYPES.items():
         metadata_type, metadata_default, metadata_validation = value
 
@@ -75,7 +79,7 @@ def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
 
         # check if metadata key is available
         try:
-            md_to_check = metadata_in[key]
+            md_to_check: Union[str, int, None] = metadata_in[key]
         except KeyError:
             continue
         # check if provided metadata item is empty
@@ -84,7 +88,7 @@ def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
 
         # check if metadata type is correct
         log.debug(f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}")
-        if not isinstance(md_to_check, metadata_type):  # noqa
+        if not isinstance(md_to_check, metadata_type):
             log.warning(
                 f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}"
             )
@@ -104,8 +108,8 @@ def validate_metadata(metadata_in: dict) -> Dict[str, dict]:
     return metadata_valid
 
 
-def write_metadata(chapter_path: Path, metadata: dict) -> None:
-    if metadata["Format"] == "pdf":
+def write_metadata(chapter_path: Path, metadata: ComicInfo) -> None:
+    if metadata["Format"] == "pdf":  # pyright:ignore
         log.warning("Can't add metadata for pdf format. Skipping")
         return
 

@@ -26,12 +26,14 @@ class CacheDB:
         if not self.db_data.get(self.db_key):
             self.db_data[self.db_key] = {}
 
-        self.db_uuid_data: dict = self.db_data[self.db_key]
+        self.db_uuid_data = self.db_data[self.db_key]
         if not self.db_uuid_data.get("name"):
             self.db_uuid_data.update({"name": self.name})
             self._write_db()
 
-        self.db_uuid_chapters: list = self.db_uuid_data.get("chapters") or []
+        self.db_uuid_chapters: List[str] = (
+            self.db_uuid_data.get("chapters") or []  # type:ignore
+        )
 
     def _prepare_db(self) -> None:
         if self.db_path.exists():
@@ -44,11 +46,11 @@ class CacheDB:
             log.error("Can't create db-file")
             raise exc
 
-    def _read_db(self) -> Dict[str, dict]:
+    def _read_db(self) -> Dict[str, Dict[str, Union[str, List[str]]]]:
         log.info(f"Reading cache-db: {self.db_path}")
         try:
             db_txt = self.db_path.read_text(encoding="utf8")
-            db_dict: dict[str, dict] = json.loads(db_txt)
+            db_dict: Dict[str, Dict[str, Union[str, List[str]]]] = json.loads(db_txt)
         except Exception as exc:
             log.error("Can't load cache-db")
             raise exc
@@ -73,7 +75,7 @@ class CacheDB:
             raise exc
 
 
-def sort_chapters(chapters: list) -> List[str]:
+def sort_chapters(chapters: List[str]) -> List[str]:
     try:
         sorted_list = sorted(chapters, key=float)
     except Exception:

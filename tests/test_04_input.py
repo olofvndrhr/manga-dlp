@@ -16,8 +16,6 @@ def test_read_and_url():
 
 
 def test_no_read_and_url():
-    url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
-    link_file = "tests/testfile.txt"
     language = "en"
     chapters = "1"
     file_format = "cbz"
@@ -30,7 +28,6 @@ def test_no_read_and_url():
 def test_no_chaps():
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     language = "en"
-    chapters = ""
     file_format = "cbz"
     download_path = "tests"
     command_args = f"-u {url_uuid} -l {language} --path {download_path} --format {file_format} --debug"
