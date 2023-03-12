@@ -10,7 +10,9 @@ METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: Dict[str, Tuple[type, Any, list[Union[str, int]]]] = {
+METADATA_TYPES: Dict[
+    str, Tuple[Any, Union[str, int, None], list[Union[str, int, None]]]
+] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
