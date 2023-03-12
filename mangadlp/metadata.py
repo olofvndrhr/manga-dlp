@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import xmltodict
 from loguru import logger as log
@@ -11,7 +11,7 @@ METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
 METADATA_TYPES: Dict[
-    str, Tuple[Any, Union[str, int, None], list[Union[str, int, None]]]
+    str, Tuple[Any, Union[str, int, None], List[Union[str, int, None]]]
 ] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
