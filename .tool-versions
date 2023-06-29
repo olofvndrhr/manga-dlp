@@ -1,5 +1,5 @@
 python 3.9.13 3.10.5 3.8.13
 shellcheck 0.9.0
-shfmt 3.6.0
+shfmt 3.7.0
 direnv 2.32.2
 just 1.13.0
