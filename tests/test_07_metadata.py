@@ -11,7 +11,7 @@ from mangadlp.metadata import validate_metadata, write_metadata
 
 
 @pytest.fixture
-def wait_20s(_: MonkeyPatch):
+def wait_20s():
     print("sleeping 20 seconds because of api timeouts")
     time.sleep(20)
 

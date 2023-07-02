@@ -8,13 +8,13 @@ from pytest import MonkeyPatch
 
 
 @pytest.fixture
-def wait_10s(_: MonkeyPatch):
+def wait_10s():
     print("sleeping 10 seconds because of api timeouts")
     time.sleep(10)
 
 
 @pytest.fixture
-def wait_20s(_: MonkeyPatch):
+def wait_20s():
     print("sleeping 20 seconds because of api timeouts")
     time.sleep(20)
 
