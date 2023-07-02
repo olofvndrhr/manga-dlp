@@ -68,6 +68,12 @@ dependencies = [
     "ruff>=0.0.247",
 ]
 
+# black
+
+[tool.black]
+line-length    = 100
+target-version = ["py39"]
+
 # pyright
 
 [tool.pyright]
@@ -97,13 +103,14 @@ select = [
     "F",   # pyflakes
     "RUF", # ruff specific
 ]
-line-length = 88
+line-length = 100
 fix = true
 show-fixes = true
 format = "grouped"
 ignore-init-module-imports = true
 respect-gitignore = true
-ignore = ["E501", "D103", "D100", "D102", "PLR2004"]
+ignore = ["E501", "D103", "D100", "D102", "PLR2004", "D403"]
+#unfixable = ["F401"]
 exclude = [
     ".direnv",
     ".git",
@@ -119,7 +126,8 @@ exclude = [
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["D104"]
+"__init__.py"  = ["D104"]
+"__about__.py" = ["D104", "F841"]
 
 [tool.ruff.pylint]
 max-args = 10
@@ -131,7 +139,7 @@ max-complexity = 10
 convention = "google"
 
 [tool.ruff.pycodestyle]
-max-doc-length = 88
+max-doc-length = 100
 
 # pytest
 

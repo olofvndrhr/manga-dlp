@@ -4,21 +4,22 @@ import time
 from pathlib import Path
 
 import pytest
+from pytest import MonkeyPatch
 
 
 @pytest.fixture
-def wait_10s():
+def wait_10s(_: MonkeyPatch):
     print("sleeping 10 seconds because of api timeouts")
     time.sleep(10)
 
 
 @pytest.fixture
-def wait_20s():
+def wait_20s(_: MonkeyPatch):
     print("sleeping 20 seconds because of api timeouts")
     time.sleep(20)
 
 
-def test_full_with_all_flags(wait_20s):
+def test_full_with_all_flags(wait_20s: MonkeyPatch):
     manga_path = Path("tests/Tomo-chan wa Onna no ko")
     chapter_path = manga_path / "Ch. 1 - Once In A Life Time Misfire.cbz"
     cache_path = Path("tests/test_cache.json")

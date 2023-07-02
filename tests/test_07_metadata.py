@@ -5,12 +5,13 @@ from pathlib import Path
 
 import pytest
 import xmlschema
+from pytest import MonkeyPatch
 
 from mangadlp.metadata import validate_metadata, write_metadata
 
 
 @pytest.fixture
-def wait_20s():
+def wait_20s(_: MonkeyPatch):
     print("sleeping 20 seconds because of api timeouts")
     time.sleep(20)
 
@@ -33,7 +34,7 @@ def test_metadata_creation():
         "Format": "cbz",
     }
 
-    write_metadata(metadata_path, metadata)
+    write_metadata(metadata_path, metadata)  # pyright:ignore
     assert metadata_file.exists()
 
     read_in_metadata = metadata_file.read_text(encoding="utf8")
@@ -59,7 +60,7 @@ def test_metadata_validation():
         "Format": "cbz",
     }
 
-    valid_metadata = validate_metadata(metadata)
+    valid_metadata = validate_metadata(metadata)  # pyright:ignore
 
     assert valid_metadata["ComicInfo"] == {
         "Title": "title1",
@@ -82,7 +83,7 @@ def test_metadata_validation_values():
         "CommunityRating": 4,
     }
 
-    valid_metadata = validate_metadata(metadata)
+    valid_metadata = validate_metadata(metadata)  # pyright:ignore
 
     assert valid_metadata["ComicInfo"] == {
         "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
@@ -101,7 +102,7 @@ def test_metadata_validation_values2():
         "CommunityRating": 10,  # invalid
     }
 
-    valid_metadata = validate_metadata(metadata)
+    valid_metadata = validate_metadata(metadata)  # pyright:ignore
 
     assert valid_metadata["ComicInfo"] == {
         "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
@@ -110,8 +111,10 @@ def test_metadata_validation_values2():
     }
 
 
-def test_metadata_chapter_validity(wait_20s):
-    url_uuid = "https://mangadex.org/title/76ee7069-23b4-493c-bc44-34ccbf3051a8/tomo-chan-wa-onna-no-ko"
+def test_metadata_chapter_validity(wait_20s: MonkeyPatch):
+    url_uuid = (
+        "https://mangadex.org/title/76ee7069-23b4-493c-bc44-34ccbf3051a8/tomo-chan-wa-onna-no-ko"
+    )
     manga_path = Path("tests/Tomo-chan wa Onna no ko")
     metadata_path = manga_path / "Ch. 1 - Once In A Life Time Misfire/ComicInfo.xml"
     language = "en"

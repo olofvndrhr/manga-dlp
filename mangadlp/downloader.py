@@ -54,5 +54,4 @@ def download_chapter(
             log.error("Can't write file")
             raise exc
 
-        image_num += 1
         sleep(download_wait)

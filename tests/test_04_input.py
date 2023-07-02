@@ -20,7 +20,9 @@ def test_no_read_and_url():
     chapters = "1"
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-l {language} -c {chapters} --path {download_path} --format {file_format} --debug"
+    command_args = (
+        f"-l {language} -c {chapters} --path {download_path} --format {file_format} --debug"
+    )
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 
@@ -30,7 +32,9 @@ def test_no_chaps():
     language = "en"
     file_format = "cbz"
     download_path = "tests"
-    command_args = f"-u {url_uuid} -l {language} --path {download_path} --format {file_format} --debug"
+    command_args = (
+        f"-u {url_uuid} -l {language} --path {download_path} --format {file_format} --debug"
+    )
     script_path = "manga-dlp.py"
     assert os.system(f"python3 {script_path} {command_args}") != 0
 
@@ -48,7 +52,7 @@ def test_no_volume():
 
 def test_readin_list():
     list_file = "tests/test_list.txt"
-    test_list = mdlpinput.readin_list(None, None, list_file)
+    test_list = mdlpinput.readin_list(None, None, list_file)  # pyright:ignore
 
     assert test_list == [
         "https://mangadex.org/title/a96676e5-8ae2-425e-b549-7f15dd34a6d8/komi-san-wa-komyushou-desu",

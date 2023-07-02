@@ -139,9 +139,7 @@ class MangaDLP:
         # prechecks userinput/options
         # no url and no readin list given
         if not self.url_uuid:
-            log.error(
-                'You need to specify a manga url/uuid with "-u" or a list with "--read"'
-            )
+            log.error('You need to specify a manga url/uuid with "-u" or a list with "--read"')
             raise ValueError
         # checks if --list is not used
         if not self.list_chapters:
@@ -179,9 +177,7 @@ class MangaDLP:
         if self.chapters.lower() == "all":
             chapters_to_download = self.manga_chapter_list
         else:
-            chapters_to_download = utils.get_chapter_list(
-                self.chapters, self.manga_chapter_list
-            )
+            chapters_to_download = utils.get_chapter_list(self.chapters, self.manga_chapter_list)
 
         # show chapters to download
         log.info(f"Chapters selected: {', '.join(chapters_to_download)}")
@@ -192,9 +188,7 @@ class MangaDLP:
 
         # prepare cache if specified
         if self.cache_path:
-            cache = CacheDB(
-                self.cache_path, self.manga_uuid, self.language, self.manga_title
-            )
+            cache = CacheDB(self.cache_path, self.manga_uuid, self.language, self.manga_title)
             cached_chapters = cache.db_uuid_chapters
             log.info(f"Cached chapters: {cached_chapters}")
 
@@ -257,9 +251,7 @@ class MangaDLP:
                         {"Format": self.file_format[1:], **metadata},
                     )
                 except Exception as exc:
-                    log.warning(
-                        f"Can't write metadata for chapter '{chapter}'. Reason={exc}"
-                    )
+                    log.warning(f"Can't write metadata for chapter '{chapter}'. Reason={exc}")
 
             # pack downloaded folder
             if self.file_format:
@@ -316,9 +308,7 @@ class MangaDLP:
 
         # get image urls for chapter
         try:
-            chapter_image_urls = self.api.get_chapter_images(
-                chapter, self.download_wait
-            )
+            chapter_image_urls = self.api.get_chapter_images(chapter, self.download_wait)
         except KeyboardInterrupt as exc:
             log.critical("Keyboard interrupt. Stopping")
             raise exc
@@ -407,9 +397,7 @@ class MangaDLP:
 
         # download images
         try:
-            downloader.download_chapter(
-                chapter_image_urls, chapter_path, self.download_wait
-            )
+            downloader.download_chapter(chapter_image_urls, chapter_path, self.download_wait)
         except KeyboardInterrupt as exc:
             log.critical("Keyboard interrupt. Stopping")
             raise exc

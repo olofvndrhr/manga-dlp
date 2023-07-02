@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 import requests
+from pytest import MonkeyPatch
 
 from mangadlp import downloader
 
@@ -17,7 +18,7 @@ def test_downloader():
     ]
     chapter_path = Path("tests/test_folder1")
     chapter_path.mkdir(parents=True, exist_ok=True)
-    images = []
+    images: list[str] = []
     downloader.download_chapter(urls, str(chapter_path), 2)
     for file in chapter_path.iterdir():
         images.append(file.name)
@@ -28,7 +29,7 @@ def test_downloader():
     shutil.rmtree(chapter_path, ignore_errors=True)
 
 
-def test_downloader_fail(monkeypatch):
+def test_downloader_fail(monkeypatch: MonkeyPatch):
     images = [
         "https://uploads.mangadex.org/data/f1117c5e7aff315bc3429a8791c89d63/A1-c111d78b798f1dda1879334a3478f7ae4503578e8adf1af0fcc4e14d2a396ad4.png",
         "https://uploads.mangadex.org/data/f1117c5e7aff315bc3429a8791c89d63/A2-717ec3c83e8e05ed7b505941431a417ebfed6a005f78b89650efd3b088b951ec.png",

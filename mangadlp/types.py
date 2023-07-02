@@ -1,4 +1,4 @@
-from typing import Optional, TypedDict
+from typing import List, Optional, TypedDict
 
 
 class ComicInfo(TypedDict, total=False):
@@ -48,3 +48,12 @@ class ChapterData(TypedDict):
     chapter: str
     name: str
     pages: int
+
+
+class CacheKeyData(TypedDict):
+    chapters: List[str]
+    name: str
+
+
+class CacheData(TypedDict):
+    __root__: CacheKeyData

@@ -10,9 +10,7 @@ METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: Dict[
-    str, Tuple[Any, Union[str, int, None], List[Union[str, int, None]]]
-] = {
+METADATA_TYPES: Dict[str, Tuple[Any, Union[str, int, None], List[Union[str, int, None]]]] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
@@ -72,14 +70,12 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
 
         # add default value if present
         if metadata_default:
-            log.debug(
-                f"Setting default value for Key:{key} -> value={metadata_default}"
-            )
+            log.debug(f"Setting default value for Key:{key} -> value={metadata_default}")
             metadata_valid["ComicInfo"][key] = metadata_default
 
         # check if metadata key is available
         try:
-            md_to_check: Union[str, int, None] = metadata_in[key]
+            md_to_check: Union[str, int, None] = metadata_in[key]  # pyright:ignore
         except KeyError:
             continue
         # check if provided metadata item is empty
@@ -87,19 +83,17 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
             continue
 
         # check if metadata type is correct
-        log.debug(f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}")
+        log.debug(
+            f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}"  # pyright:ignore
+        )
         if not isinstance(md_to_check, metadata_type):
-            log.warning(
-                f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}"
-            )
+            log.warning(f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}")
             continue
 
         # check if metadata is valid
         log.debug(f"Key:{key} -> value={md_to_check} -> valid={metadata_validation}")
         if (len(metadata_validation) > 0) and (md_to_check not in metadata_validation):
-            log.warning(
-                f"Metadata is invalid: {key}:{metadata_validation} -> {md_to_check}"
-            )
+            log.warning(f"Metadata is invalid: {key}:{metadata_validation} -> {md_to_check}")
             continue
 
         log.debug(f"Updating metadata: '{key}' = '{md_to_check}'")

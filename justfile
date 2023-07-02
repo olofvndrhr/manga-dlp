@@ -75,6 +75,10 @@ install_deps_dev:
     @echo "installing dependencies"
     @pip3 install -r contrib/requirements_dev.txt
 
+create_reqs:
+    @echo "creating requirements"
+    @pipreqs --savepath requirements.txt --mode gt --force mangadlp/
+
 test_shfmt:
     @find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
 
@@ -107,10 +111,10 @@ test_docker_build:
 
 # install dependecies and set everything up
 prepare_workspace:
-     just show_system_info
-     just check_asdf
-     just setup_asdf
-     just create_venv
+    just show_system_info
+    just check_asdf
+    just setup_asdf
+    just create_venv
 
 lint:
     just show_system_info

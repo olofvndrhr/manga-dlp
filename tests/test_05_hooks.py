@@ -4,21 +4,22 @@ import time
 from pathlib import Path
 
 import pytest
+from pytest import MonkeyPatch
 
 
 @pytest.fixture
-def wait_10s():
+def wait_10s(_: MonkeyPatch):
     print("sleeping 10 seconds because of api timeouts")
     time.sleep(10)
 
 
 @pytest.fixture
-def wait_20s():
+def wait_20s(_: MonkeyPatch):
     print("sleeping 20 seconds because of api timeouts")
     time.sleep(20)
 
 
-def test_manga_pre_hook(wait_10s):
+def test_manga_pre_hook(wait_10s: MonkeyPatch):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     language = "en"
@@ -50,7 +51,7 @@ def test_manga_pre_hook(wait_10s):
     hook_file.unlink()
 
 
-def test_manga_post_hook(wait_10s):
+def test_manga_post_hook(wait_10s: MonkeyPatch):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     language = "en"
@@ -82,7 +83,7 @@ def test_manga_post_hook(wait_10s):
     hook_file.unlink()
 
 
-def test_chapter_pre_hook(wait_10s):
+def test_chapter_pre_hook(wait_10s: MonkeyPatch):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     language = "en"
@@ -114,7 +115,7 @@ def test_chapter_pre_hook(wait_10s):
     hook_file.unlink()
 
 
-def test_chapter_post_hook(wait_10s):
+def test_chapter_post_hook(wait_10s: MonkeyPatch):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     language = "en"
@@ -146,7 +147,7 @@ def test_chapter_post_hook(wait_10s):
     hook_file.unlink()
 
 
-def test_all_hooks(wait_10s):
+def test_all_hooks(wait_10s: MonkeyPatch):
     url_uuid = "https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie"
     manga_path = Path("tests/Shikimori's Not Just a Cutie")
     language = "en"

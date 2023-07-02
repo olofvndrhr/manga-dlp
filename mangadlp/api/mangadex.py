@@ -57,9 +57,7 @@ class Mangadex:
     # get the uuid for the manga
     def get_manga_uuid(self) -> str:
         # isolate id from url
-        uuid_regex = re.compile(
-            "[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
-        )
+        uuid_regex = re.compile("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}")
         # try to get uuid in string
         try:
             uuid = uuid_regex.search(self.url_uuid)[0]  # type: ignore
@@ -75,9 +73,7 @@ class Mangadex:
         counter = 1
         while counter <= 3:
             try:
-                response = requests.get(
-                    f"{self.api_base_url}/manga/{self.manga_uuid}", timeout=10
-                )
+                response = requests.get(f"{self.api_base_url}/manga/{self.manga_uuid}", timeout=10)
             except Exception as exc:
                 if counter >= 3:
                     log.error("Maybe the MangaDex API is down?")
@@ -118,9 +114,7 @@ class Mangadex:
                     break
             title = alt_title[self.language]  # pyright:ignore
         except (KeyError, UnboundLocalError):
-            log.warning(
-                "Manga title also not found in alt titles. Falling back to english title"
-            )
+            log.warning("Manga title also not found in alt titles. Falling back to english title")
         else:
             log.debug(f"Language={self.language}, Alt-title='{title}'")
             return utils.fix_name(title)
@@ -139,9 +133,7 @@ class Mangadex:
         try:
             total_chapters: int = r.json()["total"]
         except Exception as exc:
-            log.error(
-                "Error retrieving the chapters list. Did you specify a valid language code?"
-            )
+            log.error("Error retrieving the chapters list. Did you specify a valid language code?")
             raise exc
         if total_chapters == 0:
             log.error("No chapters available to download in specified language")
@@ -190,9 +182,7 @@ class Mangadex:
                     continue
 
                 # export chapter data as a dict
-                chapter_index = (
-                    chapter_num if not self.forcevol else f"{chapter_vol}:{chapter_num}"
-                )
+                chapter_index = chapter_num if not self.forcevol else f"{chapter_vol}:{chapter_num}"
                 chapter_data[chapter_index] = {
                     "uuid": chapter_uuid,
                     "volume": chapter_vol,

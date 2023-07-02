@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import List, Union
 
 from loguru import logger as log
+
+from mangadlp.types import CacheData, CacheKeyData
 
 
 class CacheDB:
@@ -26,14 +28,12 @@ class CacheDB:
         if not self.db_data.get(self.db_key):
             self.db_data[self.db_key] = {}
 
-        self.db_uuid_data = self.db_data[self.db_key]
-        if not self.db_uuid_data.get("name"):
-            self.db_uuid_data.update({"name": self.name})
+        self.db_uuid_data: CacheKeyData = self.db_data[self.db_key]
+        if not self.db_uuid_data.get("name"):  # pyright:ignore
+            self.db_uuid_data.update({"name": self.name})  # pyright:ignore
             self._write_db()
 
-        self.db_uuid_chapters: List[str] = (
-            self.db_uuid_data.get("chapters") or []  # type:ignore
-        )
+        self.db_uuid_chapters: List[str] = self.db_uuid_data.get("chapters") or []  # type:ignore
 
     def _prepare_db(self) -> None:
         if self.db_path.exists():
@@ -46,11 +46,11 @@ class CacheDB:
             log.error("Can't create db-file")
             raise exc
 
-    def _read_db(self) -> Dict[str, Dict[str, Union[str, List[str]]]]:
+    def _read_db(self) -> CacheData:
         log.info(f"Reading cache-db: {self.db_path}")
         try:
             db_txt = self.db_path.read_text(encoding="utf8")
-            db_dict: Dict[str, Dict[str, Union[str, List[str]]]] = json.loads(db_txt)
+            db_dict: CacheData = json.loads(db_txt)
         except Exception as exc:
             log.error("Can't load cache-db")
             raise exc
