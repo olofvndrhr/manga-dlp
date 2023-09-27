@@ -5,3 +5,4 @@ click-option-group>=0.5.5
 xmltodict>=0.13.0
 
 img2pdf>=0.4.4
+pillow>=10.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
