@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>44net-assets/docker-renovate-conf"
+    "local>44net/renovate"
   ]
 }
