@@ -12,8 +12,8 @@ jobs:
   build-container:
     uses: actions/workflows/.gitea/workflows/build_container.yml@master
     with:
-      registry: git.44net.ch
-      image-name: 44net/invh-server
+      registry: docker.io
+      image-name: olofvndrhr/manga-dlp
       context: .
       dockerfile: docker/Dockerfile
       platforms: linux/amd64,linux/arm64
@@ -24,7 +24,7 @@ jobs:
   build-pypackage:
     uses: actions/workflows/.gitea/workflows/release_pypackage.yml@master
     with:
-      repository: https://git.44net.ch/api/packages/44net/pypi
+      repository: main
     secrets:
-      username: actions-bot
-      token: ${{ secrets.PACKAGE_TOKEN }}
+      username: __token__
+      token: ${{ secrets.PYPI_TOKEN }}

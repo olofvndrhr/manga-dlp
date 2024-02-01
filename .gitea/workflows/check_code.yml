@@ -26,6 +26,9 @@ jobs:
   check-docs:
     runs-on: python311
     steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
       - name: "build docs"
         run: |
           python3 -m pip install mkdocs
