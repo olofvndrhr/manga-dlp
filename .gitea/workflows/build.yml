@@ -90,6 +90,7 @@ jobs:
 
       - name: update dockerhub repo description
         uses: peter-evans/dockerhub-description@v3
+        if: gitea.event_name != 'pull_request'
         with:
           repository: ${{ env.AUTHOR }}/${{ env.IMAGE }}
           short-description: ${{ github.event.repository.description }}
