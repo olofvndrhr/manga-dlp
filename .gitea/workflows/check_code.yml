@@ -8,12 +8,12 @@ on:
     branches: [main, master]
 
 jobs:
-  check-code:
+  check-code-py311:
     uses: actions/workflows/.gitea/workflows/check_python_hatch.yml@master
     with:
       run-tests: true
 
-  scan-code:
+  scan-code-py311:
     uses: actions/workflows/.gitea/workflows/sonarqube_python.yml@master
     needs: [check-code]
     if: gitea.event_name != 'pull_request'
@@ -31,3 +31,57 @@ jobs:
           python3 -m pip install mkdocs
           cd docs || exit 1
           mkdocs build --strict
+
+  check-code-py38:
+    runs-on: python38
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run lint:style
+
+      - name: test typing
+        run: hatch run lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py39:
+    runs-on: python39
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run lint:style
+
+      - name: test typing
+        run: hatch run lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py310:
+    runs-on: python310
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run lint:style
+
+      - name: test typing
+        run: hatch run lint:typing
+
+      - name: run tests
+        run: hatch run default:test

@@ -1,7 +1,7 @@
 import sys
 
-import mangadlp.cli
+import src.mangadlp.cli
 
 
 if __name__ == "__main__":
-    sys.exit(mangadlp.cli.main())  # pylint: disable=no-value-for-parameter
+    sys.exit(src.mangadlp.cli.main())

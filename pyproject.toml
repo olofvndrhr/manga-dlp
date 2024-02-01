@@ -8,6 +8,7 @@ description = "A cli manga downloader"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
+dynamic = ["version"]
 authors = [{ name = "Ivan Schaller", email = "ivan@schaller.sh" }]
 keywords = ["manga", "downloader", "mangadex"]
 classifiers = [
@@ -59,6 +60,8 @@ packages = ["src/mangadlp"]
 dependencies = [
     "pytest==7.4.3",
     "coverage==7.3.2",
+    "xmltodict>=0.13.0",
+    "xmlschema>=2.2.1",
 ]
 
 [tool.hatch.envs.default.scripts]
