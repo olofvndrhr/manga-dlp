@@ -9,6 +9,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Add support for more sites
 
+## [2.4.1] - 2024-02-01
+
+- same as 2.4.0
+
 ## [2.4.0] - 2024-02-01
 
 ### Fixed
