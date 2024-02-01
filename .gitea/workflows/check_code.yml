@@ -58,12 +58,12 @@ jobs:
         run: hatch run +py=3.8 lint:typing
 
       - name: run tests
+        if: gitea.event_name == 'pull_request'
         run: hatch run default:test
 
   check-code-py39:
     runs-on: python39
     needs: [check-code-py38]
-    if: gitea.event_name == 'pull_request'
     steps:
       - name: checkout code
         uses: actions/checkout@v3
@@ -78,12 +78,12 @@ jobs:
         run: hatch run +py=3.9 lint:typing
 
       - name: run tests
+        if: gitea.event_name == 'pull_request'
         run: hatch run default:test
 
   check-code-py310:
     runs-on: python310
     needs: [check-code-py39]
-    if: gitea.event_name == 'pull_request'
     steps:
       - name: checkout code
         uses: actions/checkout@v3
@@ -98,12 +98,12 @@ jobs:
         run: hatch run +py=3.10 lint:typing
 
       - name: run tests
+        if: gitea.event_name == 'pull_request'
         run: hatch run default:test
 
   check-code-py311:
     runs-on: python311
     needs: [check-code-py310]
-    if: gitea.event_name == 'pull_request'
     steps:
       - name: checkout code
         uses: actions/checkout@v3
@@ -118,4 +118,5 @@ jobs:
         run: hatch run +py=3.11 lint:typing
 
       - name: run tests
+        if: gitea.event_name == 'pull_request'
         run: hatch run default:test
