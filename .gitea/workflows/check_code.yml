@@ -1,0 +1,114 @@
+name: check code
+
+on:
+  push:
+    branches: [main, master]
+
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check-docs:
+    runs-on: python311
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: "build docs"
+        run: |
+          python3 -m pip install mkdocs
+          cd docs || exit 1
+          mkdocs build --strict
+
+  scan-code-py311:
+    runs-on: python311
+    if: gitea.event_name != 'pull_request'
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: get coverage (hatch)
+        run: hatch run default:cov
+
+      - name: run sonar-scanner
+        uses: sonarsource/sonarqube-scan-action@v2.0.1
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+
+  check-code-py38:
+    runs-on: python38
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run +py=3.8 lint:style
+
+      - name: test typing
+        run: hatch run +py=3.8 lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py39:
+    runs-on: python39
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run +py=3.9 lint:style
+
+      - name: test typing
+        run: hatch run +py=3.9 lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py310:
+    runs-on: python310
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run +py=3.10 lint:style
+
+      - name: test typing
+        run: hatch run +py=3.10 lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py311:
+    runs-on: python311
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run +py=3.11 lint:style
+
+      - name: test typing
+        run: hatch run +py=3.11 lint:typing
+
+      - name: run tests
+        run: hatch run default:test

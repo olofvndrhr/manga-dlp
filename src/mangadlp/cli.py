@@ -26,7 +26,8 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
         url_str = list_file.read_text(encoding="utf-8")
         url_list = url_str.splitlines()
     except Exception as exc:
-        raise click.BadParameter("Can't get links from the file") from exc
+        msg = f"Reading in file '{list_file}'"
+        raise click.BadParameter(msg) from exc
 
     # filter empty lines and remove them
     filtered_list = list(filter(len, url_list))
@@ -39,8 +40,8 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
 @click.help_option()
 @click.version_option(version=__version__, package_name="manga-dlp")
 # manga selection
-@optgroup.group("source", cls=RequiredMutuallyExclusiveOptionGroup)  # type: ignore
-@optgroup.option(  # type: ignore
+@optgroup.group("source", cls=RequiredMutuallyExclusiveOptionGroup)
+@optgroup.option(
     "-u",
     "--url",
     "--uuid",
@@ -50,7 +51,7 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
     show_default=True,
     help="URL or UUID of the manga",
 )
-@optgroup.option(  # type: ignore
+@optgroup.option(
     "--read",
     "read_mangas",
     is_eager=True,
@@ -61,8 +62,8 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
     help="Path of file with manga links to download. One per line",
 )
 # logging options
-@optgroup.group("verbosity", cls=MutuallyExclusiveOptionGroup)  # type: ignore
-@optgroup.option(  # type: ignore
+@optgroup.group("verbosity", cls=MutuallyExclusiveOptionGroup)
+@optgroup.option(
     "--loglevel",
     "verbosity",
     type=int,
@@ -70,7 +71,7 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
     show_default=True,
     help="Custom log level",
 )
-@optgroup.option(  # type: ignore
+@optgroup.option(
     "--warn",
     "verbosity",
     flag_value=30,
@@ -78,7 +79,7 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
     show_default=True,
     help="Only log warnings and higher",
 )
-@optgroup.option(  # type: ignore
+@optgroup.option(
     "--debug",
     "verbosity",
     flag_value=10,
@@ -231,7 +232,7 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
 def main(ctx: click.Context, **kwargs: Any) -> None:
     """Script to download mangas from various sites."""
     url_uuid: str = kwargs.pop("url_uuid")
-    read_mangas: list[str] = kwargs.pop("read_mangas")
+    read_mangas: List[str] = kwargs.pop("read_mangas")
     verbosity: int = kwargs.pop("verbosity")
 
     # set log level to INFO if not set

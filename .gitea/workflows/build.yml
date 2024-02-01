@@ -1,0 +1,98 @@
+name: build package and container
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-pypackage:
+    runs-on: python311
+    env:
+      HATCH_INDEX_REPO: main
+      HATCH_INDEX_USER: __token__
+      HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch hatchling
+
+      - name: build package
+        run: hatch build --clean
+
+      - name: publish package
+        if: gitea.event_name != 'pull_request'
+        run: hatch publish --yes --no-prompt
+
+  build-container:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: docker.io
+      AUTHOR: olofvndrhr
+      IMAGE: manga-dlp
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v2
+
+      - name: setup docker buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: get container metadata
+        uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.AUTHOR }}/${{ env.IMAGE }}
+          flavor: |
+            latest=auto
+            prefix=
+            suffix=
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: login to docker.io container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.CR_USERNAME }}
+          password: ${{ secrets.CR_PASSWORD }}
+
+      - name: login to private container registry
+        uses: docker/login-action@v2
+        with:
+          registry: git.44net.ch
+          username: ${{ secrets.CR_PRIV_USERNAME }}
+          password: ${{ secrets.CR_PRIV_PASSWORD }}
+
+      - name: build and push docker image @amd64+arm64
+        uses: docker/build-push-action@v4
+        with:
+          push: ${{ gitea.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64
+          context: .
+          file: docker/Dockerfile
+          provenance: false
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+
+      - name: update dockerhub repo description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          repository: ${{ env.AUTHOR }}/${{ env.IMAGE }}
+          short-description: ${{ github.event.repository.description }}
+          enable-url-completion: true
+          username: ${{ secrets.CR_USERNAME }}
+          password: ${{ secrets.CR_PASSWORD }}

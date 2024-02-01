@@ -48,8 +48,8 @@ def download_chapter(
         # write image
         try:
             with image_path.open("wb") as file:
-                r.raw.decode_content = True  # pyright:ignore
-                shutil.copyfileobj(r.raw, file)  # pyright:ignore
+                r.raw.decode_content = True
+                shutil.copyfileobj(r.raw, file)
         except Exception as exc:
             log.error("Can't write file")
             raise exc

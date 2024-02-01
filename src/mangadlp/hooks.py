@@ -31,7 +31,7 @@ def run_hook(command: str, hook_type: str, **kwargs: Any) -> int:
 
     # running command
     log.info(f"Hook '{hook_type}' - running command: '{command}'")
-    proc = subprocess.run(command_list, check=False, timeout=15, encoding="utf8")
+    proc = subprocess.run(command_list, check=False, timeout=15, encoding="utf8")  # noqa
     exit_code = proc.returncode
 
     if exit_code == 0:

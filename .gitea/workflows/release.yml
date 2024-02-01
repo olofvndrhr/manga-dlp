@@ -1,0 +1,56 @@
+name: create release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  release-pypackage:
+    runs-on: python311
+    env:
+      HATCH_INDEX_REPO: main
+      HATCH_INDEX_USER: __token__
+      HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '>=1.20'
+
+      - name: install hatch
+        run: pip install -U hatch hatchling
+
+      - name: build package
+        run: hatch build --clean
+
+      - name: read changelog
+        id: changelog
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./CHANGELOG.md
+
+      - name: create gitea release
+        uses: https://gitea.com/actions/release-action@main
+        if: gitea.event_name != 'pull_request'
+        with:
+          title: ${{ gitea.ref_name }}
+          body: ${{ steps.changelog.outputs.content }}
+          files: |-
+            dist/**
+
+      - name: create github release
+        uses: softprops/action-gh-release@v1
+        if: gitea.event_name != 'pull_request'
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          title: ${{ gitea.ref_name }}
+          body: ${{ steps.changelog.outputs.content }}
+          files: |-
+            dist/**

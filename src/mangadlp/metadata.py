@@ -4,7 +4,8 @@ from typing import Any, Dict, List, Tuple, Union
 import xmltodict
 from loguru import logger as log
 
-from mangadlp.types import ComicInfo
+from mangadlp.models import ComicInfo
+
 
 METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
@@ -64,7 +65,7 @@ METADATA_TYPES: Dict[str, Tuple[Any, Union[str, int, None], List[Union[str, int,
 def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
     log.info("Validating metadata")
 
-    metadata_valid: dict[str, ComicInfo] = {"ComicInfo": {}}
+    metadata_valid: Dict[str, ComicInfo] = {"ComicInfo": {}}
     for key, value in METADATA_TYPES.items():
         metadata_type, metadata_default, metadata_validation = value
 
@@ -75,7 +76,7 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
 
         # check if metadata key is available
         try:
-            md_to_check: Union[str, int, None] = metadata_in[key]  # pyright:ignore
+            md_to_check: Union[str, int, None] = metadata_in[key]
         except KeyError:
             continue
         # check if provided metadata item is empty
@@ -83,9 +84,7 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
             continue
 
         # check if metadata type is correct
-        log.debug(
-            f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}"  # pyright:ignore
-        )
+        log.debug(f"Key:{key} -> value={type(md_to_check)} -> check={metadata_type}")
         if not isinstance(md_to_check, metadata_type):
             log.warning(f"Metadata has wrong type: {key}:{metadata_type} -> {md_to_check}")
             continue
@@ -103,7 +102,7 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
 
 
 def write_metadata(chapter_path: Path, metadata: ComicInfo) -> None:
-    if metadata["Format"] == "pdf":  # pyright:ignore
+    if metadata["Format"] == "pdf":
         log.warning("Can't add metadata for pdf format. Skipping")
         return
 

@@ -389,11 +389,11 @@ def test_chapter_metadata():
     forcevol = False
     test = Mangadex(url_uuid, language, forcevol)
     chapter_metadata = test.create_metadata("1")
-    manga_name = chapter_metadata["Series"]  # pyright:ignore
-    chapter_name = chapter_metadata["Title"]  # pyright:ignore
-    chapter_num = chapter_metadata["Number"]  # pyright:ignore
-    chapter_volume = chapter_metadata["Volume"]  # pyright:ignore
-    chapter_url = chapter_metadata["Web"]  # pyright:ignore
+    manga_name = chapter_metadata["Series"]  
+    chapter_name = chapter_metadata["Title"]  
+    chapter_num = chapter_metadata["Number"]  
+    chapter_volume = chapter_metadata["Volume"]  
+    chapter_url = chapter_metadata["Web"]  
 
     assert (manga_name, chapter_name, chapter_volume, chapter_num, chapter_url) == (
         "Komi-san wa Komyushou Desu",

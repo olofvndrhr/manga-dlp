@@ -8,4 +8,3 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # "s6-setuidgid abc" is used to set the permissions
 
 0 12 * * * root s6-setuidgid abc /app/schedules/daily.sh > /proc/1/fd/1 2>&1
-
