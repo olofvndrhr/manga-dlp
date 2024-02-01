@@ -10,12 +10,24 @@ on:
 
 jobs:
   build-pypackage:
-    uses: actions/workflows/.gitea/workflows/release_pypackage.yml@master
-    with:
-      repository: main
-    secrets:
-      username: __token__
-      token: ${{ secrets.PYPI_TOKEN }}
+    runs-on: python311
+    env:
+      HATCH_INDEX_REPO: main
+      HATCH_INDEX_USER: __token__
+      HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch hatchling
+
+      - name: build package
+        run: hatch build --clean
+
+      - name: publish package
+        if: gitea.event_name != 'pull_request'
+        run: hatch publish --yes --no-prompt
 
   build-container:
     runs-on: ubuntu-latest
