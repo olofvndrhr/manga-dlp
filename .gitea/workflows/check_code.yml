@@ -8,11 +8,6 @@ on:
     branches: [main, master]
 
 jobs:
-  check-code-py311:
-    uses: actions/workflows/.gitea/workflows/check_python_hatch.yml@master
-    with:
-      run-tests: true
-
   scan-code-py311:
     uses: actions/workflows/.gitea/workflows/sonarqube_python.yml@master
     needs: [check-code]
@@ -45,10 +40,10 @@ jobs:
         run: pip install -U hatch
 
       - name: test codestyle
-        run: hatch run lint:style
+        run: hatch run +py=3.8 lint:style
 
       - name: test typing
-        run: hatch run lint:typing
+        run: hatch run +py=3.8 lint:typing
 
       - name: run tests
         run: hatch run default:test
@@ -63,10 +58,10 @@ jobs:
         run: pip install -U hatch
 
       - name: test codestyle
-        run: hatch run lint:style
+        run: hatch run +py=3.9 lint:style
 
       - name: test typing
-        run: hatch run lint:typing
+        run: hatch run +py=3.9 lint:typing
 
       - name: run tests
         run: hatch run default:test
@@ -81,10 +76,28 @@ jobs:
         run: pip install -U hatch
 
       - name: test codestyle
-        run: hatch run lint:style
+        run: hatch run +py=3.10 lint:style
 
       - name: test typing
-        run: hatch run lint:typing
+        run: hatch run +py=3.10 lint:typing
+
+      - name: run tests
+        run: hatch run default:test
+
+  check-code-py311:
+    runs-on: python311
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: test codestyle
+        run: hatch run +py=3.11 lint:style
+
+      - name: test typing
+        run: hatch run +py=3.11 lint:typing
 
       - name: run tests
         run: hatch run default:test

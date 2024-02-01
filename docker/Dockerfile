@@ -1,4 +1,4 @@
-FROM git.44net.ch/44net-services/python311:11 AS builder
+FROM git.44net.ch/44net/python311:11 AS builder
 
 COPY pyproject.toml README.md /build/
 COPY src /build/src
@@ -8,7 +8,7 @@ RUN \
     && pip3 install hatch hatchling \
     && python3 -m hatch build --clean
 
-FROM git.44net.ch/44net-services/debian-s6:11
+FROM git.44net.ch/44net/debian-s6:11
 
 LABEL maintainer="Ivan Schaller" \
     description="A CLI manga downloader"
