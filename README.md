@@ -2,29 +2,23 @@
 
 > Full docs: https://manga-dlp.ivn.sh
 
-CI/CD
-
-[![status-badge](https://img.shields.io/drone/build/olofvndrhr/manga-dlp?label=tests&server=https%3A%2F%2Fci.44net.ch)](https://ci.44net.ch/olofvndrhr/manga-dlp)
-[![Last Release](https://img.shields.io/github/release-date/olofvndrhr/manga-DLP?label=last%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
-[![Version](https://img.shields.io/github/v/release/olofvndrhr/manga-dlp?label=git%20release)](https://github.com/olofvndrhr/manga-dlp/releases)
-[![Version PyPi](https://img.shields.io/pypi/v/manga-dlp?label=pypi%20release)](https://pypi.org/project/manga-dlp/)
-
 Code Analysis
 
-[![Quality Gate Status](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=alert_status&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Coverage](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=coverage&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 [![Bugs](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=bugs&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
-[![Security](https://img.shields.io/snyk/vulnerabilities/github/olofvndrhr/manga-dlp)](https://app.snyk.io/org/olofvndrhr-t6h/project/aae9609d-a4e4-41f8-b1ac-f2561b2ad4e3)
+[![Maintainability Rating](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=sqale_rating&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
+[![Reliability Rating](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=reliability_rating&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
+[![Security Rating](https://sonarqube.44net.ch/api/project_badges/measure?project=olofvndrhr%3Amanga-dlp&metric=security_rating&token=f9558470580eea5b4899cf33f190eee16011346d)](https://sonarqube.44net.ch/dashboard?id=olofvndrhr%3Amanga-dlp)
 
 Meta
 
-[![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![Formatter](https://img.shields.io/badge/code%20style-ruff-black)](https://github.com/charliermarsh/ruff)
 [![Linter](https://img.shields.io/badge/linter-ruff-red)](https://github.com/charliermarsh/ruff)
-[![Types](https://img.shields.io/badge/types-pyright-blue)](https://github.com/microsoft/pyright)
+[![Types](https://img.shields.io/badge/types-mypy-blue)](https://github.com/python/mypy)
 [![Tests](https://img.shields.io/badge/tests-pytest%20%7C%20tox-yellow)](https://github.com/pytest-dev/pytest/)
 [![Coverage](https://img.shields.io/badge/coverage-coveragepy-green)](https://github.com/nedbat/coveragepy)
 [![License](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://snyk.io/learn/what-is-mit-license/)
-[![Compatibility](https://img.shields.io/pypi/pyversions/manga-dlp)](https://pypi.org/project/manga-dlp/)
+[![Compatibility](https://img.shields.io/badge/python-3.11-blue)]()
 
 ---
 
@@ -42,19 +36,19 @@ you just want the folder with all the pictures use the flag `--format ""`.
 
 ## _Currently_ Supported sites
 
--   [Mangadex.org](https://mangadex.org/)
+- [Mangadex.org](https://mangadex.org/)
 
 ## Features (not complete)
 
--   Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
--   Json caching
--   Custom hooks after/before each download
--   Custom chapter name format
--   Volume support
--   Multiple archive formats supported (cbz,cbr,zip,none)
--   Language selection
--   Download all chapters directly
--   And others...
+- Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
+- Json caching
+- Custom hooks after/before each download
+- Custom chapter name format
+- Volume support
+- Multiple archive formats supported (cbz,cbr,zip,none)
+- Language selection
+- Download all chapters directly
+- And others...
 
 ## Usage
 
@@ -146,10 +140,10 @@ If you encounter any bugs, also just open an issue with a description of the pro
 
 ## TODO's
 
--   <del>Make docker container for easy distribution</del>
-    --> [Dockerhub](https://hub.docker.com/r/olofvndrhr/manga-dlp)
--   <del>Automate release</del>
-    --> Done with woodpecker-ci
--   <del>Make pypi package</del>
-    --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
--   Add more supported sites
+- <del>Make docker container for easy distribution</del>
+  --> [Dockerhub](https://hub.docker.com/r/olofvndrhr/manga-dlp)
+- <del>Automate release</del>
+  --> Done with woodpecker-ci
+- <del>Make pypi package</del>
+  --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
+- Add more supported sites
