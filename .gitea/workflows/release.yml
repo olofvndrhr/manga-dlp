@@ -30,11 +30,14 @@ jobs:
       - name: build package
         run: hatch build --clean
 
+      - name: create release notes
+        run: bash get_release_notes.sh latest
+
       - name: read changelog
         id: changelog
         uses: juliangruber/read-file-action@v1
         with:
-          path: ./CHANGELOG.md
+          path: ./RELEASENOTES.md
 
       - name: create gitea release
         uses: https://gitea.com/actions/release-action@main
