@@ -3,21 +3,8 @@
 default: show_receipts
 
 set shell := ["bash", "-uc"]
-set dotenv-load := true
-#set export
+set dotenv-load
 
-# aliases
-alias s := show_receipts
-alias i := show_system_info
-alias p := prepare_workspace
-alias l := lint
-alias t := tests
-alias f := tests_full
-
-# variables
-export asdf_version := "v0.10.2"
-
-# default recipe to display help information
 show_receipts:
     @just --list
 
@@ -25,42 +12,14 @@ show_system_info:
     @echo "=================================="
     @echo "os : {{os()}}"
     @echo "arch: {{arch()}}"
-    @echo "home: ${HOME}"
-    @echo "project dir: {{justfile_directory()}}"
+    @echo "justfile dir: {{justfile_directory()}}"
+    @echo "invocation dir: {{invocation_directory()}}"
+    @echo "running dir: `pwd -P`"
     @echo "=================================="
 
-check_asdf:
-    @if ! asdf --version; then \
-        just install_asdf \
-    ;else \
-        echo "asdf already installed" \
-    ;fi
-    just install_asdf_bins
-
-install_asdf:
-    @echo "installing asdf"
-    @echo "asdf version: ${asdf_version}"
-    @git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "${asdf_version}"
-    @echo "adding asdf to .bashrc"
-    @if ! grep -q ".asdf/asdf.sh" "${HOME}/.bashrc"; then \
-        echo -e '\n# source asdf' >> "${HOME}/.bashrc" \
-        ;echo 'source "${HOME}/.asdf/asdf.sh"' >> "${HOME}/.bashrc" \
-        ;echo -e 'source "${HOME}/.asdf/completions/asdf.bash"\n' >> "${HOME}/.bashrc" \
-    ;fi
-    @echo "to load asdf either restart your shell or do: 'source \${HOME}/.bashrc'"
-
-setup_asdf:
-    @echo "installing asdf bins"
-    # add plugins
-    @if ! asdf plugin add python; then :; fi
-    @if ! asdf plugin add shfmt; then :; fi
-    @if ! asdf plugin add shellcheck; then :; fi
-    @if ! asdf plugin add just https://github.com/franklad/asdf-just; then :; fi
-    @if ! asdf plugin add direnv; then :; fi
-    # install bins
-    @if ! asdf install; then :; fi
-    # setup direnv
-    @if ! asdf direnv setup --shell bash --version latest; then :; fi
+setup:
+    @asdf install
+    @lefthook install
 
 create_venv:
     @echo "creating venv"
@@ -69,81 +28,48 @@ create_venv:
 
 install_deps:
     @echo "installing dependencies"
-    @pip3 install -r requirements.txt
+    @python3 -m hatch dep show requirements --project-only > /tmp/requirements.txt
+    @pip3 install -r /tmp/requirements.txt
 
 install_deps_dev:
-    @echo "installing dependencies"
-    @pip3 install -r contrib/requirements_dev.txt
+    @echo "installing dev dependencies"
+    @python3 -m hatch dep show requirements --project-only > /tmp/requirements.txt
+    @python3 -m hatch dep show requirements --env-only >> /tmp/requirements.txt
+    @pip3 install -r /tmp/requirements.txt
 
 create_reqs:
     @echo "creating requirements"
-    @pipreqs --savepath requirements.txt --mode gt --force mangadlp/
+    @pipreqs --force --savepath requirements.txt src/mangadlp/
 
 test_shfmt:
     @find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
 
-test_black:
-    @python3 -m black --check --diff mangadlp/
-
-test_pyright:
-    @python3 -m pyright mangadlp/
-
-test_ruff:
-    @python3 -m ruff --diff mangadlp/
-
-test_ci_conf:
-    @woodpecker-cli lint .woodpecker/
-
-test_pytest:
-    @python3 -m tox -e basic
-
-test_coverage:
-    @python3 -m tox -e coverage
-
-test_tox:
-    @python3 -m tox
-
-test_build:
-    @python3 -m hatch build --clean
-
-test_docker_build:
-    @docker build . -f docker/Dockerfile.amd64 -t manga-dlp:test
-
-# install dependecies and set everything up
-prepare_workspace:
-    just show_system_info
-    just check_asdf
-    just setup_asdf
-    just create_venv
+format_shfmt:
+    @find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -w -i 4 -bn -ci -sr "{}" \+;
 
 lint:
     just show_system_info
-    -just test_ci_conf
     just test_shfmt
-    just test_black
-    just test_pyright
-    just test_ruff
-    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
+    @hatch run lint:style
+    @hatch run lint:typing
 
-tests:
+format:
     just show_system_info
-    -just test_ci_conf
-    just test_shfmt
-    just test_black
-    just test_pyright
-    just test_ruff
-    just test_pytest
-    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
+    just format_shfmt
+    @hatch run lint:fmt
 
-tests_full:
-    just show_system_info
-    -just test_ci_conf
-    just test_shfmt
-    just test_black
-    just test_pyright
-    just test_ruff
-    just test_build
-    just test_tox
-    just test_coverage
-    just test_docker_build
-    @echo -e "\n\033[0;32m=== ALL DONE ===\033[0m\n"
+check:
+    just format
+    just lint
+
+test:
+    @hatch run default:test
+
+coverage:
+    @hatch run default:cov
+
+build:
+    @hatch build --clean
+
+run loglevel *flags:
+    @hatch run mangadlp --loglevel {{loglevel}} {{flags}}

@@ -6,7 +6,7 @@ import requests
 from loguru import logger as log
 
 from mangadlp import utils
-from mangadlp.types import ChapterData, ComicInfo
+from mangadlp.models import ChapterData, ComicInfo
 
 
 class Mangadex:
@@ -22,7 +22,7 @@ class Mangadex:
     Attributes:
         api_name (str): Name of the API
         manga_uuid (str): UUID of the manga, without the url part
-        manga_data (dict): Infos of the manga. Name, title etc
+        manga_data (dict): Infos of the manga. Name, title etc.
         manga_title (str): The title of the manga, sanitized for all file systems
         manga_chapter_data (dict): All chapter data of the manga. Volumes, chapters, chapter uuids and chapter names
         chapter_list (list): A list of all available chapters for the language
@@ -65,7 +65,7 @@ class Mangadex:
             log.error("No valid UUID found")
             raise exc
 
-        return uuid  # pyright:ignore
+        return uuid
 
     # make initial request
     def get_manga_data(self) -> Dict[str, Any]:
@@ -84,9 +84,9 @@ class Mangadex:
             else:
                 break
 
-        response_body: Dict[str, Dict[str, Any]] = response.json()  # pyright:ignore
+        response_body: Dict[str, Dict[str, Any]] = response.json()
         # check if manga exists
-        if response_body["result"] != "ok":  # type:ignore
+        if response_body["result"] != "ok":
             log.error("Manga not found")
             raise KeyError
 
@@ -98,30 +98,35 @@ class Mangadex:
         attributes = self.manga_data["attributes"]
         # try to get the title in requested language
         try:
-            title = attributes["title"][self.language]
+            found_title = attributes["title"][self.language]
+            title = utils.fix_name(found_title)
         except KeyError:
             log.info("Manga title not found in requested language. Trying alt titles")
         else:
             log.debug(f"Language={self.language}, Title='{title}'")
-            return utils.fix_name(title)
+            return title  # type: ignore
 
         # search in alt titles
         try:
             log.debug(f"Alt titles: {attributes['altTitles']}")
             for item in attributes["altTitles"]:
                 if item.get(self.language):
-                    alt_title = item
+                    alt_title_item = item
                     break
-            title = alt_title[self.language]  # pyright:ignore
+            found_title = alt_title_item[self.language]
         except (KeyError, UnboundLocalError):
             log.warning("Manga title also not found in alt titles. Falling back to english title")
         else:
-            log.debug(f"Language={self.language}, Alt-title='{title}'")
-            return utils.fix_name(title)
+            title = utils.fix_name(found_title)
+            log.debug(f"Language={self.language}, Alt-title='{found_title}'")
+            return title  # type: ignore
 
-        title = attributes["title"]["en"]
+        found_title = attributes["title"]["en"]
+        title = utils.fix_name(found_title)
+
         log.debug(f"Language=en, Fallback-title='{title}'")
-        return utils.fix_name(title)
+
+        return title  # type: ignore
 
     # check if chapters are available in requested language
     def check_chapter_lang(self) -> int:
@@ -149,7 +154,7 @@ class Mangadex:
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
 
-        chapter_data: dict[str, ChapterData] = {}
+        chapter_data: Dict[str, ChapterData] = {}
         last_volume, last_chapter = ("", "")
         offset = 0
         while offset < total_chapters:  # if more than 500 chapters
@@ -233,8 +238,8 @@ class Mangadex:
             if api_error:
                 return []
 
-        chapter_hash = api_data["chapter"]["hash"]  # pyright:ignore
-        chapter_img_data = api_data["chapter"]["data"]  # pyright:ignore
+        chapter_hash = api_data["chapter"]["hash"]
+        chapter_img_data = api_data["chapter"]["data"]
 
         # get list of image urls
         image_urls: List[str] = []

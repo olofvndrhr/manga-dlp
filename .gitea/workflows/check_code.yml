@@ -1,0 +1,33 @@
+name: check code
+
+on:
+  push:
+    branches: [main, master]
+
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check-code:
+    uses: actions/workflows/.gitea/workflows/check_python_hatch.yml@master
+    with:
+      run-tests: true
+
+  scan-code:
+    uses: actions/workflows/.gitea/workflows/sonarqube_python.yml@master
+    needs: [check-code]
+    if: gitea.event_name != 'pull_request'
+    with:
+      run-coverage: true
+    secrets:
+      sonar-host: ${{ secrets.SONARQUBE_HOST }}
+      sonar-token: ${{ secrets.SONARQUBE_TOKEN }}
+
+  check-docs:
+    runs-on: python311
+    steps:
+      - name: "build docs"
+        run: |
+          python3 -m pip install mkdocs
+          cd docs || exit 1
+          mkdocs build --strict

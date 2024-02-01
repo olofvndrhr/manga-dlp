@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, List
 from zipfile import ZipFile
 
+import pytz
 from loguru import logger as log
 
 
@@ -24,17 +25,17 @@ def make_archive(chapter_path: Path, file_format: str) -> None:
 
 def make_pdf(chapter_path: Path) -> None:
     try:
-        import img2pdf  # pylint: disable=import-outside-toplevel # pyright:ignore
+        import img2pdf  # pylint: disable=import-outside-toplevel
     except Exception as exc:
         log.error("Cant import img2pdf. Please install it first")
         raise exc
 
     pdf_path = Path(f"{chapter_path}.pdf")
-    images: list[str] = []
+    images: List[str] = []
     for file in chapter_path.iterdir():
         images.append(str(file))
     try:
-        pdf_path.write_bytes(img2pdf.convert(images))  # pyright:ignore
+        pdf_path.write_bytes(img2pdf.convert(images))
     except Exception as exc:
         log.error("Can't create '.pdf' archive")
         raise exc
@@ -43,13 +44,13 @@ def make_pdf(chapter_path: Path) -> None:
 # create a list of chapters
 def get_chapter_list(chapters: str, available_chapters: List[str]) -> List[str]:
     # check if there are available chapter
-    chapter_list: list[str] = []
+    chapter_list: List[str] = []
     for chapter in chapters.split(","):
         # check if chapter list is with volumes and ranges (forcevol)
         if "-" in chapter and ":" in chapter:
             # split chapters and volumes apart for list generation
-            lower_num_fv: list[str] = chapter.split("-")[0].split(":")
-            upper_num_fv: list[str] = chapter.split("-")[1].split(":")
+            lower_num_fv: List[str] = chapter.split("-")[0].split(":")
+            upper_num_fv: List[str] = chapter.split("-")[1].split(":")
             vol_fv: str = lower_num_fv[0]
             chap_beg_fv: int = int(lower_num_fv[1])
             chap_end_fv: int = int(upper_num_fv[1])
@@ -70,7 +71,7 @@ def get_chapter_list(chapters: str, available_chapters: List[str]) -> List[str]:
             # select all chapters from the volume --> 1: == 1:1,1:2,1:3...
             if vol_num and not chap_num:
                 regex: Any = re.compile(f"{vol_num}:[0-9]{{1,4}}")
-                vol_list: list[str] = [n for n in available_chapters if regex.match(n)]
+                vol_list: List[str] = [n for n in available_chapters if regex.match(n)]
                 chapter_list.extend(vol_list)
             else:
                 chapter_list.append(chapter)
@@ -160,7 +161,7 @@ def get_file_format(file_format: str) -> str:
 
 
 def progress_bar(progress: float, total: float) -> None:
-    time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    time = datetime.now(tz=pytz.timezone("Europe/Zurich")).strftime("%Y-%m-%dT%H:%M:%S")
     percent = int(progress / (int(total) / 100))
     bar_length = 50
     bar_progress = int(progress / (int(total) / bar_length))
@@ -168,9 +169,9 @@ def progress_bar(progress: float, total: float) -> None:
     whitespace_texture = " " * (bar_length - bar_progress)
     if progress == total:
         full_bar = "■" * bar_length
-        print(f"\r{time}{' '*6}| [BAR    ] ❙{full_bar}❙ 100%", end="\n")
+        print(f"\r{time}{' '*6}| [BAR    ] ❙{full_bar}❙ 100%", end="\n")  # noqa
     else:
-        print(
+        print(  # noqa
             f"\r{time}{' '*6}| [BAR    ] ❙{bar_texture}{whitespace_texture}❙ {percent}%",
             end="\r",
         )

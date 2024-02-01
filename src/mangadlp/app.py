@@ -10,7 +10,7 @@ from mangadlp.api.mangadex import Mangadex
 from mangadlp.cache import CacheDB
 from mangadlp.hooks import run_hook
 from mangadlp.metadata import write_metadata
-from mangadlp.types import ChapterData
+from mangadlp.models import ChapterData
 from mangadlp.utils import get_file_format
 
 
@@ -73,7 +73,7 @@ class MangaDLP:
         add_metadata: Flag to toggle creation & inclusion of metadata
     """
 
-    def __init__(  # pylint: disable=too-many-locals
+    def __init__(  # noqa
         self,
         url_uuid: str,
         language: str = "en",
@@ -159,7 +159,7 @@ class MangaDLP:
                 raise ValueError
 
     # once called per manga
-    def get_manga(self) -> None:
+    def get_manga(self) -> None:  # noqa
         print_divider = "========================================="
         # show infos
         log.info(f"{print_divider}")
@@ -218,10 +218,10 @@ class MangaDLP:
         )
 
         # get chapters
-        skipped_chapters: list[Any] = []
-        error_chapters: list[Any] = []
+        skipped_chapters: List[Any] = []
+        error_chapters: List[Any] = []
         for chapter in chapters_to_download:
-            if self.cache_path and chapter in cached_chapters:  # pyright:ignore
+            if self.cache_path and chapter in cached_chapters:
                 log.info(f"Chapter '{chapter}' is in cache. Skipping download")
                 continue
 
@@ -235,7 +235,7 @@ class MangaDLP:
                 skipped_chapters.append(chapter)
                 # update cache
                 if self.cache_path:
-                    cache.add_chapter(chapter)  # pyright:ignore
+                    cache.add_chapter(chapter)
                 continue
             except Exception:
                 # skip download/packing due to an error
@@ -266,7 +266,7 @@ class MangaDLP:
 
             # update cache
             if self.cache_path:
-                cache.add_chapter(chapter)  # pyright:ignore
+                cache.add_chapter(chapter)
 
             # start chapter post hook
             run_hook(
@@ -429,7 +429,7 @@ class MangaDLP:
             # check if image folder is existing
             if not chapter_path.exists():
                 log.error(f"Image folder: {chapter_path} does not exist")
-                raise IOError
+                raise OSError
             if self.file_format == ".pdf":
                 utils.make_pdf(chapter_path)
             else:

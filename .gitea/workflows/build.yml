@@ -1,0 +1,30 @@
+name: build package and container
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-container:
+    uses: actions/workflows/.gitea/workflows/build_container.yml@master
+    with:
+      registry: git.44net.ch
+      image-name: 44net/invh-server
+      context: .
+      dockerfile: docker/Dockerfile
+      platforms: linux/amd64,linux/arm64
+    secrets:
+      cr-username: ${{ secrets.CR_USERNAME }}
+      cr-password: ${{ secrets.CR_PASSWORD }}
+
+  build-pypackage:
+    uses: actions/workflows/.gitea/workflows/release_pypackage.yml@master
+    with:
+      repository: https://git.44net.ch/api/packages/44net/pypi
+    secrets:
+      username: actions-bot
+      token: ${{ secrets.PACKAGE_TOKEN }}

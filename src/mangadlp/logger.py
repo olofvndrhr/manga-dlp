@@ -1,8 +1,9 @@
 import logging
 import sys
-from typing import Any
+from typing import Any, Dict
 
 from loguru import logger
+
 
 LOGURU_FMT = "{time:%Y-%m-%dT%H:%M:%S%z} | <level>[{level: <7}]</level> [{name: <10}] [{function: <20}]: {message}"
 
@@ -20,7 +21,7 @@ class InterceptHandler(logging.Handler):
 
         # Find caller from where originated the logged message
         frame, depth = logging.currentframe(), 2
-        while frame.f_code.co_filename == logging.__file__:  # pyright:ignore
+        while frame.f_code.co_filename == logging.__file__:
             frame = frame.f_back  # type: ignore
             depth += 1
 
@@ -29,7 +30,7 @@ class InterceptHandler(logging.Handler):
 
 # init logger with format and log level
 def prepare_logger(loglevel: int = 20) -> None:
-    stdout_handler: dict[str, Any] = {
+    stdout_handler: Dict[str, Any] = {
         "sink": sys.stdout,
         "level": loglevel,
         "format": LOGURU_FMT,

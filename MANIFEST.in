@@ -1,13 +1,1 @@
-include *.json
-include *.md
-include *.properties
-include *.py
-include *.txt
-include *.yml
-include *.xml
-recursive-include contrib *.py
-recursive-include mangadlp *.py
-recursive-include mangadlp *.xml
-recursive-include tests *.py
-recursive-include tests *.xml
-recursive-include tests *.txt
+graft src

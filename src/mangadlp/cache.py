@@ -4,7 +4,7 @@ from typing import List, Union
 
 from loguru import logger as log
 
-from mangadlp.types import CacheData, CacheKeyData
+from mangadlp.models import CacheData, CacheKeyData
 
 
 class CacheDB:
@@ -29,11 +29,11 @@ class CacheDB:
             self.db_data[self.db_key] = {}
 
         self.db_uuid_data: CacheKeyData = self.db_data[self.db_key]
-        if not self.db_uuid_data.get("name"):  # pyright:ignore
-            self.db_uuid_data.update({"name": self.name})  # pyright:ignore
+        if not self.db_uuid_data.get("name"):
+            self.db_uuid_data.update({"name": self.name})
             self._write_db()
 
-        self.db_uuid_chapters: List[str] = self.db_uuid_data.get("chapters") or []  # type:ignore
+        self.db_uuid_chapters: List[str] = self.db_uuid_data.get("chapters") or []
 
     def _prepare_db(self) -> None:
         if self.db_path.exists():

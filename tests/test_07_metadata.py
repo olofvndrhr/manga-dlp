@@ -34,7 +34,7 @@ def test_metadata_creation():
         "Format": "cbz",
     }
 
-    write_metadata(metadata_path, metadata)  # pyright:ignore
+    write_metadata(metadata_path, metadata)  
     assert metadata_file.exists()
 
     read_in_metadata = metadata_file.read_text(encoding="utf8")
@@ -60,7 +60,7 @@ def test_metadata_validation():
         "Format": "cbz",
     }
 
-    valid_metadata = validate_metadata(metadata)  # pyright:ignore
+    valid_metadata = validate_metadata(metadata)  
 
     assert valid_metadata["ComicInfo"] == {
         "Title": "title1",
@@ -83,7 +83,7 @@ def test_metadata_validation_values():
         "CommunityRating": 4,
     }
 
-    valid_metadata = validate_metadata(metadata)  # pyright:ignore
+    valid_metadata = validate_metadata(metadata)  
 
     assert valid_metadata["ComicInfo"] == {
         "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",
@@ -102,7 +102,7 @@ def test_metadata_validation_values2():
         "CommunityRating": 10,  # invalid
     }
 
-    valid_metadata = validate_metadata(metadata)  # pyright:ignore
+    valid_metadata = validate_metadata(metadata)  
 
     assert valid_metadata["ComicInfo"] == {
         "Notes": "Downloaded with https://github.com/olofvndrhr/manga-dlp",

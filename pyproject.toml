@@ -1,9 +1,8 @@
 [build-system]
-requires      = ["hatchling>=1.11.0"]
+requires = ["hatchling>=1.18", "hatch-regex-commit>=0.0.3"]
 build-backend = "hatchling.build"
 
 [project]
-dynamic = ["version"]
 name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
@@ -18,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
     "requests>=2.28.0",
@@ -25,115 +25,153 @@ dependencies = [
     "click>=8.1.3",
     "click-option-group>=0.5.5",
     "xmltodict>=0.13.0",
+    "img2pdf>=0.4.4",
+    "pytz==2022.1",
 ]
 
 [project.urls]
 Homepage = "https://github.com/olofvndrhr/manga-dlp"
-History  = "https://github.com/olofvndrhr/manga-dlp/commits/master"
-Tracker  = "https://github.com/olofvndrhr/manga-dlp/issues"
-Source   = "https://github.com/olofvndrhr/manga-dlp"
+History = "https://github.com/olofvndrhr/manga-dlp/commits/master"
+Tracker = "https://github.com/olofvndrhr/manga-dlp/issues"
+Source = "https://github.com/olofvndrhr/manga-dlp"
 
 [project.scripts]
-mangadlp  = "mangadlp.cli:main"
+mangadlp = "mangadlp.cli:main"
 manga-dlp = "mangadlp.cli:main"
 
 [tool.hatch.version]
-path = "mangadlp/__about__.py"
+source = "regex_commit"
+path = "src/mangadlp/__about__.py"
+tag_sign = false
 
 [tool.hatch.build]
 ignore-vcs = true
 
 [tool.hatch.build.targets.sdist]
-packages = ["mangadlp"]
+packages = ["src/mangadlp"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["mangadlp"]
+packages = ["src/mangadlp"]
+
+### envs
 
 [tool.hatch.envs.default]
 dependencies = [
-    "requests>=2.28.0",
-    "loguru>=0.6.0",
-    "click>=8.1.3",
-    "click-option-group>=0.5.5",
-    "xmltodict>=0.13.0",
-    "xmlschema>=2.2.1",
-    "img2pdf>=0.4.4",
-    "hatch>=1.6.0",
-    "hatchling>=1.11.0",
-    "pytest>=7.0.0",
-    "coverage>=6.3.1",
-    "black>=22.1.0",
-    "mypy>=0.940",
-    "tox>=3.24.5",
-    "ruff>=0.0.247",
+    "pytest==7.4.3",
+    "coverage==7.3.2",
 ]
 
-# black
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = ["coverage erase", "coverage run -m pytest {args:tests}"]
+cov-report = ["- coverage combine", "coverage report", "coverage xml"]
+cov = ["test-cov", "cov-report"]
 
-[tool.black]
-line-length    = 100
-target-version = ["py39"]
+[[tool.hatch.envs.lint.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11"]
 
-# pyright
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+    "mypy==1.7.1",
+    "ruff==0.1.7",
+]
 
-[tool.pyright]
-typeCheckingMode                   = "strict"
-pythonVersion                      = "3.9"
-reportUnnecessaryTypeIgnoreComment = true
-reportShadowedImports              = true
-reportUnusedExpression             = true
-reportMatchNotExhaustive           = true
-# venvPath         = "."
-# venv             = "venv"
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --non-interactive --install-types {args:src/mangadlp}"
+style = ["ruff check --diff {args:src/mangadlp}", "ruff format --check --diff {args:src/mangadlp}"]
+fmt = ["ruff format {args:src/mangadlp}", "ruff check --fix {args:src/mangadlp}", "style"]
+all = ["style", "typing"]
 
-# ruff
+### ruff
 
 [tool.ruff]
-target-version = "py39"
-select = [
-    "E",   # pycodetyle err
-    "W",   # pycodetyle warn
-    "D",   # pydocstyle
-    "C90", # mccabe
-    "I",   # isort
-    "PLE", # pylint err
-    "PLW", # pylint warn
-    "PLC", # pylint convention
-    "PLR", # pylint refactor
-    "F",   # pyflakes
-    "RUF", # ruff specific
-]
+target-version = "py38"
 line-length = 100
+indent-width = 4
 fix = true
 show-fixes = true
-format = "grouped"
 ignore-init-module-imports = true
 respect-gitignore = true
-ignore = ["E501", "D103", "D100", "D102", "PLR2004", "D403"]
-#unfixable = ["F401"]
+src = ["src", "tests"]
 exclude = [
     ".direnv",
     ".git",
     ".mypy_cache",
     ".ruff_cache",
     ".svn",
+    ".tox",
+    ".nox",
     ".venv",
     "venv",
     "__pypackages__",
     "build",
     "dist",
+    "node_modules",
     "venv",
 ]
 
+[tool.ruff.lint]
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C",
+    "DTZ",
+    "E",
+    "EM",
+    "F",
+    "FBT",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "T",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = ["E501", "D103", "D100", "D102", "PLR2004", "D403", "ISC001", "FBT001", "FBT002", "FBT003", "W505"]
+unfixable = ["F401"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
 [tool.ruff.per-file-ignores]
-"__init__.py"  = ["D104"]
+"__init__.py" = ["D104"]
 "__about__.py" = ["D104", "F841"]
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.pyupgrade]
+keep-runtime-typing = true
+
+[tool.ruff.isort]
+lines-after-imports = 2
+known-first-party = ["mangadlp"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.pylint]
-max-args = 10
+max-branches = 24
+max-returns = 12
+max-statements = 100
+max-args = 15
+allow-magic-value-types = ["str", "bytes", "complex", "float", "int"]
 
 [tool.ruff.mccabe]
-max-complexity = 10
+max-complexity = 15
 
 [tool.ruff.pydocstyle]
 convention = "google"
@@ -141,17 +179,48 @@ convention = "google"
 [tool.ruff.pycodestyle]
 max-doc-length = 100
 
-# pytest
+### mypy
 
+[tool.mypy]
+#plugins = ["pydantic.mypy"]
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+ignore_missing_imports = true
+warn_return_any = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+
+#[tool.pydantic-mypy]
+#init_forbid_extra = true
+#init_typed = true
+#warn_required_dynamic_aliases = true
+
+### pytest
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = ["src"]
+addopts = "--color=yes --exitfirst --verbose -ra"
+#addopts = "--color=yes --exitfirst --verbose -ra --capture=tee-sys"
+filterwarnings = [
+    'ignore:Jupyter is migrating its paths to use standard platformdirs:DeprecationWarning',
+]
 
-# coverage
+### coverage
 
 [tool.coverage.run]
-source       = ["mangadlp"]
-branch       = true
-command_line = "-m pytest --exitfirst"
+source_pkgs = ["mangadlp", "tests"]
+branch = true
+parallel = true
+omit = ["src/mangadlp/__about__.py"]
+
+[tool.coverage.paths]
+testproj = ["src/mangadlp", "*/mangadlp/src/mangadlp"]
+tests = ["tests", "*/mangadlp/tests"]
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
@@ -169,5 +238,7 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     # Don't complain about abstract methods, they aren't run:
     "@(abc.)?abstractmethod",
+    "no cov",
+    "if TYPE_CHECKING:",
 ]
-ignore_errors = true
+# ignore_errors = true
