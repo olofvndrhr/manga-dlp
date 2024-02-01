@@ -1,0 +1,20 @@
+name: run scheduled tests
+
+on:
+  issue_comment:
+
+  schedule:
+    - cron: "0 20 * * 6"
+
+jobs:
+  check-code-py311:
+    runs-on: python311
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: install hatch
+        run: pip install -U hatch
+
+      - name: run tests
+        run: hatch run default:test
