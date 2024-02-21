@@ -30,30 +30,27 @@ jobs:
       - name: build package
         run: hatch build --clean
 
-      - name: create release notes
-        run: bash get_release_notes.sh latest
-
-      - name: read changelog
-        id: changelog
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./RELEASENOTES.md
+      - name: get release notes
+        id: release-notes
+        uses: olofvndrhr/releasenote-gen@v1
 
       - name: create gitea release
         uses: https://gitea.com/actions/release-action@main
         if: gitea.event_name != 'pull_request'
         with:
           title: ${{ gitea.ref_name }}
-          body: ${{ steps.changelog.outputs.content }}
+          body: ${{ steps.release-notes.outputs.releasenotes }}
           files: |-
             dist/**
 
       - name: create github release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         if: gitea.event_name != 'pull_request'
         with:
           token: ${{ secrets.GH_TOKEN }}
-          title: ${{ gitea.ref_name }}
-          body: ${{ steps.changelog.outputs.content }}
-          files: |-
+          owner: olofvndrhr
+          repo: manga-dlp
+          name: ${{ gitea.ref_name }}
+          body: ${{ steps.release-notes.outputs.releasenotes }}
+          artifacts: |-
             dist/**
