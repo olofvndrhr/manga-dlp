@@ -239,7 +239,7 @@ parallel = true
 omit = ["src/mangadlp/__about__.py"]
 
 [tool.coverage.paths]
-testproj = ["src/mangadlp", "*/manga-dlp/src/mangadlp"]
+mangadlp = ["src/mangadlp", "*/manga-dlp/src/mangadlp"]
 tests = ["tests", "*/manga-dlp/tests"]
 
 [tool.coverage.report]
