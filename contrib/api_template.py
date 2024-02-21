@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List
 
 from mangadlp.models import ChapterData, ComicInfo
 
@@ -40,7 +40,7 @@ class YourAPI:
         self.manga_uuid = "abc"
         self.manga_title = "abc"
         self.chapter_list = ["1", "2", "2.1", "5", "10"]
-        self.manga_chapter_data: dict[str, ChapterData] = {  # example data
+        self.manga_chapter_data: Dict[str, ChapterData] = {  # example data
             "1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -57,7 +57,7 @@ class YourAPI:
             },
         }
         # or with --forcevol
-        self.manga_chapter_data: dict[str, ChapterData] = {
+        self.manga_chapter_data: Dict[str, ChapterData] = {
             "1:1": {
                 "uuid": "abc",
                 "volume": "1",
@@ -72,7 +72,7 @@ class YourAPI:
             },
         }
 
-        def get_chapter_images(self, chapter: str, wait_time: float) -> list[str]:
+        def get_chapter_images(self, chapter: str, wait_time: float) -> List[str]:
             """Get chapter images as a list (full links).
 
             Args:

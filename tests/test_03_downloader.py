@@ -1,5 +1,6 @@
 import shutil
 from pathlib import Path
+from typing import List
 
 import pytest
 import requests
@@ -18,7 +19,7 @@ def test_downloader():
     ]
     chapter_path = Path("tests/test_folder1")
     chapter_path.mkdir(parents=True, exist_ok=True)
-    images: list[str] = []
+    images: List[str] = []
     downloader.download_chapter(urls, str(chapter_path), 2)
     for file in chapter_path.iterdir():
         images.append(file.name)

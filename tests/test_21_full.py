@@ -3,6 +3,7 @@ import platform
 import shutil
 import time
 from pathlib import Path
+from typing import List
 
 import pytest
 from pytest import MonkeyPatch
@@ -165,7 +166,7 @@ def test_full_with_input_skip_folder(wait_10s: MonkeyPatch):
     chapter_path.mkdir(parents=True, exist_ok=True)
 
     os.system(f"python3 {script_path} {command_args}")
-    found_files: list[str] = []
+    found_files: List[str] = []
     for file in chapter_path.iterdir():
         found_files.append(file.name)
 
