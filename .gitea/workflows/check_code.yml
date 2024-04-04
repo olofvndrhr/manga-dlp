@@ -37,7 +37,7 @@ jobs:
         run: hatch run default:cov
 
       - name: run sonar-scanner
-        uses: sonarsource/sonarqube-scan-action@v2.0.1
+        uses: sonarsource/sonarqube-scan-action@v2.0.2
         env:
           SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
