@@ -58,7 +58,7 @@ packages = ["src/mangadlp"]
 [tool.hatch.envs.default]
 python = "3.11"
 dependencies = [
-    "pytest==7.4.3",
+    "pytest==8.2.2",
     "coverage==7.3.2",
     "xmltodict>=0.13.0",
     "xmlschema>=2.2.1",
