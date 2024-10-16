@@ -59,7 +59,7 @@ packages = ["src/mangadlp"]
 python = "3.11"
 dependencies = [
     "pytest==7.4.3",
-    "coverage==7.3.2",
+    "coverage==7.6.3",
     "xmltodict>=0.13.0",
     "xmlschema>=2.2.1",
 ]
