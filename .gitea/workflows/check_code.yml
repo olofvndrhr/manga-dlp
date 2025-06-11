@@ -9,10 +9,10 @@ on:
 
 jobs:
   check-docs:
-    runs-on: python311
+    runs-on: python3.12
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "build docs"
         run: |
@@ -21,12 +21,12 @@ jobs:
           mkdocs build --strict
 
   scan-code-py311:
-    runs-on: python311
+    runs-on: python3.12
     if: gitea.event_name != 'pull_request'
     needs: [check-code-py38]
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -37,7 +37,7 @@ jobs:
         run: hatch run default:cov
 
       - name: run sonar-scanner
-        uses: sonarsource/sonarqube-scan-action@v2.1.0
+        uses: sonarsource/sonarqube-scan-action@v5
         env:
           SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
     runs-on: python38
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install hatch
         run: pip install -U hatch
@@ -66,7 +66,7 @@ jobs:
     needs: [check-code-py38]
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install hatch
         run: pip install -U hatch
@@ -86,7 +86,7 @@ jobs:
     needs: [check-code-py39]
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install hatch
         run: pip install -U hatch
@@ -102,11 +102,11 @@ jobs:
         run: hatch run default:test
 
   check-code-py311:
-    runs-on: python311
+    runs-on: python3.12
     needs: [check-code-py310]
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install hatch
         run: pip install -U hatch

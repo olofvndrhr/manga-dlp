@@ -1,6 +1,6 @@
 # manga-dlp - python script to download mangas
 
-> Full docs: https://manga-dlp.ivn.sh
+> Full docs: https://manga-dlp.vsfl.org
 
 Code Analysis
 
@@ -90,7 +90,7 @@ mangadlp <args> # call script directly
 
 ### With docker
 
-See the docker [README](https://manga-dlp.ivn.sh/docker/)
+See the docker [README](https://manga-dlp.vsfl.org/docker/)
 
 ## Options
 

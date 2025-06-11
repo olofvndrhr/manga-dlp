@@ -40,19 +40,19 @@ you just want the folder with all the pictures use the flag `--format ""`.
 
 ## _Currently_ Supported sites
 
--   [Mangadex.org](https://mangadex.org/)
+- [Mangadex.org](https://mangadex.org/)
 
 ## Features (not complete)
 
--   Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
--   Json caching
--   Custom hooks after/before each download
--   Custom chapter name format
--   Volume support
--   Multiple archive formats supported (cbz,cbr,zip,none)
--   Language selection
--   Download all chapters directly
--   And others...
+- Metadata support with [ComicInfo.xml](https://anansi-project.github.io/docs/comicinfo/intro)
+- Json caching
+- Custom hooks after/before each download
+- Custom chapter name format
+- Volume support
+- Multiple archive formats supported (cbz,cbr,zip,none)
+- Language selection
+- Download all chapters directly
+- And others...
 
 ## Usage
 
@@ -94,7 +94,7 @@ mangadlp <args> # call script directly
 
 ### With docker
 
-See the docker [README](https://manga-dlp.ivn.sh/docker/)
+See the docker [README](https://manga-dlp.vsfl.org/docker/)
 
 ## Options
 
@@ -144,10 +144,10 @@ If you encounter any bugs, also just open an issue with a description of the pro
 
 ## TODO's
 
--   <del>Make docker container for easy distribution</del>
-    --> [Dockerhub](https://hub.docker.com/r/olofvndrhr/manga-dlp)
--   <del>Automate release</del>
-    --> Done with woodpecker-ci
--   <del>Make pypi package</del>
-    --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
--   Add more supported sites
+- <del>Make docker container for easy distribution</del>
+  --> [Dockerhub](https://hub.docker.com/r/olofvndrhr/manga-dlp)
+- <del>Automate release</del>
+  --> Done with woodpecker-ci
+- <del>Make pypi package</del>
+  --> Done with release [2.1.7](https://pypi.org/project/manga-dlp/)
+- Add more supported sites

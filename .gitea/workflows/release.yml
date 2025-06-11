@@ -10,14 +10,14 @@ on:
 
 jobs:
   release-pypackage:
-    runs-on: python311
+    runs-on: python3.12
     env:
       HATCH_INDEX_REPO: main
       HATCH_INDEX_USER: __token__
       HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: setup go
         uses: actions/setup-go@v4

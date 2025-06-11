@@ -114,7 +114,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - `--name-format` and `--name-format-none` flags to add a custom naming scheme for the downloaded files. See
-  docs: https://manga-dlp.ivn.sh/download/
+  docs: <https://manga-dlp.vsfl.org/download/>
 - More debug log messages
 - More tests for the custom naming scheme
 - More type hints

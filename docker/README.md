@@ -1,6 +1,6 @@
 # Docker container of manga-dlp
 
-> Full docs: https://manga-dlp.ivn.sh/docker
+> Full docs: https://manga-dlp.vsfl.org/docker
 
 ## Quick start
 
