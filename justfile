@@ -3,17 +3,17 @@
 default: show_receipts
 
 set shell := ["bash", "-uc"]
-set dotenv-load
+set dotenv-load := true
 
 show_receipts:
     just --list
 
 show_system_info:
     @echo "=================================="
-    @echo "os : {{os()}}"
-    @echo "arch: {{arch()}}"
-    @echo "justfile dir: {{justfile_directory()}}"
-    @echo "invocation dir: {{invocation_directory()}}"
+    @echo "os : {{ os() }}"
+    @echo "arch: {{ arch() }}"
+    @echo "justfile dir: {{ justfile_directory() }}"
+    @echo "invocation dir: {{ invocation_directory() }}"
     @echo "running dir: `pwd -P`"
     @echo "=================================="
 
@@ -62,8 +62,8 @@ check:
     just lint
     just format
 
-test:
-    hatch run default:test
+test *args:
+    hatch run default:test {{ args }}
 
 coverage:
     hatch run default:cov
@@ -72,4 +72,4 @@ build:
     hatch build --clean
 
 run loglevel *flags:
-    hatch run mangadlp --loglevel {{loglevel}} {{flags}}
+    hatch run mangadlp --loglevel {{ loglevel }} {{ flags }}

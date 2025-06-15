@@ -37,11 +37,11 @@ manga-dlp -u <some url> -c 1 --hook-post-manga "echo ${MDLP_MANGA_TITLE}"
 All hooks are exposed to a variety of environment variables with infos about the manga/chapter currently downloading.
 
 All available env variables are listed below with the example
-for [this](https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie) manga:
+for [this](https://mangadex.org/title/7b0fbb36-7e17-4709-b616-742005b7e0e3/yona-yona-yona) manga:
 
 > Command
 >
-used: `python3 manga-dlp.py -u https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie -c 1`
+> used: `python3 manga-dlp.py -u https://mangadex.org/title/7b0fbb36-7e17-4709-b616-742005b7e0e3/yona-yona-yona -c 1`
 
 **General:**
 
@@ -52,22 +52,22 @@ used: `python3 manga-dlp.py -u https://mangadex.org/title/0aea9f43-d4a9-4bf7-beb
 **Manga hooks:**
 
 - `MDLP_API` -> Mangadex
-- `MDLP_MANGA_URL_UUID` -> https://mangadex.org/title/0aea9f43-d4a9-4bf7-bebc-550a512f9b95/shikimori-s-not-just-a-cutie
+- `MDLP_MANGA_URL_UUID` -> https://mangadex.org/title/7b0fbb36-7e17-4709-b616-742005b7e0e3/yona-yona-yona
 - `MDLP_MANGA_UUID` -> 0aea9f43-d4a9-4bf7-bebc-550a512f9b95
-- `MDLP_MANGA_TITLE` -> Shikimori's Not Just a Cutie
+- `MDLP_MANGA_TITLE` -> Yona Yona Yona
 - `MDLP_LANGUAGE` -> en
 - `MDLP_TOTAL_CHAPTERS` -> 158
 - `MDLP_CHAPTERS_TO_DOWNLOAD` -> ['1']
 - `MDLP_FILE_FORMAT` -> .cbz
 - `MDLP_FORCEVOL` -> False
 - `MDLP_DOWNLOAD_PATH` -> downloads
-- `MDLP_MANGA_PATH` -> downloads/Shikimori's Not Just a Cutie
+- `MDLP_MANGA_PATH` -> downloads/Yona Yona Yona
 
 **Chapter hooks (extends Manga hooks env variables):**
 
 - `MDLP_CHAPTER_FILENAME` -> Ch. 1
-- `MDLP_CHAPTER_PATH` -> downloads/Shikimori's Not Just a Cutie/Ch. 1
-- `MDLP_CHAPTER_ARCHIVE_PATH` -> downloads/Shikimori's Not Just a Cutie/Ch. 1.cbz
+- `MDLP_CHAPTER_PATH` -> downloads/Yona Yona Yona/Ch. 1
+- `MDLP_CHAPTER_ARCHIVE_PATH` -> downloads/Yona Yona Yona/Ch. 1.cbz
 - `MDLP_CHAPTER_UUID` -> b7cba066-0b45-4d88-be08-89240841b4f7
 - `MDLP_CHAPTER_VOLUME` -> 1
 - `MDLP_CHAPTER_NUMBER` -> 1
