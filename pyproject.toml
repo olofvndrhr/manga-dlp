@@ -77,7 +77,7 @@ python = ["3.8", "3.9", "3.10", "3.11"]
 detached = true
 dependencies = [
     "mypy~=1.15.0",
-    "ruff~=0.11.10",
+    "ruff~=0.12.1",
 ]
 
 [tool.hatch.envs.lint.scripts]
