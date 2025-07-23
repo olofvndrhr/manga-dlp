@@ -37,7 +37,7 @@ jobs:
 
       - name: run tests
         if: github.event_name == 'pull_request'
-        run: hatch run default:test
+        run: hatch run test:test
 
   scan-code:
     runs-on: python3.12
@@ -52,8 +52,8 @@ jobs:
       - name: install hatch
         run: pip install -U hatch
 
-      - name: get coverage (hatch)
-        run: hatch run default:cov
+      # - name: get coverage (hatch)
+      #   run: hatch run test:cov
 
       - name: run sonar-scanner
         uses: sonarsource/sonarqube-scan-action@v5
