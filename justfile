@@ -23,23 +23,23 @@ setup:
 
 create_venv:
     @echo "creating venv"
-    python3 -m pip install --upgrade pip setuptools wheel
+    pip install --upgrade pip setuptools wheel
     python3 -m venv venv
 
 install_deps:
     @echo "installing dependencies"
-    python3 -m hatch dep show requirements --project-only > /tmp/requirements.txt
-    pip3 install -r /tmp/requirements.txt
+    hatch dep show requirements --project-only > /tmp/requirements.txt
+    pip install -r /tmp/requirements.txt
 
 install_deps_dev:
     @echo "installing dev dependencies"
-    python3 -m hatch dep show requirements --project-only > /tmp/requirements.txt
-    python3 -m hatch dep show requirements --env-only >> /tmp/requirements.txt
-    pip3 install -r /tmp/requirements.txt
+    hatch dep show requirements --project-only > /tmp/requirements.txt
+    hatch dep show requirements --env-only >> /tmp/requirements.txt
+    pip install -r /tmp/requirements.txt
 
 create_reqs:
     @echo "creating requirements"
-    pipreqs --force --savepath requirements.txt src/mangadlp/
+    hatch dep show requirements --project-only > requirements.txt
 
 test_shfmt:
     find . -type f \( -name "**.sh" -and -not -path "./.**" -and -not -path "./venv**" \) -exec shfmt -d -i 4 -bn -ci -sr "{}" \+;
@@ -59,14 +59,14 @@ format:
     hatch run lint:fmt
 
 check:
-    just lint
     just format
+    just lint
 
 test *args:
-    hatch run default:test {{ args }}
+    hatch run test:test {{ args }}
 
 coverage:
-    hatch run default:cov
+    hatch run test:cov
 
 build:
     hatch build --clean

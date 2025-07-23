@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
 
 import xmltodict
 from loguru import logger as log
@@ -11,7 +11,7 @@ METADATA_FILENAME = "ComicInfo.xml"
 METADATA_TEMPLATE = Path("mangadlp/metadata/ComicInfo_v2.0.xml")
 # define metadata types, defaults and valid values. an empty list means no value check
 # {key: (type, default value, valid values)}
-METADATA_TYPES: Dict[str, Tuple[Any, Union[str, int, None], List[Union[str, int, None]]]] = {
+METADATA_TYPES: dict[str, tuple[Any, str | int | None, list[str | int | None]]] = {
     "Title": (str, None, []),
     "Series": (str, None, []),
     "Number": (str, None, []),
@@ -62,10 +62,10 @@ METADATA_TYPES: Dict[str, Tuple[Any, Union[str, int, None], List[Union[str, int,
 }
 
 
-def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
+def validate_metadata(metadata_in: ComicInfo) -> dict[str, ComicInfo]:
     log.info("Validating metadata")
 
-    metadata_valid: Dict[str, ComicInfo] = {"ComicInfo": {}}
+    metadata_valid: dict[str, ComicInfo] = {"ComicInfo": {}}
     for key, value in METADATA_TYPES.items():
         metadata_type, metadata_default, metadata_validation = value
 
@@ -76,7 +76,7 @@ def validate_metadata(metadata_in: ComicInfo) -> Dict[str, ComicInfo]:
 
         # check if metadata key is available
         try:
-            md_to_check: Union[str, int, None] = metadata_in[key]
+            md_to_check: str | int | None = metadata_in[key]
         except KeyError:
             continue
         # check if provided metadata item is empty

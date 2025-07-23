@@ -32,7 +32,7 @@ def test_uuid_link_false():
 
     with pytest.raises(Exception) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == TypeError
+    assert e.type is TypeError
 
 
 def test_title():
@@ -94,7 +94,7 @@ def test_non_existing_manga():
 
     with pytest.raises(Exception) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == KeyError
+    assert e.type is KeyError
 
 
 def test_api_failure(monkeypatch: MonkeyPatch):
@@ -108,7 +108,7 @@ def test_api_failure(monkeypatch: MonkeyPatch):
 
     with pytest.raises(Exception) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == TypeError
+    assert e.type is TypeError
 
 
 def test_chapter_lang_en():
@@ -131,7 +131,7 @@ def test_empty_chapter_lang():
 
     with pytest.raises(Exception) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == KeyError
+    assert e.type is KeyError
 
 
 def test_not_existing_lang():
@@ -143,7 +143,7 @@ def test_not_existing_lang():
 
     with pytest.raises(Exception) as e:
         Mangadex(url_uuid, language, forcevol)
-    assert e.type == KeyError
+    assert e.type is KeyError
 
 
 def test_create_chapter_list():

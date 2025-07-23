@@ -1,5 +1,8 @@
 [build-system]
-requires = ["hatchling>=1.18", "hatch-regex-commit>=0.0.3"]
+requires = [
+    "hatchling==1.27.0",
+    "hatch-regex-commit==0.0.3",
+]
 build-backend = "hatchling.build"
 
 [project]
@@ -7,23 +10,28 @@ name = "manga-dlp"
 description = "A cli manga downloader"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dynamic = ["version"]
-authors = [{ name = "Ivan Schaller", email = "ivan@schaller.sh" }]
-keywords = ["manga", "downloader", "mangadex"]
+authors = [
+    { name = "Ivan Schaller", email = "ivan@schaller.sh" },
+]
+keywords = [
+    "manga",
+    "downloader",
+    "mangadex",
+]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
     "requests>=2.28.0",
     "loguru~=0.7.3",
-    "click~=8.2.0",
+    "click~=8.2.1",
     "click-option-group>=0.5.5",
     "xmltodict>=0.13.0",
     "img2pdf>=0.4.4",
@@ -32,17 +40,17 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/olofvndrhr/manga-dlp"
-History = "https://github.com/olofvndrhr/manga-dlp/commits/master"
-Tracker = "https://github.com/olofvndrhr/manga-dlp/issues"
-Source = "https://github.com/olofvndrhr/manga-dlp"
+History  = "https://github.com/olofvndrhr/manga-dlp/commits/master"
+Tracker  = "https://github.com/olofvndrhr/manga-dlp/issues"
+Source   = "https://github.com/olofvndrhr/manga-dlp"
 
 [project.scripts]
-mangadlp = "mangadlp.cli:main"
+mangadlp  = "mangadlp.cli:main"
 manga-dlp = "mangadlp.cli:main"
 
 [tool.hatch.version]
-source = "regex_commit"
-path = "src/mangadlp/__about__.py"
+source   = "regex_commit"
+path     = "src/mangadlp/__about__.py"
 tag_sign = false
 
 [tool.hatch.build.targets.sdist]
@@ -55,41 +63,48 @@ packages = ["src/mangadlp"]
 ### envs
 ###
 
-[tool.hatch.envs.default]
-python = "3.11"
+[tool.hatch.envs.test]
+python = "3.12"
 dependencies = [
-    "pytest~=8.3.5",
-    "coverage~=7.8.0",
+    "pytest==8.4.1",
+    "coverage==7.9.2",
     "xmltodict>=0.13.0",
     "xmlschema>=2.2.1",
 ]
 
-[tool.hatch.envs.default.scripts]
+[tool.hatch.envs.test.scripts]
 test = "pytest {args:tests}"
-test-cov = ["coverage erase", "coverage run -m pytest {args:tests}"]
-cov-report = ["- coverage combine", "coverage report", "coverage xml"]
+test-cov = [
+    "coverage erase",
+    "coverage run -m pytest {args:tests}",
+]
+cov-report = [
+    "- coverage combine",
+    "coverage report",
+    "coverage xml",
+]
 cov = ["test-cov", "cov-report"]
 
 [[tool.hatch.envs.lint.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
+python = ["3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.lint]
 detached = true
 dependencies = [
-    "mypy~=1.15.0",
-    "ruff~=0.12.1",
+    "mypy==1.17.0",
+    "ruff==0.12.4",
 ]
 
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --non-interactive --install-types {args:src/mangadlp}"
 style = [
-    "ruff check --diff {args:.}",
-    "ruff format --check --diff {args:.}"
+    "ruff check --no-fix {args:.}",
+    "ruff format --diff {args:.}",
 ]
 fmt = [
     "ruff check --fix {args:.}",
     "ruff format {args:.}",
-    "style"
+    "style",
 ]
 all = ["style", "typing"]
 
@@ -98,30 +113,13 @@ all = ["style", "typing"]
 ###
 
 [tool.ruff]
-target-version = "py38"
-line-length = 100
-indent-width = 4
-fix = true
-show-fixes = true
+target-version    = "py310"
+line-length       = 100
+indent-width      = 4
+fix               = true
+show-fixes        = true
 respect-gitignore = true
-src = ["src", "tests"]
-exclude = [
-    ".direnv",
-    ".git",
-    ".mypy_cache",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".nox",
-    ".venv",
-    "venv",
-    "__pypackages__",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-    "contrib"
-]
+src               = ["src", "tests"]
 
 [tool.ruff.lint]
 select = [
@@ -150,29 +148,51 @@ select = [
     "UP",
     "W",
     "YTT",
+    "D",
 ]
-ignore-init-module-imports = true
-ignore = ["E501", "D103", "D100", "D102", "PLR2004", "D403", "ISC001", "FBT001", "FBT002", "FBT003", "W505"]
+ignore = [
+    "E501",
+    "D103",
+    "D100",
+    "D102",
+    "PLR2004",
+    "D403",
+    "ISC001",
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "W505",
+]
+fixable = ["ALL"]
 unfixable = ["F401"]
 
 [tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
+quote-style               = "double"
+indent-style              = "space"
 skip-magic-trailing-comma = false
-line-ending = "lf"
-docstring-code-format = true
+line-ending               = "lf"
+docstring-code-format     = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["D104"]
 "__about__.py" = ["D104", "F841"]
-"tests/**/*" = ["PLR2004", "S101", "TID252", "T201", "ARG001", "S603", "S605"]
+"tests/**/*" = [
+    "PLR2004",
+    "S101",
+    "TID252",
+    "T201",
+    "ARG001",
+    "S603",
+    "S605",
+]
+"contrib/**" = ["ALL"]
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
-known-first-party = ["mangadlp"]
+known-first-party   = ["mangadlp"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -182,7 +202,13 @@ max-branches = 24
 max-returns = 12
 max-statements = 100
 max-args = 15
-allow-magic-value-types = ["str", "bytes", "complex", "float", "int"]
+allow-magic-value-types = [
+    "str",
+    "bytes",
+    "complex",
+    "float",
+    "int",
+]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 15
@@ -199,18 +225,18 @@ max-doc-length = 100
 
 [tool.mypy]
 #plugins = ["pydantic.mypy"]
-follow_imports = "silent"
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-check_untyped_defs = true
-no_implicit_reexport = true
+follow_imports         = "silent"
+warn_redundant_casts   = true
+warn_unused_ignores    = true
+disallow_any_generics  = true
+check_untyped_defs     = true
+no_implicit_reexport   = true
 ignore_missing_imports = true
-warn_return_any = true
-pretty = true
-show_column_numbers = true
-show_error_codes = true
-show_error_context = true
+warn_return_any        = true
+pretty                 = true
+show_column_numbers    = true
+show_error_codes       = true
+show_error_context     = true
 
 #[tool.pydantic-mypy]
 #init_forbid_extra = true
@@ -234,12 +260,15 @@ filterwarnings = [
 
 [tool.coverage.run]
 source_pkgs = ["mangadlp", "tests"]
-branch = true
-parallel = true
-omit = ["src/mangadlp/__about__.py"]
+branch      = true
+parallel    = true
+omit        = ["src/mangadlp/__about__.py"]
 
 [tool.coverage.paths]
-mangadlp = ["src/mangadlp", "*/manga-dlp/src/mangadlp"]
+mangadlp = [
+    "src/mangadlp",
+    "*/manga-dlp/src/mangadlp",
+]
 tests = ["tests", "*/manga-dlp/tests"]
 
 [tool.coverage.report]

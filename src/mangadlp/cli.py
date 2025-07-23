@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import click
 from click_option_group import (
@@ -16,7 +16,7 @@ from mangadlp.logger import prepare_logger
 
 
 # read in the list of links from a file
-def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
+def readin_list(_ctx: click.Context, _param: str, value: str) -> list[str]:
     if not value:
         return []
 
@@ -232,7 +232,7 @@ def readin_list(_ctx: click.Context, _param: str, value: str) -> List[str]:
 def main(ctx: click.Context, **kwargs: Any) -> None:
     """Script to download mangas from various sites."""
     url_uuid: str = kwargs.pop("url_uuid")
-    read_mangas: List[str] = kwargs.pop("read_mangas")
+    read_mangas: list[str] = kwargs.pop("read_mangas")
     verbosity: int = kwargs.pop("verbosity")
 
     # set log level to INFO if not set

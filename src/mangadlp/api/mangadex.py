@@ -1,6 +1,6 @@
 import re
 from time import sleep
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 from loguru import logger as log
@@ -34,7 +34,7 @@ class Mangadex:
     img_base_url = "https://uploads.mangadex.org"
 
     # get infos to initiate class
-    def __init__(self, url_uuid: str, language: str, forcevol: bool):
+    def __init__(self, url_uuid: str, language: str, forcevol: bool):  # noqa: D107
         # static info
         self.api_name = "Mangadex"
 
@@ -68,7 +68,7 @@ class Mangadex:
         return uuid
 
     # make initial request
-    def get_manga_data(self) -> Dict[str, Any]:
+    def get_manga_data(self) -> dict[str, Any]:
         log.debug(f"Getting manga data for: {self.manga_uuid}")
         counter = 1
         while counter <= 3:
@@ -84,7 +84,7 @@ class Mangadex:
             else:
                 break
 
-        response_body: Dict[str, Dict[str, Any]] = response.json()
+        response_body: dict[str, dict[str, Any]] = response.json()
         # check if manga exists
         if response_body["result"] != "ok":
             log.error("Manga not found")
@@ -148,13 +148,13 @@ class Mangadex:
         return total_chapters
 
     # get chapter data like name, uuid etc
-    def get_chapter_data(self) -> Dict[str, ChapterData]:
+    def get_chapter_data(self) -> dict[str, ChapterData]:
         log.debug(f"Getting chapter data for: {self.manga_uuid}")
         api_sorting = "order[chapter]=asc&order[volume]=asc"
         # check for chapters in specified lang
         total_chapters = self.check_chapter_lang()
 
-        chapter_data: Dict[str, ChapterData] = {}
+        chapter_data: dict[str, ChapterData] = {}
         last_volume, last_chapter = ("", "")
         offset = 0
         while offset < total_chapters:  # if more than 500 chapters
@@ -162,9 +162,9 @@ class Mangadex:
                 f"{self.api_base_url}/manga/{self.manga_uuid}/feed?{api_sorting}&limit=500&offset={offset}&{self.api_additions}",
                 timeout=10,
             )
-            response_body: Dict[str, Any] = r.json()
+            response_body: dict[str, Any] = r.json()
             for chapter in response_body["data"]:
-                attributes: Dict[str, Any] = chapter["attributes"]
+                attributes: dict[str, Any] = chapter["attributes"]
                 # chapter infos from feed
                 chapter_num: str = attributes.get("chapter") or ""
                 chapter_vol: str = attributes.get("volume") or ""
@@ -204,7 +204,7 @@ class Mangadex:
         return chapter_data
 
     # get images for the chapter (mangadex@home)
-    def get_chapter_images(self, chapter: str, wait_time: float) -> List[str]:
+    def get_chapter_images(self, chapter: str, wait_time: float) -> list[str]:
         log.debug(f"Getting chapter images for: {self.manga_uuid}")
         athome_url = f"{self.api_base_url}/at-home/server"
         chapter_uuid = self.manga_chapter_data[chapter]["uuid"]
@@ -242,7 +242,7 @@ class Mangadex:
         chapter_img_data = api_data["chapter"]["data"]
 
         # get list of image urls
-        image_urls: List[str] = []
+        image_urls: list[str] = []
         for image in chapter_img_data:
             image_urls.append(f"{self.img_base_url}/data/{chapter_hash}/{image}")
 
@@ -251,9 +251,9 @@ class Mangadex:
         return image_urls
 
     # create list of chapters
-    def create_chapter_list(self) -> List[str]:
+    def create_chapter_list(self) -> list[str]:
         log.debug(f"Creating chapter list for: {self.manga_uuid}")
-        chapter_list: List[str] = []
+        chapter_list: list[str] = []
         for data in self.manga_chapter_data.values():
             chapter_number: str = data["chapter"]
             volume_number: str = data["volume"]

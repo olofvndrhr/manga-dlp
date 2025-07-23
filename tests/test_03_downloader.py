@@ -1,6 +1,5 @@
 import shutil
 from pathlib import Path
-from typing import List
 
 import pytest
 import requests
@@ -19,7 +18,7 @@ def test_downloader():
     ]
     chapter_path = Path("tests/test_folder1")
     chapter_path.mkdir(parents=True, exist_ok=True)
-    images: List[str] = []
+    images: list[str] = []
     downloader.download_chapter(urls, str(chapter_path), 2)
     for file in chapter_path.iterdir():
         images.append(file.name)
@@ -47,6 +46,6 @@ def test_downloader_fail(monkeypatch: MonkeyPatch):
     with pytest.raises(TypeError) as e:
         downloader.download_chapter(images, str(chapter_path), 2)
 
-    assert e.type == TypeError
+    assert e.type is TypeError
     # cleanup
     shutil.rmtree(chapter_path, ignore_errors=True)

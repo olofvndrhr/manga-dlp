@@ -1,7 +1,7 @@
 import re
 import shutil
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any
 
 from loguru import logger as log
 
@@ -24,7 +24,7 @@ def match_api(url_uuid: str) -> type:
         The class of the API to use
     """
     # apis to check
-    apis: List[Tuple[str, re.Pattern[str], type]] = [
+    apis: list[tuple[str, re.Pattern[str], type]] = [
         (
             "mangadex.org",
             re.compile(
@@ -83,7 +83,7 @@ class MangaDLP:
         name_format: str = "{default}",
         name_format_none: str = "",
         forcevol: bool = False,
-        download_path: Union[str, Path] = "downloads",
+        download_path: str | Path = "downloads",
         download_wait: float = 0.5,
         manga_pre_hook_cmd: str = "",
         manga_post_hook_cmd: str = "",
@@ -109,7 +109,7 @@ class MangaDLP:
         self.chapter_post_hook_cmd = chapter_post_hook_cmd
         self.cache_path = cache_path
         self.add_metadata = add_metadata
-        self.hook_infos: Dict[str, Any] = {}
+        self.hook_infos: dict[str, Any] = {}
 
         # prepare everything
         self._prepare()
@@ -218,8 +218,8 @@ class MangaDLP:
         )
 
         # get chapters
-        skipped_chapters: List[Any] = []
-        error_chapters: List[Any] = []
+        skipped_chapters: list[Any] = []
+        error_chapters: list[Any] = []
         for chapter in chapters_to_download:
             if self.cache_path and chapter in cached_chapters:
                 log.info(f"Chapter '{chapter}' is in cache. Skipping download")

@@ -17,4 +17,4 @@ def test_check_api_none():
     url = "https://abc.defghjk/title/abc/def"
     with pytest.raises(ValueError) as e:
         MangaDLP(url_uuid=url, list_chapters=True, download_wait=2)
-    assert e.type == ValueError
+    assert e.type is ValueError

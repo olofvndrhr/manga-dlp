@@ -2,7 +2,7 @@ name: run scheduled tests
 
 on:
   schedule:
-    - cron: "0 20 * * 6"
+    - cron: "0 20 1 * *"
 
 jobs:
   check-code-py311:

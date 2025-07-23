@@ -1,6 +1,6 @@
 import logging
 import sys
-from typing import Any, Dict
+from typing import Any
 
 from loguru import logger
 
@@ -30,7 +30,7 @@ class InterceptHandler(logging.Handler):
 
 # init logger with format and log level
 def prepare_logger(loglevel: int = 20) -> None:
-    stdout_handler: Dict[str, Any] = {
+    stdout_handler: dict[str, Any] = {
         "sink": sys.stdout,
         "level": loglevel,
         "format": LOGURU_FMT,

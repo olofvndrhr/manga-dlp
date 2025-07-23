@@ -2,7 +2,6 @@ import logging
 import shutil
 from pathlib import Path
 from time import sleep
-from typing import List, Union
 
 import requests
 from loguru import logger as log
@@ -12,8 +11,8 @@ from mangadlp import utils
 
 # download images
 def download_chapter(
-    image_urls: List[str],
-    chapter_path: Union[str, Path],
+    image_urls: list[str],
+    chapter_path: str | Path,
     download_wait: float,
 ) -> None:
     total_img = len(image_urls)

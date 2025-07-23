@@ -14,6 +14,7 @@ mangas.txt
 venv
 test.sh
 .ruff_cache/
+.hatch/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -154,4 +155,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-

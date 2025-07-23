@@ -35,22 +35,22 @@ jobs:
         uses: olofvndrhr/releasenote-gen@v1
 
       - name: create gitea release
-        uses: https://gitea.com/actions/release-action@main
-        if: gitea.event_name != 'pull_request'
+        uses: https://github.com/actions/release-action@main
+        if: github.event_name != 'pull_request'
         with:
-          title: ${{ gitea.ref_name }}
+          title: ${{ github.ref_name }}
           body: ${{ steps.release-notes.outputs.releasenotes }}
           files: |-
             dist/**
 
       - name: create github release
         uses: ncipollo/release-action@v1
-        if: gitea.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         with:
           token: ${{ secrets.GH_TOKEN }}
           owner: olofvndrhr
           repo: manga-dlp
-          name: ${{ gitea.ref_name }}
+          name: ${{ github.ref_name }}
           body: ${{ steps.release-notes.outputs.releasenotes }}
           artifacts: |-
             dist/**

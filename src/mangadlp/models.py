@@ -1,4 +1,4 @@
-from typing import List, Optional, TypedDict
+from typing import TypedDict
 
 
 class ComicInfo(TypedDict, total=False):
@@ -8,33 +8,33 @@ class ComicInfo(TypedDict, total=False):
     All valid types and values are specified in metadata.METADATA_TYPES
     """
 
-    Title: Optional[str]
-    Series: Optional[str]
-    Number: Optional[str]
-    Count: Optional[int]
-    Volume: Optional[int]
-    AlternateSeries: Optional[str]
-    AlternateNumber: Optional[str]
-    AlternateCount: Optional[int]
-    Summary: Optional[str]
-    Notes: Optional[str]
-    Year: Optional[int]
-    Month: Optional[int]
-    Day: Optional[int]
-    Writer: Optional[str]
-    Colorist: Optional[str]
-    Publisher: Optional[str]
-    Genre: Optional[str]
-    Web: Optional[str]
-    PageCount: Optional[int]
-    LanguageISO: Optional[str]
-    Format: Optional[str]
-    BlackAndWhite: Optional[str]
-    Manga: Optional[str]
-    ScanInformation: Optional[str]
-    SeriesGroup: Optional[str]
-    AgeRating: Optional[str]
-    CommunityRating: Optional[int]
+    Title: str | None
+    Series: str | None
+    Number: str | None
+    Count: int | None
+    Volume: int | None
+    AlternateSeries: str | None
+    AlternateNumber: str | None
+    AlternateCount: int | None
+    Summary: str | None
+    Notes: str | None
+    Year: int | None
+    Month: int | None
+    Day: int | None
+    Writer: str | None
+    Colorist: str | None
+    Publisher: str | None
+    Genre: str | None
+    Web: str | None
+    PageCount: int | None
+    LanguageISO: str | None
+    Format: str | None
+    BlackAndWhite: str | None
+    Manga: str | None
+    ScanInformation: str | None
+    SeriesGroup: str | None
+    AgeRating: str | None
+    CommunityRating: int | None
 
 
 class ChapterData(TypedDict):
@@ -50,10 +50,10 @@ class ChapterData(TypedDict):
     pages: int
 
 
-class CacheKeyData(TypedDict):
-    chapters: List[str]
+class CacheKeyData(TypedDict):  # noqa
+    chapters: list[str]
     name: str
 
 
-class CacheData(TypedDict):
+class CacheData(TypedDict):  # noqa
     __root__: CacheKeyData

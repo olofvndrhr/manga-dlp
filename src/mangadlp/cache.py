@@ -1,16 +1,15 @@
 import json
 from pathlib import Path
-from typing import List, Union
 
 from loguru import logger as log
 
 from mangadlp.models import CacheData, CacheKeyData
 
 
-class CacheDB:
-    def __init__(
+class CacheDB:  # noqa: D101
+    def __init__(  # noqa: D107
         self,
-        db_path: Union[str, Path],
+        db_path: str | Path,
         manga_uuid: str,
         manga_lang: str,
         manga_name: str,
@@ -33,7 +32,7 @@ class CacheDB:
             self.db_uuid_data.update({"name": self.name})
             self._write_db()
 
-        self.db_uuid_chapters: List[str] = self.db_uuid_data.get("chapters") or []
+        self.db_uuid_chapters: list[str] = self.db_uuid_data.get("chapters") or []
 
     def _prepare_db(self) -> None:
         if self.db_path.exists():
@@ -75,7 +74,7 @@ class CacheDB:
             raise exc
 
 
-def sort_chapters(chapters: List[str]) -> List[str]:
+def sort_chapters(chapters: list[str]) -> list[str]:
     try:
         sorted_list = sorted(chapters, key=float)
     except Exception:
