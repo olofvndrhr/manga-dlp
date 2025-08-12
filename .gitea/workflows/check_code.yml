@@ -12,7 +12,7 @@ jobs:
     runs-on: python3.12
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "build docs"
         run: |
@@ -24,7 +24,7 @@ jobs:
     runs-on: python3.12
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: install hatch
         run: pip install -U hatch
@@ -45,7 +45,7 @@ jobs:
     needs: ["check-code"]
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 

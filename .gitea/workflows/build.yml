@@ -17,7 +17,7 @@ jobs:
       HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: install hatch
         run: pip install -U hatch hatchling
@@ -37,7 +37,7 @@ jobs:
       IMAGE: manga-dlp
     steps:
       - name: checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: setup qemu
         uses: docker/setup-qemu-action@v3
