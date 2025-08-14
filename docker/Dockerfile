@@ -8,7 +8,7 @@ RUN \
     && pip3 install hatch hatchling \
     && python3 -m hatch build --clean
 
-FROM git.44net.ch/44net/debian-s6:11
+FROM git.44net.ch/44net/debian-s6:13
 
 LABEL maintainer="Ivan Schaller" \
     description="A CLI manga downloader"
